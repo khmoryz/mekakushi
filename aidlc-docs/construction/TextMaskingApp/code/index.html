@@ -70,61 +70,12 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* macOS Window Structure */
+        /* App Window Structure */
         .app-window {
             height: 100vh;
             background: var(--bg-primary);
             display: flex;
             flex-direction: column;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: 0 25px 50px var(--shadow-heavy);
-        }
-
-        /* macOS Title Bar */
-        .title-bar {
-            height: 52px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-primary);
-            display: flex;
-            align-items: center;
-            padding: 0 var(--spacing-md);
-            -webkit-app-region: drag;
-        }
-
-        .window-controls {
-            display: flex;
-            gap: var(--spacing-sm);
-            -webkit-app-region: no-drag;
-        }
-
-        .window-control {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-        }
-
-        .window-control.close {
-            background: #ff5f57;
-        }
-
-        .window-control.minimize {
-            background: #ffbd2e;
-        }
-
-        .window-control.maximize {
-            background: #28ca42;
-        }
-
-        .app-title {
-            flex: 1;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin: 0;
         }
 
         /* Main Container */
@@ -155,15 +106,11 @@
 
         .text-panel {
             flex: 1;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-md);
             display: flex;
             flex-direction: column;
+            padding: var(--spacing-md);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 4px 16px var(--shadow-light);
         }
 
         .text-panel h2 {
@@ -300,15 +247,11 @@
         /* Dictionary Panel */
         .dictionary-panel {
             width: 320px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-primary);
-            border-radius: var(--radius-md);
             padding: var(--spacing-md);
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 4px 16px var(--shadow-light);
         }
 
         .dictionary-panel h3 {
@@ -592,17 +535,6 @@
 
 <body>
     <div class="app-window">
-        <!-- macOS Title Bar -->
-        <div class="title-bar">
-            <div class="window-controls">
-                <button class="window-control close"></button>
-                <button class="window-control minimize"></button>
-                <button class="window-control maximize"></button>
-            </div>
-            <h1 class="app-title">Text Masking App</h1>
-            <div style="width: 68px;"></div> <!-- Balance for window controls -->
-        </div>
-
         <div class="container">
             <!-- メインコンテンツエリア -->
             <div class="main-content">
