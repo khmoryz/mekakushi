@@ -1,267 +1,267 @@
-# リバースエンジニアリング
+# Reverse Engineering
 
-**目的**: 既存のコードベースを分析し、包括的な設計成果物を生成します。
+**Purpose**: Analyze existing codebase and generate comprehensive design artifacts
 
-**実行条件**: ブラウンフィールドプロジェクトが検出された場合（ワークスペースに既存のコードが見つかった場合）。
+**Execute when**: Brownfield project detected (existing code found in workspace)
 
-**スキップ条件**: グリーンフィールドプロジェクトの場合（既存のコードがない場合）。
+**Skip when**: Greenfield project (no existing code)
 
-**再実行の振る舞い**: ブラウンフィールドプロジェクトが検出された場合、成果物が存在していても常に再実行します。これにより、成果物が現在のコードの状態を反映することが保証されます。
+**Rerun behavior**: Always rerun when brownfield project detected, even if artifacts exist. This ensures artifacts reflect current code state
 
-## ステップ1: マルチパッケージ検出
+## Step 1: Multi-Package Discovery
 
-### 1.1 ワークスペースのスキャン
-- 言及されたパッケージだけでなく、すべてのパッケージ
-- 設定ファイルによるパッケージ間の関係
-- パッケージタイプ: アプリケーション、CDK/インフラストラクチャ、モデル、クライアント、テスト
+### 1.1 Scan Workspace
+- All packages (not just mentioned ones)
+- Package relationships via config files
+- Package types: Application, CDK/Infrastructure, Models, Clients, Tests
 
-### 1.2 ビジネスコンテキストの理解
-- システムが全体として実装している中核的なビジネス
-- すべてのパッケージのビジネス概要
-- システムが実装しているビジネストランザクションのリスト
+### 1.2 Understand the Business Context
+- The core business that the system is implementing overall
+- The business overview of every package
+- List of Business Transactions that are implemented in the system
 
-### 1.3 インフラストラクチャの検出
-- CDKパッケージ（CDK依存関係を持つpackage.json）
-- Terraform（.tfファイル）
-- CloudFormation（.yaml/.jsonテンプレート）
-- デプロイメントスクリプト
+### 1.3 Infrastructure Discovery
+- CDK packages (package.json with CDK dependencies)
+- Terraform (.tf files)
+- CloudFormation (.yaml/.json templates)
+- Deployment scripts
 
-### 1.4 ビルドシステムの検出
-- ビルドシステム: Brazil, Maven, Gradle, npm
-- ビルドシステム宣言用の設定ファイル
-- パッケージ間のビルド依存関係
+### 1.4 Build System Discovery
+- Build systems: Brazil, Maven, Gradle, npm
+- Config files for build-system declarations
+- Build dependencies between packages
 
-### 1.5 サービスアーキテクチャの検出
-- Lambda関数（ハンドラ、トリガー）
-- コンテナサービス（Docker/ECS設定）
-- API定義（Smithyモデル、OpenAPI仕様）
-- データストア（DynamoDB、S3など）
+### 1.5 Service Architecture Discovery
+- Lambda functions (handlers, triggers)
+- Container services (Docker/ECS configs)
+- API definitions (Smithy models, OpenAPI specs)
+- Data stores (DynamoDB, S3, etc.)
 
-### 1.6 コード品質分析
-- プログラミング言語とフレームワーク
-- テストカバレッジ指標
-- リンティング設定
-- CI/CDパイプライン
+### 1.6 Code Quality Analysis
+- Programming languages and frameworks
+- Test coverage indicators
+- Linting configurations
+- CI/CD pipelines
 
-## ステップ1: ビジネス概要ドキュメントの生成
+## Step 1: Generate Business Overview Documentation
 
-`aidlc-docs/inception/reverse-engineering/business-overview.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/business-overview.md`:
 
 ```markdown
-# ビジネス概要
+# Business Overview
 
-## ビジネスコンテキスト図
-[ビジネスコンテキストを示すMermaid図]
+## Business Context Diagram
+[Mermaid diagram showing the Business Context]
 
-## ビジネス説明
-- **ビジネス説明**: [システムが何をするかの全体的なビジネス説明]
-- **ビジネストランザクション**: [システムが実装するビジネストランザクションのリストとその説明]
-- **ビジネス辞書**: [システムが従うビジネス辞書の用語とその意味]
+## Business Description
+- **Business Description**: [Overall Business description of what the system does]
+- **Business Transactions**: [List of Business Transactions that the system implements and their descriptions]
+- **Business Dictionary**: [Business dictionary terms that the system follows and their meaning]
 
-## コンポーネントレベルのビジネス説明
-### [パッケージ/コンポーネント名]
-- **目的**: [ビジネスの観点から何をするか]
-- **責任**: [主要な責任]
+## Component Level Business Descriptions
+### [Package/Component Name]
+- **Purpose**: [What it does from the business perspective]
+- **Responsibilities**: [Key responsibilities]
 ```
 
-## ステップ2: アーキテクチャドキュメントの生成
+## Step 2: Generate Architecture Documentation
 
-`aidlc-docs/inception/reverse-engineering/architecture.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/architecture.md`:
 
 ```markdown
-# システムアーキテクチャ
+# System Architecture
 
-## システム概要
-[システムの高レベルな説明]
+## System Overview
+[High-level description of the system]
 
-## アーキテクチャ図
-[すべてのパッケージ、サービス、データストア、関係を示すMermaid図]
+## Architecture Diagram
+[Mermaid diagram showing all packages, services, data stores, relationships]
 
-## コンポーネント説明
-### [パッケージ/コンポーネント名]
-- **目的**: [何をするか]
-- **責任**: [主要な責任]
-- **依存関係**: [何に依存しているか]
-- **タイプ**: [アプリケーション/インフラストラクチャ/モデル/クライアント/テスト]
+## Component Descriptions
+### [Package/Component Name]
+- **Purpose**: [What it does]
+- **Responsibilities**: [Key responsibilities]
+- **Dependencies**: [What it depends on]
+- **Type**: [Application/Infrastructure/Model/Client/Test]
 
-## データフロー
-[主要なワークフローのMermaidシーケンス図]
+## Data Flow
+[Mermaid sequence diagram of key workflows]
 
-## 統合ポイント
-- **外部API**: [目的付きリスト]
-- **データベース**: [目的付きリスト]
-- **サードパーティサービス**: [目的付きリスト]
+## Integration Points
+- **External APIs**: [List with purposes]
+- **Databases**: [List with purposes]
+- **Third-party Services**: [List with purposes]
 
-## インフラストラクチャコンポーネント
-- **CDKスタック**: [目的付きリスト]
-- **デプロイメントモデル**: [説明]
-- **ネットワーキング**: [VPC、サブネット、セキュリティグループ]
+## Infrastructure Components
+- **CDK Stacks**: [List with purposes]
+- **Deployment Model**: [Description]
+- **Networking**: [VPC, subnets, security groups]
 ```
 
-## ステップ3: コード構造ドキュメントの生成
+## Step 3: Generate Code Structure Documentation
 
-`aidlc-docs/inception/reverse-engineering/code-structure.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/code-structure.md`:
 
 ```markdown
-# コード構造
+# Code Structure
 
-## ビルドシステム
-- **タイプ**: [Maven/Gradle/npm/Brazil]
-- **設定**: [主要なビルドファイルと設定]
+## Build System
+- **Type**: [Maven/Gradle/npm/Brazil]
+- **Configuration**: [Key build files and settings]
 
-## 主要なクラス/モジュール
-[Mermaidクラス図またはモジュール階層]
+## Key Classes/Modules
+[Mermaid class diagram or module hierarchy]
 
-## デザインパターン
-### [パターン名]
-- **場所**: [どこで使用されているか]
-- **目的**: [なぜ使用されているか]
-- **実装**: [どのように実装されているか]
+## Design Patterns
+### [Pattern Name]
+- **Location**: [Where used]
+- **Purpose**: [Why used]
+- **Implementation**: [How implemented]
 
-## クリティカルな依存関係
-### [依存関係名]
-- **バージョン**: [バージョン番号]
-- **使用法**: [どのように、どこで使用されているか]
-- **目的**: [なぜ必要か]
+## Critical Dependencies
+### [Dependency Name]
+- **Version**: [Version number]
+- **Usage**: [How and where used]
+- **Purpose**: [Why needed]
 ```
 
-## ステップ4: APIドキュメントの生成
+## Step 4: Generate API Documentation
 
-`aidlc-docs/inception/reverse-engineering/api-documentation.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/api-documentation.md`:
 
 ```markdown
-# APIドキュメント
+# API Documentation
 
-## REST API
-### [エンドポイント名]
-- **メソッド**: [GET/POST/PUT/DELETE]
-- **パス**: [/api/path]
-- **目的**: [何をするか]
-- **リクエスト**: [リクエスト形式]
-- **レスポンス**: [レスポンス形式]
+## REST APIs
+### [Endpoint Name]
+- **Method**: [GET/POST/PUT/DELETE]
+- **Path**: [/api/path]
+- **Purpose**: [What it does]
+- **Request**: [Request format]
+- **Response**: [Response format]
 
-## 内部API
-### [インターフェース/クラス名]
-- **メソッド**: [シグネチャ付きリスト]
-- **パラメータ**: [パラメータの説明]
-- **戻り値の型**: [戻り値の型の説明]
+## Internal APIs
+### [Interface/Class Name]
+- **Methods**: [List with signatures]
+- **Parameters**: [Parameter descriptions]
+- **Return Types**: [Return type descriptions]
 
-## データモデル
-### [モデル名]
-- **フィールド**: [フィールドの説明]
-- **関係**: [関連モデル]
-- **検証**: [検証ルール]
+## Data Models
+### [Model Name]
+- **Fields**: [Field descriptions]
+- **Relationships**: [Related models]
+- **Validation**: [Validation rules]
 ```
 
-## ステップ5: コンポーネントインベントリの生成
+## Step 5: Generate Component Inventory
 
-`aidlc-docs/inception/reverse-engineering/component-inventory.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/component-inventory.md`:
 
 ```markdown
-# コンポーネントインベントリ
+# Component Inventory
 
-## アプリケーションパッケージ
-- [パッケージ名] - [目的]
+## Application Packages
+- [Package name] - [Purpose]
 
-## インフラストラクチャパッケージ
-- [パッケージ名] - [CDK/Terraform] - [目的]
+## Infrastructure Packages
+- [Package name] - [CDK/Terraform] - [Purpose]
 
-## 共有パッケージ
-- [パッケージ名] - [モデル/ユーティリティ/クライアント] - [目的]
+## Shared Packages
+- [Package name] - [Models/Utilities/Clients] - [Purpose]
 
-## テストパッケージ
-- [パッケージ名] - [統合/ロード/ユニット] - [目的]
+## Test Packages
+- [Package name] - [Integration/Load/Unit] - [Purpose]
 
-## 合計数
-- **合計パッケージ数**: [数]
-- **アプリケーション**: [数]
-- **インフラストラクチャ**: [数]
-- **共有**: [数]
-- **テスト**: [数]
+## Total Count
+- **Total Packages**: [Number]
+- **Application**: [Number]
+- **Infrastructure**: [Number]
+- **Shared**: [Number]
+- **Test**: [Number]
 ```
 
-## ステップ6: 技術スタックドキュメントの生成
+## Step 6: Generate Technology Stack Documentation
 
-`aidlc-docs/inception/reverse-engineering/technology-stack.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/technology-stack.md`:
 
 ```markdown
-# 技術スタック
+# Technology Stack
 
-## プログラミング言語
-- [言語] - [バージョン] - [使用法]
+## Programming Languages
+- [Language] - [Version] - [Usage]
 
-## フレームワーク
-- [フレームワーク] - [バージョン] - [目的]
+## Frameworks
+- [Framework] - [Version] - [Purpose]
 
-## インフラストラクチャ
-- [サービス] - [目的]
+## Infrastructure
+- [Service] - [Purpose]
 
-## ビルドツール
-- [ツール] - [バージョン] - [目的]
+## Build Tools
+- [Tool] - [Version] - [Purpose]
 
-## テストツール
-- [ツール] - [バージョン] - [目的]
+## Testing Tools
+- [Tool] - [Version] - [Purpose]
 ```
 
-## ステップ7: 依存関係ドキュメントの生成
+## Step 7: Generate Dependencies Documentation
 
-`aidlc-docs/inception/reverse-engineering/dependencies.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/dependencies.md`:
 
 ```markdown
-# 依存関係
+# Dependencies
 
-## 内部依存関係
-[パッケージの依存関係を示すMermaid図]
+## Internal Dependencies
+[Mermaid diagram showing package dependencies]
 
-### [パッケージA] は [パッケージB] に依存
-- **タイプ**: [コンパイル/ランタイム/テスト]
-- **理由**: [なぜ依存関係が存在するのか]
+### [Package A] depends on [Package B]
+- **Type**: [Compile/Runtime/Test]
+- **Reason**: [Why dependency exists]
 
-## 外部依存関係
-### [依存関係名]
-- **バージョン**: [バージョン]
-- **目的**: [なぜ使用されているか]
-- **ライセンス**: [ライセンスタイプ]
+## External Dependencies
+### [Dependency Name]
+- **Version**: [Version]
+- **Purpose**: [Why used]
+- **License**: [License type]
 ```
 
-## ステップ8: コード品質評価の生成
+## Step 8: Generate Code Quality Assessment
 
-`aidlc-docs/inception/reverse-engineering/code-quality-assessment.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/code-quality-assessment.md`:
 
 ```markdown
-# コード品質評価
+# Code Quality Assessment
 
-## テストカバレッジ
-- **全体**: [パーセンテージまたは良い/普通/悪い/なし]
-- **ユニットテスト**: [ステータス]
-- **統合テスト**: [ステータス]
+## Test Coverage
+- **Overall**: [Percentage or Good/Fair/Poor/None]
+- **Unit Tests**: [Status]
+- **Integration Tests**: [Status]
 
-## コード品質指標
-- **リンティング**: [設定済み/未設定]
-- **コードスタイル**: [一貫性あり/なし]
-- **ドキュメンテーション**: [良い/普通/悪い]
+## Code Quality Indicators
+- **Linting**: [Configured/Not configured]
+- **Code Style**: [Consistent/Inconsistent]
+- **Documentation**: [Good/Fair/Poor]
 
-## 技術的負債
-- [問題の説明と場所]
+## Technical Debt
+- [Issue description and location]
 
-## パターンとアンチパターン
-- **良いパターン**: [リスト]
-- **アンチパターン**: [場所付きリスト]
+## Patterns and Anti-patterns
+- **Good Patterns**: [List]
+- **Anti-patterns**: [List with locations]
 ```
 
-## ステップ9: タイムスタンプファイルの作成
+## Step 9: Create Timestamp File
 
-`aidlc-docs/inception/reverse-engineering/reverse-engineering-timestamp.md` を作成します：
+Create `aidlc-docs/inception/reverse-engineering/reverse-engineering-timestamp.md`:
 
 ```markdown
-# リバースエンジニアリングメタデータ
+# Reverse Engineering Metadata
 
-**分析日**: [ISOタイムスタンプ]
-**分析者**: AI-DLC
-**ワークスペース**: [ワークスペースパス]
-**分析された合計ファイル数**: [数]
+**Analysis Date**: [ISO timestamp]
+**Analyzer**: AI-DLC
+**Workspace**: [Workspace path]
+**Total Files Analyzed**: [Number]
 
-## 生成された成果物
+## Artifacts Generated
 - [x] architecture.md
 - [x] code-structure.md
 - [x] api-documentation.md
@@ -271,36 +271,35 @@
 - [x] code-quality-assessment.md
 ```
 
-## ステップ10: 状態追跡の更新
+## Step 10: Update State Tracking
 
-`aidlc-docs/aidlc-state.md` を更新します：
-
-```markdown
-## リバースエンジニアリングステータス
-- [x] リバースエンジニアリング - [タイムスタンプ]に完了
-- **成果物の場所**: aidlc-docs/inception/reverse-engineering/
-```
-
-## ステップ11: ユーザーへの完了メッセージの提示
+Update `aidlc-docs/aidlc-state.md`:
 
 ```markdown
-# 🔍 リバースエンジニアリング完了
-
-[分析からの主要な調査結果のAI生成サマリー（箇条書き形式）]
-
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/inception/reverse-engineering/` でリバースエンジニアリングの成果物を確認してください。
-
-> **🚀 <u>**次のステップ:**</u>**
->
-> **以下のアクションが可能です：**
->
-> 🔧 **変更をリクエスト** - 必要に応じてリバースエンジニアリング分析の修正を依頼します
-> ✅ **承認して続行** - 分析を承認し、**要件分析**に進みます
+## Reverse Engineering Status
+- [x] Reverse Engineering - Completed on [timestamp]
+- **Artifacts Location**: aidlc-docs/inception/reverse-engineering/
 ```
 
-## ステップ12: ユーザーの承認を待つ
+## Step 11: Present Completion Message to User
 
-- **必須**: ユーザーが明示的に承認するまで進行しない
-- **必須**: `audit.md` にユーザーの応答を完全な生の入力で記録する
+```markdown
+# 🔍 Reverse Engineering Complete
+
+[AI-generated summary of key findings from analysis in the form of bullet points]
+
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the reverse engineering artifacts at: `aidlc-docs/inception/reverse-engineering/`
+
+> **🚀 <u>**WHAT'S NEXT?**</u>**
+>
+> **You may:**
+>
+> 🔧 **Request Changes** - Ask for modifications to the reverse engineering analysis if required
+> ✅ **Approve & Continue** - Approve analysis and proceed to **Requirements Analysis**
 ```
+
+## Step 12: Wait for User Approval
+
+- **MANDATORY**: Do not proceed until user explicitly approves
+- **MANDATORY**: Log user's response in audit.md with complete raw input

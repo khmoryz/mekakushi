@@ -1,95 +1,94 @@
-# インフラストラクチャ設計
+# Infrastructure Design
 
-## 前提条件
-- ユニットの機能設計が完了していること
-- NFR設計が推奨される（マッピングする論理コンポーネントを提供）
-- 実行計画でインフラストラクチャ設計ステージが実行されるべきであることが示されていること
+## Prerequisites
+- Functional Design must be complete for the unit
+- NFR Design recommended (provides logical components to map)
+- Execution plan must indicate Infrastructure Design stage should execute
 
-## 概要
-論理的なソフトウェアコンポーネントを、デプロイ環境の実際のインフラストラクチャ選択にマッピングします。
+## Overview
+Map logical software components to actual infrastructure choices for deployment environments.
 
-## 実行ステップ
+## Steps to Execute
 
-### ステップ1: 設計成果物の分析
-- `aidlc-docs/construction/{unit-name}/functional-design/` から機能設計を読み込む
-- `aidlc-docs/construction/{unit-name}/nfr-design/` からNFR設計を読み込む（存在する場合）
-- インフラストラクチャが必要な論理コンポーネントを特定する
+### Step 1: Analyze Design Artifacts
+- Read functional design from `aidlc-docs/construction/{unit-name}/functional-design/`
+- Read NFR design from `aidlc-docs/construction/{unit-name}/nfr-design/` (if exists)
+- Identify logical components needing infrastructure
 
-### ステップ2: インフラストラクチャ設計計画の作成
-- インフラストラクチャ設計のためのチェックボックス `[]` 付きの計画を生成する
-- 実際のサービス（AWS, Azure, GCP, オンプレミス）へのマッピングに焦点を当てる
-- 各ステップにはチェックボックス `[]` を付ける
+### Step 2: Create Infrastructure Design Plan
+- Generate plan with checkboxes [] for infrastructure design
+- Focus on mapping to actual services (AWS, Azure, GCP, on-premise)
+- Each step should have a checkbox []
 
-### ステップ3: コンテキストに応じた質問の生成
-**指示**: 機能設計とNFR設計を分析し、この特定のユニットのインフラストラクチャニーズにのみ関連する質問を生成します。以下のカテゴリをインスピレーションとして使用し、必須のチェックリストとしては使用しないでください。適用できない場合はカテゴリ全体をスキップしてください。
+### Step 3: Generate Context-Appropriate Questions
+**DIRECTIVE**: Analyze the functional and NFR design to generate ONLY questions relevant to THIS specific unit's infrastructure needs. Use the categories below as inspiration, NOT as a mandatory checklist. Skip entire categories if not applicable.
 
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- このユニットに特有の曖昧さや欠落情報に焦点を当てる
-- インフラストラクチャの決定にユーザーの入力が必要な場合にのみ質問を生成する
+- EMBED questions using [Answer]: tag format
+- Focus on ambiguities and missing information specific to this unit
+- Generate questions only where user input is needed for infrastructure decisions
 
-**質問カテゴリの例**（必要に応じて適応）：
-- **デプロイ環境** - クラウドプロバイダーや環境設定が不明確な場合のみ
-- **コンピューティングインフラストラクチャ** - コンピューティングサービスの選択に明確化が必要な場合のみ
-- **ストレージインフラストラクチャ** - データベースやストレージの選択が曖昧な場合のみ
-- **メッセージングインフラストラクチャ** - メッセージング/キューイングサービスに仕様が必要な場合のみ
-- **ネットワーキングインフラストラクチャ** - ロードバランシングやAPIゲートウェイのアプローチが不明確な場合のみ
-- **監視インフラストラクチャ** - オブザーバビリティツールの明確化が必要な場合のみ
-- **共有インフラストラクチャ** - インフラストラクチャ共有戦略が曖昧な場合のみ
+**Example question categories** (adapt as needed):
+- **Deployment Environment** - Only if cloud provider or environment setup is unclear
+- **Compute Infrastructure** - Only if compute service choice needs clarification
+- **Storage Infrastructure** - Only if database or storage selection is ambiguous
+- **Messaging Infrastructure** - Only if messaging/queuing services need specification
+- **Networking Infrastructure** - Only if load balancing or API gateway approach is unclear
+- **Monitoring Infrastructure** - Only if observability tooling needs clarification
+- **Shared Infrastructure** - Only if infrastructure sharing strategy is ambiguous
 
-### ステップ4: 計画の保存
-- `aidlc-docs/construction/plans/{unit-name}-infrastructure-design-plan.md` として保存する
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
+### Step 4: Store Plan
+- Save as `aidlc-docs/construction/plans/{unit-name}-infrastructure-design-plan.md`
+- Include all [Answer]: tags for user input
 
-### ステップ5: 回答の収集と分析
-- ユーザーがすべての `[Answer]:` タグを完了するのを待つ
-- 曖昧な応答がないかレビューする
-- 必要に応じてフォローアップの質問を追加する
+### Step 5: Collect and Analyze Answers
+- Wait for user to complete all [Answer]: tags
+- Review for vague or ambiguous responses
+- Add follow-up questions if needed
 
-### ステップ6: インフラストラクチャ設計成果物の生成
-- `aidlc-docs/construction/{unit-name}/infrastructure-design/infrastructure-design.md` を作成する
-- `aidlc-docs/construction/{unit-name}/infrastructure-design/deployment-architecture.md` を作成する
-- 共有インフラストラクチャの場合: `aidlc-docs/construction/shared-infrastructure.md` を作成する
+### Step 6: Generate Infrastructure Design Artifacts
+- Create `aidlc-docs/construction/{unit-name}/infrastructure-design/infrastructure-design.md`
+- Create `aidlc-docs/construction/{unit-name}/infrastructure-design/deployment-architecture.md`
+- If shared infrastructure: Create `aidlc-docs/construction/shared-infrastructure.md`
 
-### ステップ7: 完了メッセージの提示
-- この構造で完了メッセージを提示する：
-     1. **完了のお知らせ**（必須）: 常にこれで始める：
+### Step 7: Present Completion Message
+- Present completion message in this structure:
+     1. **Completion Announcement** (mandatory): Always start with this:
 
 ```markdown
-# 🏢 インフラストラクチャ設計完了 - [unit-name]
+# 🏢 Infrastructure Design Complete - [unit-name]
 ```
 
-     2. **AIサマリー**（任意）: インフラストラクチャ設計の構造化された箇条書きサマリーを提供する
-        - フォーマット: 「インフラストラクチャ設計により、[説明]がマッピングされました：」
-        - 主要なインフラストラクチャサービスとコンポーネントをリストアップ（箇条書き）
-        - デプロイメントアーキテクチャの決定と根拠をリストアップ
-        - クラウドプロバイダーの選択とサービスマッピングについて言及する
-        - ワークフローの指示（「レビューしてください」、「お知らせください」、「次のフェーズに進みます」、「進む前に」）を含めない
-        - 事実に基づき、コンテンツに焦点を当てる
-     3. **フォーマットされたワークフローメッセージ**（必須）: 常にこの正確なフォーマットで終える：
+     2. **AI Summary** (optional): Provide structured bullet-point summary of infrastructure design
+        - Format: "Infrastructure design has mapped [description]:"
+        - List key infrastructure services and components (bullet points)
+        - List deployment architecture decisions and rationale
+        - Mention cloud provider choices and service mappings
+        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - Keep factual and content-focused
+     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
 
 ```markdown
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/construction/[unit-name]/infrastructure-design/` でインフラストラクチャ設計を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the infrastructure design at: `aidlc-docs/construction/[unit-name]/infrastructure-design/`
 
 
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - レビューに基づいてインフラストラクチャ設計の修正を依頼します  
-> ✅ **次のステージへ進む** - インフラストラクチャ設計を承認し、**コード生成**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the infrastructure design based on your review  
+> ✅ **Continue to Next Stage** - Approve infrastructure design and proceed to **Code Generation**
 
 ---
 ```
 
-### ステップ8: 明示的な承認を待つ
-- ユーザーがインフラストラクチャ設計を明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、設計を更新し、承認プロセスを繰り返す
+### Step 8: Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the infrastructure design
+- Approval must be clear and unambiguous
+- If user requests changes, update the design and repeat the approval process
 
-### ステップ9: 承認の記録と進捗の更新
-- `audit.md` にタイムスタンプ付きで承認を記録する
-- ユーザーの承認応答をタイムスタンプ付きで記録する
-- `aidlc-state.md` でインフラストラクチャ設計ステージを完了とマークする
-```
+### Step 9: Record Approval and Update Progress
+- Log approval in audit.md with timestamp
+- Record the user's approval response with timestamp
+- Mark Infrastructure Design stage complete in aidlc-state.md

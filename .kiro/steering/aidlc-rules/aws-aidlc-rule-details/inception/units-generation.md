@@ -1,181 +1,181 @@
-# ユニット生成 - 詳細ステップ
+# Units Generation - Detailed Steps
 
-## 概要
-このステージでは、2つの統合されたパートを通じて、システムを管理可能な作業単位に分解します：
-- **パート1 - 計画**: 質問付きの分解計画を作成し、回答を収集し、曖昧さを分析し、承認を得る
-- **パート2 - 生成**: 承認された計画を実行してユニット成果物を生成する
+## Overview
+This stage decomposes the system into manageable units of work through two integrated parts:
+- **Part 1 - Planning**: Create decomposition plan with questions, collect answers, analyze for ambiguities, get approval
+- **Part 2 - Generation**: Execute approved plan to generate unit artifacts
 
-**定義**: 作業単位とは、開発目的でストーリーを論理的にグループ化したものです。マイクロサービスの場合、各ユニットは独立してデプロイ可能なサービスになります。モノリスの場合、単一のユニットは論理モジュールを持つアプリケーション全体を表します。
+**DEFINITION**: A unit of work is a logical grouping of stories for development purposes. For microservices, each unit becomes an independently deployable service. For monoliths, the single unit represents the entire application with logical modules.
 
-**用語**: 独立してデプロイ可能なコンポーネントには「サービス」を、サービス内の論理的なグループには「モジュール」を、計画コンテキストでは「作業単位」を使用します。
+**Terminology**: Use "Service" for independently deployable components, "Module" for logical groupings within a service, "Unit of Work" for planning context.
 
-## 前提条件
-- コンテキスト評価が完了していること
-- 要件評価が推奨される（機能的スコープを提供）
-- ストーリー開発が推奨される（ストーリーがユニットにマッピングされる）
-- アプリケーション設計フェーズが必須（コンポーネント、メソッド、サービスを決定）
-- 実行計画で設計フェーズが実行されるべきであることが示されていること
-
----
-
-# パート1: 計画
-
-## ステップ1: 作業単位計画の作成
-- システムを作業単位に分解するためのチェックボックス `[]` 付きの計画を生成する
-- システムを管理可能な開発単位に分割することに焦点を当てる
-- 各ステップとサブステップにはチェックボックス `[]` を付ける
-
-## ステップ2: 計画に必須のユニット成果物を含める
-**常に**これらの必須成果物をユニット計画に含める：
-- [ ] ユニットの定義と責任を記述した `aidlc-docs/inception/application-design/unit-of-work.md` を生成する
-- [ ] 依存関係マトリックスを記述した `aidlc-docs/inception/application-design/unit-of-work-dependency.md` を生成する
-- [ ] ストーリーをユニットにマッピングした `aidlc-docs/inception/application-design/unit-of-work-story-map.md` を生成する
-- [ ] ユニットの境界と依存関係を検証する
-- [ ] すべてのストーリーがユニットに割り当てられていることを確認する
-
-## ステップ3: コンテキストに応じた質問の生成
-**指示**: 要件、ストーリー、アプリケーション設計を分析し、この特定の分解問題にのみ関連する質問を生成します。以下のカテゴリをインスピレーションとして使用し、必須のチェックリストとしては使用しないでください。適用できない場合はカテゴリ全体をスキップしてください。
-
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- このコンテキストに特有の曖昧さや欠落情報に焦点を当てる
-- 意思決定にユーザーの入力が必要な場合にのみ質問を生成する
-
-**質問カテゴリの例**（必要に応じて適応）：
-- **ストーリーのグループ化** - 複数のストーリーが存在し、グループ化戦略が不明確な場合のみ
-- **依存関係** - 複数のユニットが存在する可能性があり、統合アプローチが曖昧な場合のみ
-- **チームのアライメント** - チーム構造や所有権が不明確な場合のみ
-- **技術的考慮事項** - ユニット間でスケーラビリティ/デプロイ要件が異なる場合のみ
-- **ビジネスドメイン** - ドメイン境界や境界付けられたコンテキストが不明確な場合のみ
-
-## ステップ4: UOW計画の保存
-- `aidlc-docs/inception/plans/unit-of-work-plan.md` として保存する
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
-- 計画がシステム分解のすべての側面をカバーしていることを確認する
-
-## ステップ5: ユーザー入力の要求
-- ユーザーに計画文書内の `[Answer]:` タグを直接入力するように依頼する
-- 分解決定の重要性を強調する
-- `[Answer]:` タグの入力方法について明確な指示を提供する
-
-## ステップ6: 回答の収集
-- ユーザーが文書内の `[Answer]:` タグを使用してすべての質問に回答するのを待つ
-- すべての `[Answer]:` タグが完了するまで進行しない
-- `[Answer]:` タグが空白のままになっていないことを確認するために文書を確認する
-
-## ステップ7: 回答の分析（必須）
-進行する前に、すべてのユーザーの回答を注意深く確認する必要があります：
-- **曖昧または不明確な応答**: 「混合」、「中間」、「わからない」、「場合による」
-- **未定義の基準または用語**: 明確な定義のない概念への言及
-- **矛盾した回答**: 互いに矛盾する応答
-- **生成の詳細が欠落**: 具体的なガイダンスが欠けている回答
-- **選択肢を組み合わせた回答**: 明確な決定ルールなしに異なるアプローチを統合する応答
-
-## ステップ8: 必須のフォローアップ質問
-ステップ7の分析で曖昧な回答が明らかになった場合は、**必ず**以下を実行する必要があります：
-- `[Answer]:` タグを使用して計画文書に特定のフォローアップ質問を追加する
-- すべての曖昧さが解決されるまで承認に進まない
-- 必要なフォローアップの例：
-  - 「AとBの『混合』について言及しましたが、AとBをいつ使用するかを決定するための具体的な基準は何ですか？」
-  - 「AとBの『中間』と言いましたが、その正確な中間アプローチを定義できますか？」
-  - 「『わからない』と示しましたが、決定するのに役立つ追加情報はありますか？」
-  - 「『複雑さによる』と述べましたが、複雑さのレベルをどのように定義しますか？」
-
-## ステップ9: 承認の要求
-- 「**作業単位計画が完了しました。`aidlc-docs/inception/plans/unit-of-work-plan.md` の計画を確認してください。生成に進んでもよろしいですか？**」と尋ねる
-- ユーザーが確認するまで進行しない
-
-## ステップ10: 承認の記録
-- プロンプトと応答をタイムスタンプ付きで `audit.md` に記録する
-- ISO 8601タイムスタンプ形式を使用する
-- 完全な承認プロンプトテキストを含める
-
-## ステップ11: 進捗の更新
-- `aidlc-state.md` でユニット計画を完了とマークする
-- 「現在のステータス」セクションを更新する
-- ユニット生成への移行を準備する
+## Prerequisites
+- Context Assessment must be complete
+- Requirements Assessment recommended (provides functional scope)
+- Story Development recommended (stories map to units)
+- Application Design phase REQUIRED (determines components, methods, and services)
+- Execution plan must indicate Design phase should execute
 
 ---
 
-# パート2: 生成
+# PART 1: PLANNING
 
-## ステップ12: 作業単位計画の読み込み
-- [ ] `aidlc-docs/inception/plans/unit-of-work-plan.md` から完全な計画を読み込む
-- [ ] 次の未完了のステップ（最初の `[]` チェックボックス）を特定する
-- [ ] そのステップのコンテキストと要件を読み込む
+## Step 1: Create Unit of Work Plan
+- Generate plan with checkboxes [] for decomposing system into units of work
+- Focus on breaking down the system into manageable development units
+- Each step and sub-step should have a checkbox []
 
-## ステップ13: 現在のステップの実行
-- [ ] 現在のステップが記述していることを正確に実行する
-- [ ] 計画で指定されたユニット成果物を生成する
-- [ ] 計画からの承認された分解アプローチに従う
-- [ ] 計画で指定された基準と境界を使用する
+## Step 2: Include Mandatory Unit Artifacts in Plan
+**ALWAYS** include these mandatory artifacts in the unit plan:
+- [ ] Generate `aidlc-docs/inception/application-design/unit-of-work.md` with unit definitions and responsibilities
+- [ ] Generate `aidlc-docs/inception/application-design/unit-of-work-dependency.md` with dependency matrix
+- [ ] Generate `aidlc-docs/inception/application-design/unit-of-work-story-map.md` mapping stories to units
+- [ ] Validate unit boundaries and dependencies
+- [ ] Ensure all stories are assigned to units
 
-## ステップ14: 進捗の更新
-- [ ] 完了したステップを作業単位計画で `[x]` とマークする
-- [ ] `aidlc-docs/aidlc-state.md` の現在のステータスを更新する
-- [ ] 生成されたすべての成果物を保存する
+## Step 3: Generate Context-Appropriate Questions
+**DIRECTIVE**: Analyze the requirements, stories, and application design to generate ONLY questions relevant to THIS specific decomposition problem. Use the categories below as inspiration, NOT as a mandatory checklist. Skip entire categories if not applicable.
 
-## ステップ15: 続行または完了
-- [ ] さらにステップが残っている場合は、ステップ12に戻る
-- [ ] すべてのステップが完了した場合、ユニットが設計ステージの準備ができていることを確認する
-- [ ] ユニット生成ステージを完了とマークする
+- EMBED questions using [Answer]: tag format
+- Focus on ambiguities and missing information specific to this context
+- Generate questions only where user input is needed for decision-making
 
-## ステップ16: 完了メッセージの提示
+**Example question categories** (adapt as needed):
+- **Story Grouping** - Only if multiple stories exist and grouping strategy is unclear
+- **Dependencies** - Only if multiple units likely and integration approach is ambiguous
+- **Team Alignment** - Only if team structure or ownership is unclear
+- **Technical Considerations** - Only if scalability/deployment requirements differ across units
+- **Business Domain** - Only if domain boundaries or bounded contexts are unclear
+
+## Step 4: Store UOW Plan
+- Save as `aidlc-docs/inception/plans/unit-of-work-plan.md`
+- Include all [Answer]: tags for user input
+- Ensure plan covers all aspects of system decomposition
+
+## Step 5: Request User Input
+- Ask user to fill [Answer]: tags directly in the plan document
+- Emphasize importance of decomposition decisions
+- Provide clear instructions on completing the [Answer]: tags
+
+## Step 6: Collect Answers
+- Wait for user to provide answers to all questions using [Answer]: tags in the document
+- Do not proceed until ALL [Answer]: tags are completed
+- Review the document to ensure no [Answer]: tags are left blank
+
+## Step 7: ANALYZE ANSWERS (MANDATORY)
+Before proceeding, you MUST carefully review all user answers for:
+- **Vague or ambiguous responses**: "mix of", "somewhere between", "not sure", "depends"
+- **Undefined criteria or terms**: References to concepts without clear definitions
+- **Contradictory answers**: Responses that conflict with each other
+- **Missing generation details**: Answers that lack specific guidance
+- **Answers that combine options**: Responses that merge different approaches without clear decision rules
+
+## Step 8: MANDATORY Follow-up Questions
+If the analysis in step 7 reveals ANY ambiguous answers, you MUST:
+- Add specific follow-up questions to the plan document using [Answer]: tags
+- DO NOT proceed to approval until all ambiguities are resolved
+- Examples of required follow-ups:
+  - "You mentioned 'mix of A and B' - what specific criteria should determine when to use A vs B?"
+  - "You said 'somewhere between A and B' - can you define the exact middle ground approach?"
+  - "You indicated 'not sure' - what additional information would help you decide?"
+  - "You mentioned 'depends on complexity' - how do you define complexity levels?"
+
+## Step 9: Request Approval
+- Ask: "**Unit of work plan complete. Review the plan in aidlc-docs/inception/plans/unit-of-work-plan.md. Ready to proceed to generation?**"
+- DO NOT PROCEED until user confirms
+
+## Step 10: Log Approval
+- Log prompt and response in audit.md with timestamp
+- Use ISO 8601 timestamp format
+- Include complete approval prompt text
+
+## Step 11: Update Progress
+- Mark Units Planning complete in aidlc-state.md
+- Update the "Current Status" section
+- Prepare for transition to Units Generation
+
+---
+
+# PART 2: GENERATION
+
+## Step 12: Load Unit of Work Plan
+- [ ] Read the complete plan from `aidlc-docs/inception/plans/unit-of-work-plan.md`
+- [ ] Identify the next uncompleted step (first [ ] checkbox)
+- [ ] Load the context and requirements for that step
+
+## Step 13: Execute Current Step
+- [ ] Perform exactly what the current step describes
+- [ ] Generate unit artifacts as specified in the plan
+- [ ] Follow the approved decomposition approach from Planning
+- [ ] Use the criteria and boundaries specified in the plan
+
+## Step 14: Update Progress
+- [ ] Mark the completed step as [x] in the unit of work plan
+- [ ] Update `aidlc-docs/aidlc-state.md` current status
+- [ ] Save all generated artifacts
+
+## Step 15: Continue or Complete
+- [ ] If more steps remain, return to Step 12
+- [ ] If all steps complete, verify units are ready for design stages
+- [ ] Mark Units Generation stage as complete
+
+## Step 16: Present Completion Message
 
 ```markdown
-# 🔧 ユニット生成完了
+# 🔧 Units Generation Complete
 
-[AIが生成したユニットと分解の箇条書きサマリー]
+[AI-generated summary of units and decomposition created in bullet points]
 
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/inception/application-design/` でユニット生成の成果物を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the units generation artifacts at: `aidlc-docs/inception/application-design/`
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - 必要に応じてユニット生成の修正を依頼します
-> ✅ **承認して続行** - ユニットを承認し、**CONSTRUCTIONフェーズ**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the units generation if required
+> ✅ **Approve & Continue** - Approve units and proceed to **CONSTRUCTION PHASE**
 ```
 
-## ステップ17: 明示的な承認を待つ
-- ユーザーがユニット生成を明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、ユニットを更新し、承認プロセスを繰り返す
+## Step 17: Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the units generation
+- Approval must be clear and unambiguous
+- If user requests changes, update the units and repeat the approval process
 
-## ステップ18: 承認応答の記録
-- ユーザーの承認応答をタイムスタンプ付きで `aidlc-docs/audit.md` に記録する
-- 正確なユーザー応答テキストを含める
-- 承認ステータスを明確にマークする
+## Step 18: Record Approval Response
+- Log the user's approval response with timestamp in `aidlc-docs/audit.md`
+- Include the exact user response text
+- Mark the approval status clearly
 
-## ステップ19: 進捗の更新
-- `aidlc-state.md` でユニット生成ステージを完了とマークする
-- 「現在のステータス」セクションを更新する
-- CONSTRUCTIONフェーズへの移行を準備する
+## Step 19: Update Progress
+- Mark Units Generation stage complete in `aidlc-docs/aidlc-state.md`
+- Update the "Current Status" section
+- Prepare for transition to CONSTRUCTION PHASE
 
 ---
 
-## 重要ルール
+## Critical Rules
 
-### 計画フェーズのルール
-- コンテキストに関連する質問のみを生成する
-- すべての質問に `[Answer]:` タグ形式を使用する
-- 進行する前にすべての回答の曖昧さを分析する
-- フォローアップの質問ですべての曖昧さを解決する
-- 生成前にユーザーの明示的な承認を得る
+### Planning Phase Rules
+- Generate ONLY context-relevant questions
+- Use [Answer]: tag format for all questions
+- Analyze all answers for ambiguities before proceeding
+- Resolve ALL ambiguities with follow-up questions
+- Get explicit user approval before generation
 
-### 生成フェーズのルール
-- **ハードコードされたロジックなし**: 作業単位計画に書かれていることだけを実行する
-- **計画に正確に従う**: ステップの順序から逸脱しない
-- **チェックボックスの更新**: 各ステップ完了直後に `[x]` とマークする
-- **承認されたアプローチを使用**: 計画からの分解方法論に従う
-- **完了の検証**: 進行する前にすべてのユニット成果物が完了していることを確認する
+### Generation Phase Rules
+- **NO HARDCODED LOGIC**: Only execute what's written in the unit of work plan
+- **FOLLOW PLAN EXACTLY**: Do not deviate from the step sequence
+- **UPDATE CHECKBOXES**: Mark [x] immediately after completing each step
+- **USE APPROVED APPROACH**: Follow the decomposition methodology from Planning
+- **VERIFY COMPLETION**: Ensure all unit artifacts are complete before proceeding
 
-## 完了基準
-- すべての計画に関する質問に回答され、曖昧さが解決されている
-- 計画に対するユーザーの承認が得られている
-- 作業単位計画のすべてのステップが `[x]` とマークされている
-- 計画に従ってすべてのユニット成果物が生成されている：
-  - ユニット定義を含む `unit-of-work.md`
-  - 依存関係マトリックスを含む `unit-of-work-dependency.md`
-  - ストーリーマッピングを含む `unit-of-work-story-map.md`
-- ユニットが検証され、ユニットごとの設計ステージの準備ができている
+## Completion Criteria
+- All planning questions answered and ambiguities resolved
+- User approval obtained for the plan
+- All steps in unit of work plan marked [x]
+- All unit artifacts generated according to plan:
+  - `unit-of-work.md` with unit definitions
+  - `unit-of-work-dependency.md` with dependency matrix
+  - `unit-of-work-story-map.md` with story mappings
+- Units verified and ready for per-unit design stages

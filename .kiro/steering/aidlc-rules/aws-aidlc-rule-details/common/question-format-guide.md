@@ -1,332 +1,332 @@
-# 質問フォーマットガイド
+# Question Format Guide
 
-## 必須: すべての質問はこのフォーマットを使用しなければなりません
+## MANDATORY: All Questions Must Use This Format
 
-### ルール: チャットで質問しない
-**重要**: チャットで直接質問してはなりません。すべての質問は専用の質問ファイルに配置する必要があります。
+### Rule: Never Ask Questions in Chat
+**CRITICAL**: You must NEVER ask questions directly in the chat. ALL questions must be placed in dedicated question files.
 
-### 質問ファイルのフォーマット
+### Question File Format
 
-#### ファイル命名規則
-- 説明的な名前を使用する: `{phase-name}-questions.md`
-- 例:
+#### File Naming Convention
+- Use descriptive names: `{phase-name}-questions.md`
+- Examples:
   - `classification-questions.md`
   - `requirements-questions.md`
   - `story-planning-questions.md`
   - `design-questions.md`
 
-#### 質問の構造
-すべての質問には、意味のある選択肢と最後の選択肢として「その他」を含める必要があります：
+#### Question Structure
+Every question must include meaningful options plus "Other" as the last option:
 
 ```markdown
-## 質問 [番号]
-[明確で具体的な質問文]
+## Question [Number]
+[Clear, specific question text]
 
-A) [最初の意味のある選択肢]
-B) [2番目の意味のある選択肢]
-[...必要に応じて追加の選択肢...]
-X) その他（以下の[Answer]:タグの後に説明してください）
+A) [First meaningful option]
+B) [Second meaningful option]
+[...additional options as needed...]
+X) Other (please describe after [Answer]: tag below)
 
 [Answer]: 
 ```
 
-**重要**: 
-- すべての質問の最後の選択肢として「その他」は必須です
-- 意味のある選択肢のみを含める - スロットを埋めるために選択肢を作り出さない
-- 意味のある限り、多くのまたは少数の選択肢を使用する（最小2つ+その他）
+**CRITICAL**: 
+- "Other" is MANDATORY as the LAST option for every question
+- Only include meaningful options - don't make up options to fill slots
+- Use as many or as few options as make sense (minimum 2 + Other)
 
-### 完全な例
+### Complete Example
 
 ```markdown
-# 要件明確化のための質問
+# Requirements Clarification Questions
 
-要件を明確にするために、以下の質問にお答えください。
+Please answer the following questions to help clarify the requirements.
 
-## 質問1
-主要なユーザー認証方法は何ですか？
+## Question 1
+What is the primary user authentication method?
 
-A) ユーザー名とパスワード
-B) ソーシャルメディアログイン（Google、Facebook）
-C) シングルサインオン（SSO）
-D) 多要素認証
-E) その他（以下の[Answer]:タグの後に説明してください）
-
-[Answer]: 
-
-## 質問2
-これはウェブアプリケーションですか、それともモバイルアプリケーションですか？
-
-A) ウェブアプリケーション
-B) モバイルアプリケーション
-C) ウェブとモバイルの両方
-D) その他（以下の[Answer]:タグの後に説明してください）
+A) Username and password
+B) Social media login (Google, Facebook)
+C) Single Sign-On (SSO)
+D) Multi-factor authentication
+E) Other (please describe after [Answer]: tag below)
 
 [Answer]: 
 
-## 質問3
-これは新規プロジェクトですか、それとも既存のコードベースですか？
+## Question 2
+Will this be a web or mobile application?
 
-A) 新規プロジェクト（グリーンフィールド）
-B) 既存のコードベース（ブラウンフィールド）
-C) その他（以下の[Answer]:タグの後に説明してください）
+A) Web application
+B) Mobile application
+C) Both web and mobile
+D) Other (please describe after [Answer]: tag below)
+
+[Answer]: 
+
+## Question 3
+Is this a new project or existing codebase?
+
+A) New project (greenfield)
+B) Existing codebase (brownfield)
+C) Other (please describe after [Answer]: tag below)
 
 [Answer]: 
 ```
 
-### ユーザーの回答フォーマット
-ユーザーは[Answer]:タグの後に選択肢の文字を記入して回答します：
+### User Response Format
+Users will answer by filling in the letter choice after [Answer]: tag:
 
 ```markdown
-## 質問1
-主要なユーザー認証方法は何ですか？
+## Question 1
+What is the primary user authentication method?
 
-A) ユーザー名とパスワード
-B) ソーシャルメディアログイン（Google、Facebook）
-C) シングルサインオン（SSO）
-D) 多要素認証
+A) Username and password
+B) Social media login (Google, Facebook)
+C) Single Sign-On (SSO)
+D) Multi-factor authentication
 
 [Answer]: C
 ```
 
-### ユーザーの回答の読み取り
-ユーザーが完了を確認した後：
-1. 質問ファイルを読み取る
-2. [Answer]:タグの後の回答を抽出する
-3. すべての質問に回答されていることを検証する
-4. 回答に基づいて分析を進める
+### Reading User Responses
+After user confirms completion:
+1. Read the question file
+2. Extract answers after [Answer]: tags
+3. Validate all questions are answered
+4. Proceed with analysis based on responses
 
-### 多肢選択ガイドライン
+### Multiple Choice Guidelines
 
-#### 選択肢の数
-- 最小: 2つの意味のある選択肢 + 「その他」 (A, B, C)
-- 標準: 3-4つの意味のある選択肢 + 「その他」 (A, B, C, D, E)
-- 最大: 5つの意味のある選択肢 + 「その他」 (A, B, C, D, E, F)
-- **重要**: スロットを埋めるためだけに選択肢を作り出さない - 意味のある選択肢のみを含める
+#### Option Count
+- Minimum: 2 meaningful options + "Other" (A, B, C)
+- Typical: 3-4 meaningful options + "Other" (A, B, C, D, E)
+- Maximum: 5 meaningful options + "Other" (A, B, C, D, E, F)
+- **CRITICAL**: Don't make up options just to fill slots - only include meaningful choices
 
-#### 選択肢の品質
-- 選択肢を相互に排他的にする
-- 最も一般的なシナリオをカバーする
-- 意味のある、現実的な選択肢のみを含める
-- **常に最後の選択肢として「その他」を含める（必須）**
-- 具体的に、明確にする
-- **A, B, C, Dのスロットを埋めるために選択肢を作り出さない**
+#### Option Quality
+- Make options mutually exclusive
+- Cover the most common scenarios
+- Only include meaningful, realistic options
+- **ALWAYS include "Other" as the LAST option** (MANDATORY)
+- Be specific and clear
+- **Don't make up options to fill A, B, C, D slots**
 
-#### 良い例:
+#### Good Example:
 ```markdown
-## 質問5
-どのデータベース技術を使用しますか？
+## Question 5
+What database technology will be used?
 
-A) リレーショナル (PostgreSQL, MySQL)
-B) NoSQLドキュメント (MongoDB, DynamoDB)
-C) NoSQLキーバリュー (Redis, Memcached)
-D) グラフデータベース (Neo4j, Neptune)
-E) その他（以下の[Answer]:タグの後に説明してください）
+A) Relational (PostgreSQL, MySQL)
+B) NoSQL Document (MongoDB, DynamoDB)
+C) NoSQL Key-Value (Redis, Memcached)
+D) Graph Database (Neo4j, Neptune)
+E) Other (please describe after [Answer]: tag below)
 
 [Answer]: 
 ```
 
-#### 悪い例（避けるべき）:
+#### Bad Example (Avoid):
 ```markdown
-## 質問5
-どのデータベースを使用しますか？
+## Question 5
+What database will you use?
 
-A) はい
-B) いいえ
-C) 多分
+A) Yes
+B) No
+C) Maybe
 
 [Answer]: 
 ```
 
-### ワークフロー統合
+### Workflow Integration
 
-#### ステップ1: 質問ファイルの作成
+#### Step 1: Create Question File
 ```markdown
-すべての質問を含む `aidlc-docs/{phase-name}-questions.md` を作成する
+Create aidlc-docs/{phase-name}-questions.md with all questions
 ```
 
-#### ステップ2: ユーザーへの通知
+#### Step 2: Inform User
 ```
-「`{phase-name}-questions.md` に[X]個の質問を作成しました。
-各質問に[Answer]:タグの後に選択肢の文字を記入して回答してください。
-どの選択肢もニーズに合わない場合は、最後の選択肢（その他）を選び、好みを説明してください。完了したら教えてください。」
-```
-
-#### ステップ3: 確認を待つ
-ユーザーが「完了」、「終わった」などと言うのを待ちます。
-
-#### ステップ4: 読み取りと分析
-```
-`aidlc-docs/{phase-name}-questions.md` を読み取る
-すべての回答を抽出する
-完全性を検証する
-分析を進める
+"I've created {phase-name}-questions.md with [X] questions. 
+Please answer each question by filling in the letter choice after the [Answer]: tag. 
+If none of the options match your needs, choose the last option (Other) and describe your preference. Let me know when you're done."
 ```
 
-### エラーハンドリング
+#### Step 3: Wait for Confirmation
+Wait for user to say "done", "completed", "finished", or similar.
 
-#### 回答の欠落
-[Answer]:タグが空の場合：
+#### Step 4: Read and Analyze
 ```
-「質問[X]に回答されていません。進行する前に、すべての質問に提供された文字の選択肢を使用して回答してください。」
-```
-
-#### 無効な回答
-回答が有効な文字の選択肢でない場合：
-```
-「質問[X]の回答「[answer]」は無効です。
-質問で提供された文字の選択肢のみを使用してください。」
+Read aidlc-docs/{phase-name}-questions.md
+Extract all answers
+Validate completeness
+Proceed with analysis
 ```
 
-#### 曖昧な回答
-ユーザーが文字の代わりに説明を提供した場合：
+### Error Handling
+
+#### Missing Answers
+If any [Answer]: tag is empty:
 ```
-「質問[X]について、回答に最も一致する文字の選択肢を提供してください。
-一致するものがない場合は、「その他」を選択し、[Answer]:タグの後に説明を追加してください。」
+"I noticed Question [X] is not answered. Please provide an answer using one of the letter choices 
+for all questions before proceeding."
 ```
 
-### 矛盾と曖昧さの検出
+#### Invalid Answers
+If answer is not a valid letter choice:
+```
+"Question [X] has an invalid answer '[answer]'. 
+Please use only the letter choices provided in the question."
+```
 
-**必須**: ユーザーの回答を読んだ後、矛盾と曖昧さをチェックしなければなりません。
+#### Ambiguous Answers
+If user provides explanation instead of letter:
+```
+"For Question [X], please provide the letter choice that best matches your answer. 
+If none match, choose 'Other' and add your description after the [Answer]: tag."
+```
 
-#### 矛盾の検出
-論理的に一貫性のない回答を探します：
-- スコープの不一致: 「バグ修正」だが「コードベース全体に影響」
-- リスクの不一致: 「低リスク」だが「破壊的変更」
-- タイムラインの不一致: 「迅速な修正」だが「複数のサブシステム」
-- 影響の不一致: 「単一コンポーネント」だが「重大なアーキテクチャ変更」
+### Contradiction and Ambiguity Detection
 
-#### 曖昧さの検出
-不明確または境界線上の応答を探します：
-- 複数の分類に適合する可能性のある回答
-- 具体性に欠ける応答
-- 複数の質問にわたる矛盾した指標
+**MANDATORY**: After reading user responses, you MUST check for contradictions and ambiguities.
 
-#### 明確化のための質問の作成
-矛盾または曖昧さが検出された場合：
+#### Detecting Contradictions
+Look for logically inconsistent answers:
+- Scope mismatch: "Bug fix" but "Entire codebase affected"
+- Risk mismatch: "Low risk" but "Breaking changes"
+- Timeline mismatch: "Quick fix" but "Multiple subsystems"
+- Impact mismatch: "Single component" but "Significant architecture changes"
 
-1. **明確化ファイルの作成**: `{phase-name}-clarification-questions.md`
-2. **問題の説明**: 検出された矛盾/曖昧さを明確に述べる
-3. **的を絞った質問**: 問題を解決するために多肢選択形式を使用する
-4. **元の質問の参照**: どの質問に矛盾した回答があったかを示す
+#### Detecting Ambiguities
+Look for unclear or borderline responses:
+- Answers that could fit multiple classifications
+- Responses that lack specificity
+- Conflicting indicators across multiple questions
 
-**例**:
+#### Creating Clarification Questions
+If contradictions or ambiguities detected:
+
+1. **Create clarification file**: `{phase-name}-clarification-questions.md`
+2. **Explain the issue**: Clearly state what contradiction/ambiguity was detected
+3. **Ask targeted questions**: Use multiple choice format to resolve the issue
+4. **Reference original questions**: Show which questions had conflicting answers
+
+**Example**:
 ```markdown
-# [フェーズ名] 明確化のための質問
+# [Phase Name] Clarification Questions
 
-あなたの回答に、明確化が必要な矛盾が検出されました：
+I detected contradictions in your responses that need clarification:
 
-## 矛盾1: [簡単な説明]
-あなたは「[回答A]」（Q[X]:[文字]）と示しましたが、「[回答B]」（Q[Y]:[文字]）とも示しました。
-これらの応答は[説明]のため矛盾しています。
+## Contradiction 1: [Brief Description]
+You indicated "[Answer A]" (Q[X]:[Letter]) but also "[Answer B]" (Q[Y]:[Letter]).
+These responses are contradictory because [explanation].
 
-### 明確化のための質問1
-[矛盾を解決するための具体的な質問]
+### Clarification Question 1
+[Specific question to resolve contradiction]
 
-A) [最初の回答に解決する選択肢]
-B) [2番目の回答に解決する選択肢]
-C) [中間的な選択肢]
-D) [質問を再構成する選択肢]
+A) [Option that resolves toward first answer]
+B) [Option that resolves toward second answer]
+C) [Option that provides middle ground]
+D) [Option that reframes the question]
 
 [Answer]: 
 
-## 曖昧さ1: [簡単な説明]
-Q[X]へのあなたの応答（「[回答]」）は、[説明]のため曖昧です。
+## Ambiguity 1: [Brief Description]
+Your response to Q[X] ("[Answer]") is ambiguous because [explanation].
 
-### 明確化のための質問2
-[曖昧さを明確にするための具体的な質問]
+### Clarification Question 2
+[Specific question to clarify ambiguity]
 
-A) [明確な選択肢1]
-B) [明確な選択肢2]
-C) [明確な選択肢3]
-D) [明確な選択肢4]
-
-[Answer]: 
-```
-
-#### 明確化のためのワークフロー
-
-1. **検出**: すべての応答を矛盾/曖昧さについて分析する
-2. **作成**: 問題が見つかった場合、明確化のための質問ファイルを生成する
-3. **通知**: 問題と明確化ファイルについてユーザーに伝える
-4. **待機**: ユーザーが明確化を提供するまで進行しない
-5. **再検証**: 明確化の後、一貫性を再度チェックする
-6. **進行**: すべての矛盾が解決されたときにのみ前進する
-
-#### ユーザーメッセージの例
-```
-「あなたの回答に2つの矛盾が検出されました：
-
-1. バグ修正のスコープ vs. コードベースへの影響（Q1 vs Q2）
-2. 低リスク vs. 破壊的変更（Q7 vs Q4）
-
-これらを解決するために、2つの質問を含む`classification-clarification-questions.md`を作成しました。
-分類を進める前に、これらの明確化のための質問に回答してください。」
-```
-
-### ベストプラクティス
-
-1. **具体的に**: 質問は明確で曖昧さがないようにする
-2. **包括的に**: 必要なすべての情報をカバーする
-3. **簡潔に**: 質問を1つのトピックに集中させる
-4. **実用的に**: 選択肢は現実的で実行可能であるべき
-5. **一貫して**: すべての質問ファイルで同じフォーマットを使用する
-
-### フェーズ固有の例
-
-#### 2つの意味のある選択肢を持つ例：
-```markdown
-## 質問1
-これは新規プロジェクトですか、それとも既存のコードベースですか？
-
-A) 新規プロジェクト（グリーンフィールド）
-B) 既存のコードベース（ブラウンフィールド）
-C) その他（以下の[Answer]:タグの後に説明してください）
+A) [Clear option 1]
+B) [Clear option 2]
+C) [Clear option 3]
+D) [Clear option 4]
 
 [Answer]: 
 ```
 
-#### 3つの意味のある選択肢を持つ例：
-```markdown
-## 質問2
-デプロイターゲットは何ですか？
+#### Workflow for Clarifications
 
-A) クラウド (AWS, Azure, GCP)
-B) オンプレミスサーバー
-C) ハイブリッド（クラウドとオンプレミスの両方）
-D) その他（以下の[Answer]:タグの後に説明してください）
+1. **Detect**: Analyze all responses for contradictions/ambiguities
+2. **Create**: Generate clarification question file if issues found
+3. **Inform**: Tell user about the issues and clarification file
+4. **Wait**: Do not proceed until user provides clarifications
+5. **Re-validate**: After clarifications, check again for consistency
+6. **Proceed**: Only move forward when all contradictions are resolved
+
+#### Example User Message
+```
+"I detected 2 contradictions in your responses:
+
+1. Bug fix scope vs. codebase impact (Q1 vs Q2)
+2. Low risk vs. breaking changes (Q7 vs Q4)
+
+I've created classification-clarification-questions.md with 2 questions to resolve these.
+Please answer these clarifying questions before I can proceed with classification."
+```
+
+### Best Practices
+
+1. **Be Specific**: Questions should be clear and unambiguous
+2. **Be Comprehensive**: Cover all necessary information
+3. **Be Concise**: Keep questions focused on one topic
+4. **Be Practical**: Options should be realistic and actionable
+5. **Be Consistent**: Use same format throughout all question files
+
+### Phase-Specific Examples
+
+#### Example with 2 meaningful options:
+```markdown
+## Question 1
+Is this a new project or existing codebase?
+
+A) New project (greenfield)
+B) Existing codebase (brownfield)
+C) Other (please describe after [Answer]: tag below)
 
 [Answer]: 
 ```
 
-#### 4つの意味のある選択肢を持つ例：
+#### Example with 3 meaningful options:
 ```markdown
-## 質問3
-どのアーキテクチャパターンを使用すべきですか？
+## Question 2
+What is the deployment target?
 
-A) モノリシックアーキテクチャ
-B) マイクロサービスアーキテクチャ
-C) サーバーレスアーキテクチャ
-D) イベント駆動型アーキテクチャ
-E) その他（以下の[Answer]:タグの後に説明してください）
+A) Cloud (AWS, Azure, GCP)
+B) On-premises servers
+C) Hybrid (both cloud and on-premises)
+D) Other (please describe after [Answer]: tag below)
 
 [Answer]: 
 ```
 
-## まとめ
+#### Example with 4 meaningful options:
+```markdown
+## Question 3
+What architectural pattern should be used?
 
-**覚えておいてください**: 
-- ✅ 常に質問ファイルを作成する
-- ✅ 常に多肢選択形式を使用する
-- ✅ **常に最後の選択肢として「その他」を含める（必須）**
-- ✅ 意味のある選択肢のみを含める - スロットを埋めるために選択肢を作り出さない
-- ✅ 常に[Answer]:タグを使用する
-- ✅ 常にユーザーの完了を待つ
-- ✅ 常に回答の矛盾を検証する
-- ✅ 必要に応じて常に明確化ファイルを作成する
-- ✅ 進行する前に常に矛盾を解決する
-- ❌ チャットで質問しない
-- ❌ A, B, C, Dを持つためだけに選択肢を作り出さない
-- ❌ 回答なしで進行しない
-- ❌ 未解決の矛盾があるまま進行しない
-- ❌ 曖昧な応答について仮定をしない
+A) Monolithic architecture
+B) Microservices architecture
+C) Serverless architecture
+D) Event-driven architecture
+E) Other (please describe after [Answer]: tag below)
+
+[Answer]: 
 ```
+
+## Summary
+
+**Remember**: 
+- ✅ Always create question files
+- ✅ Always use multiple choice format
+- ✅ **Always include "Other" as the LAST option (MANDATORY)**
+- ✅ Only include meaningful options - don't make up options to fill slots
+- ✅ Always use [Answer]: tags
+- ✅ Always wait for user completion
+- ✅ Always validate responses for contradictions
+- ✅ Always create clarification files if needed
+- ✅ Always resolve contradictions before proceeding
+- ❌ Never ask questions in chat
+- ❌ Never make up options just to have A, B, C, D
+- ❌ Never proceed without answers
+- ❌ Never proceed with unresolved contradictions
+- ❌ Never make assumptions about ambiguous responses

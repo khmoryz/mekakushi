@@ -1,113 +1,112 @@
-# 機能設計
+# Functional Design
 
-## 目的
-**ユニットごとの詳細なビジネスロジック設計**
+## Purpose
+**Detailed business logic design per unit**
 
-機能設計は以下に焦点を当てます：
-- ユニットの詳細なビジネスロジックとアルゴリズム
-- エンティティとリレーションシップを持つドメインモデル
-- 詳細なビジネスルール、検証ロジック、制約
-- 技術に依存しない設計（インフラストラクチャの懸念なし）
+Functional Design focuses on:
+- Detailed business logic and algorithms for the unit
+- Domain models with entities and relationships
+- Detailed business rules, validation logic, and constraints
+- Technology-agnostic design (no infrastructure concerns)
 
-**注意**: これはアプリケーション設計（INCEPTIONフェーズ）からの高レベルなコンポーネント設計に基づいています。
+**Note**: This builds upon high-level component design from Application Design (INCEPTION phase)
 
-## 前提条件
-- ユニット生成が完了していること
-- 作業単位の成果物が利用可能であること
-- アプリケーション設計が推奨される（高レベルのコンポーネント構造を提供）
-- 実行計画で機能設計ステージが実行されるべきであることが示されていること
+## Prerequisites
+- Units Generation must be complete
+- Unit of work artifacts must be available
+- Application Design recommended (provides high-level component structure)
+- Execution plan must indicate Functional Design stage should execute
 
-## 概要
-ユニットの詳細なビジネスロジックを、技術に依存せず、純粋にビジネス機能に焦点を当てて設計します。
+## Overview
+Design detailed business logic for the unit, technology-agnostic and focused purely on business functions.
 
-## 実行ステップ
+## Steps to Execute
 
-### ステップ1: ユニットコンテキストの分析
-- `aidlc-docs/inception/application-design/unit-of-work.md` からユニット定義を読み込む
-- `aidlc-docs/inception/application-design/unit-of-work-story-map.md` から割り当てられたストーリーを読み込む
-- ユニットの責任と境界を理解する
+### Step 1: Analyze Unit Context
+- Read unit definition from `aidlc-docs/inception/application-design/unit-of-work.md`
+- Read assigned stories from `aidlc-docs/inception/application-design/unit-of-work-story-map.md`
+- Understand unit responsibilities and boundaries
 
-### ステップ2: 機能設計計画の作成
-- 機能設計のためのチェックボックス `[]` 付きの計画を生成する
-- ビジネスロジック、ドメインモデル、ビジネスルールに焦点を当てる
-- 各ステップにはチェックボックス `[]` を付ける
+### Step 2: Create Functional Design Plan
+- Generate plan with checkboxes [] for functional design
+- Focus on business logic, domain models, business rules
+- Each step should have a checkbox []
 
-### ステップ3: コンテキストに応じた質問の生成
-**指示**: ユニット定義と機能設計成果物を徹底的に分析し、機能設計を改善するすべての領域を特定するために、明確化のための質問を積極的に行います。包括的な理解を確実にするために、積極的に質問してください。
+### Step 3: Generate Context-Appropriate Questions
+**DIRECTIVE**: Thoroughly analyze the unit definition and functional design artifacts to identify ALL areas where clarification would improve the functional design. Be proactive in asking questions to ensure comprehensive understanding.
 
-**重要**: 機能設計の品質に影響を与える可能性のある曖昧さや欠落した詳細がある場合は、デフォルトで質問をしてください。不正確な仮定をするよりも、多すぎる質問をする方が良いです。
+**CRITICAL**: Default to asking questions when there is ANY ambiguity or missing detail that could affect functional design quality. It's better to ask too many questions than to make incorrect assumptions.
 
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- 曖昧さ、欠落情報、または明確化が必要な領域に焦点を当てる
-- ユーザーの入力が機能設計の決定を改善する場所で質問を生成する
-- **迷った場合は質問する** - 過信は質の低い設計につながります
+- EMBED questions using [Answer]: tag format
+- Focus on ANY ambiguities, missing information, or areas needing clarification
+- Generate questions wherever user input would improve functional design decisions
+- **When in doubt, ask the question** - overconfidence leads to poor designs
 
-**考慮すべき質問カテゴリ**（すべてのカテゴリを評価）：
-- **ビジネスロジックモデリング** - コアエンティティ、ワークフロー、データ変換、ビジネスプロセスについて尋ねる
-- **ドメインモデル** - ドメインの概念、エンティティの関係、データ構造、ビジネスオブジェクトについて尋ねる
-- **ビジネスルール** - 決定ルール、検証ロジック、制約、ビジネスポリシーについて尋ねる
-- **データフロー** - データ入力、出力、変換、永続化要件について尋ねる
-- **統合ポイント** - 外部システムとの相互作用、API、データ交換について尋ねる
-- **エラーハンドリング** - エラーシナリオ、検証の失敗、例外処理について尋ねる
-- **ビジネスシナリオ** - エッジケース、代替フロー、複雑なビジネス状況について尋ねる
+**Question categories to consider** (evaluate ALL categories):
+- **Business Logic Modeling** - Ask about core entities, workflows, data transformations, and business processes
+- **Domain Model** - Ask about domain concepts, entity relationships, data structures, and business objects
+- **Business Rules** - Ask about decision rules, validation logic, constraints, and business policies
+- **Data Flow** - Ask about data inputs, outputs, transformations, and persistence requirements
+- **Integration Points** - Ask about external system interactions, APIs, and data exchange
+- **Error Handling** - Ask about error scenarios, validation failures, and exception handling
+- **Business Scenarios** - Ask about edge cases, alternative flows, and complex business situations
 
-### ステップ4: 計画の保存
-- `aidlc-docs/construction/plans/{unit-name}-functional-design-plan.md` として保存する
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
+### Step 4: Store Plan
+- Save as `aidlc-docs/construction/plans/{unit-name}-functional-design-plan.md`
+- Include all [Answer]: tags for user input
 
-### ステップ5: 回答の収集と分析
-- ユーザーがすべての `[Answer]:` タグを完了するのを待つ
-- **必須**: すべての応答を注意深くレビューし、曖昧な回答がないか確認する
-- **重要**: 不明瞭な応答にはフォローアップの質問を追加する - 曖昧なまま進行しない
-- 「場合による」、「多分」、「わからない」、「混合」、「中間」などの応答を探す
-- 曖昧さが検出された場合は、明確化のための質問ファイルを作成する
-- **すべての曖昧さが解決されるまで進行しない**
+### Step 5: Collect and Analyze Answers
+- Wait for user to complete all [Answer]: tags
+- **MANDATORY**: Carefully review ALL responses for vague or ambiguous answers
+- **CRITICAL**: Add follow-up questions for ANY unclear responses - do not proceed with ambiguity
+- Look for responses like "depends", "maybe", "not sure", "mix of", "somewhere between"
+- Create clarification questions file if ANY ambiguities are detected
+- **Do not proceed until ALL ambiguities are resolved**
 
-### ステップ6: 機能設計成果物の生成
-- `aidlc-docs/construction/{unit-name}/functional-design/business-logic-model.md` を作成する
-- `aidlc-docs/construction/{unit-name}/functional-design/business-rules.md` を作成する
-- `aidlc-docs/construction/{unit-name}/functional-design/domain-entities.md` を作成する
+### Step 6: Generate Functional Design Artifacts
+- Create `aidlc-docs/construction/{unit-name}/functional-design/business-logic-model.md`
+- Create `aidlc-docs/construction/{unit-name}/functional-design/business-rules.md`
+- Create `aidlc-docs/construction/{unit-name}/functional-design/domain-entities.md`
 
-### ステップ7: 完了メッセージの提示
-- この構造で完了メッセージを提示する：
-     1. **完了のお知らせ**（必須）: 常にこれで始める：
+### Step 7: Present Completion Message
+- Present completion message in this structure:
+     1. **Completion Announcement** (mandatory): Always start with this:
 
 ```markdown
-# 🔧 機能設計完了 - [unit-name]
+# 🔧 Functional Design Complete - [unit-name]
 ```
 
-     2. **AIサマリー**（任意）: 機能設計の構造化された箇条書きサマリーを提供する
-        - フォーマット: 「機能設計により、[説明]が作成されました：」
-        - 主要なビジネスロジックモデルとエンティティをリストアップ（箇条書き）
-        - 定義されたビジネスルールと検証ロジックをリストアップ
-        - ドメインモデルの構造と関係について言及する
-        - ワークフローの指示（「レビューしてください」、「お知らせください」、「次のフェーズに進みます」、「進む前に」）を含めない
-        - 事実に基づき、コンテンツに焦点を当てる
-     3. **フォーマットされたワークフローメッセージ**（必須）: 常にこの正確なフォーマットで終える：
+     2. **AI Summary** (optional): Provide structured bullet-point summary of functional design
+        - Format: "Functional design has created [description]:"
+        - List key business logic models and entities (bullet points)
+        - List business rules and validation logic defined
+        - Mention domain model structure and relationships
+        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - Keep factual and content-focused
+     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
 
 ```markdown
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/construction/[unit-name]/functional-design/` で機能設計の成果物を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the functional design artifacts at: `aidlc-docs/construction/[unit-name]/functional-design/`
 
 
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - レビューに基づいて機能設計の修正を依頼します  
-> ✅ **次のステージへ進む** - 機能設計を承認し、**[next-stage-name]**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the functional design based on your review  
+> ✅ **Continue to Next Stage** - Approve functional design and proceed to **[next-stage-name]**
 
 ---
 ```
 
-### ステップ8: 明示的な承認を待つ
-- ユーザーが機能設計を明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、設計を更新し、承認プロセスを繰り返す
+### Step 8: Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the functional design
+- Approval must be clear and unambiguous
+- If user requests changes, update the design and repeat the approval process
 
-### ステップ9: 承認の記録と進捗の更新
-- `audit.md` にタイムスタンプ付きで承認を記録する
-- ユーザーの承認応答をタイムスタンプ付きで記録する
-- `aidlc-state.md` で機能設計ステージを完了とマークする
-```
+### Step 9: Record Approval and Update Progress
+- Log approval in audit.md with timestamp
+- Record the user's approval response with timestamp
+- Mark Functional Design stage complete in aidlc-state.md

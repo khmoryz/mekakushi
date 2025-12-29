@@ -1,349 +1,349 @@
-# ビルドとテスト
+# Build and Test
 
-**目的**: すべてのユニットをビルドし、包括的なテスト戦略を実行します。
+**Purpose**: Build all units and execute comprehensive testing strategy
 
-## 前提条件
-- すべてのユニットのコード生成が完了していること
-- すべてのコード成果物が生成されていること
-- プロジェクトがビルドとテストの準備ができていること
-
----
-
-## ステップ1: テスト要件の分析
-
-プロジェクトを分析して、適切なテスト戦略を決定します：
-- **ユニットテスト**: コード生成中にユニットごとに既に生成済み
-- **統合テスト**: ユニット/サービス間の相互作用をテスト
-- **パフォーマンステスト**: 負荷、ストレス、スケーラビリティのテスト
-- **エンドツーエンドテスト**: 完全なユーザーワークフローのテスト
-- **契約テスト**: サービス間のAPI契約検証
-- **セキュリティテスト**: 脆弱性スキャン、侵入テスト
+## Prerequisites
+- Code Generation must be complete for all units
+- All code artifacts must be generated
+- Project is ready for build and testing
 
 ---
 
-## ステップ2: ビルド手順の生成
+## Step 1: Analyze Testing Requirements
 
-`aidlc-docs/construction/build-and-test/build-instructions.md` を作成します：
+Analyze the project to determine appropriate testing strategy:
+- **Unit tests**: Already generated per unit during code generation
+- **Integration tests**: Test interactions between units/services
+- **Performance tests**: Load, stress, and scalability testing
+- **End-to-end tests**: Complete user workflows
+- **Contract tests**: API contract validation between services
+- **Security tests**: Vulnerability scanning, penetration testing
+
+---
+
+## Step 2: Generate Build Instructions
+
+Create `aidlc-docs/construction/build-and-test/build-instructions.md`:
 
 ```markdown
-# ビルド手順
+# Build Instructions
 
-## 前提条件
-- **ビルドツール**: [ツール名とバージョン]
-- **依存関係**: [必要なすべての依存関係のリスト]
-- **環境変数**: [必要な環境変数のリスト]
-- **システム要件**: [OS、メモリ、ディスク容量]
+## Prerequisites
+- **Build Tool**: [Tool name and version]
+- **Dependencies**: [List all required dependencies]
+- **Environment Variables**: [List required env vars]
+- **System Requirements**: [OS, memory, disk space]
 
-## ビルドステップ
+## Build Steps
 
-### 1. 依存関係のインストール
-```bash
-[依存関係をインストールするコマンド]
-# 例: npm install, mvn dependency:resolve, pip install -r requirements.txt
-```
+### 1. Install Dependencies
+\`\`\`bash
+[Command to install dependencies]
+# Example: npm install, mvn dependency:resolve, pip install -r requirements.txt
+\`\`\`
 
-### 2. 環境の設定
-```bash
-[環境を設定するコマンド]
-# 例: 変数のエクスポート、認証情報の設定
-```
+### 2. Configure Environment
+\`\`\`bash
+[Commands to set up environment]
+# Example: export variables, configure credentials
+\`\`\`
 
-### 3. 全ユニットのビルド
-```bash
-[全ユニットをビルドするコマンド]
-# 例: mvn clean install, npm run build, brazil-build
-```
+### 3. Build All Units
+\`\`\`bash
+[Command to build all units]
+# Example: mvn clean install, npm run build, brazil-build
+\`\`\`
 
-### 4. ビルド成功の確認
-- **期待される出力**: [成功したビルド出力の説明]
-- **ビルド成果物**: [生成された成果物とその場所のリスト]
-- **一般的な警告**: [許容される警告の注記]
+### 4. Verify Build Success
+- **Expected Output**: [Describe successful build output]
+- **Build Artifacts**: [List generated artifacts and locations]
+- **Common Warnings**: [Note any acceptable warnings]
 
-## トラブルシューティング
+## Troubleshooting
 
-### 依存関係エラーでビルドが失敗する場合
-- **原因**: [一般的な原因]
-- **解決策**: [ステップバイステップの修正手順]
+### Build Fails with Dependency Errors
+- **Cause**: [Common causes]
+- **Solution**: [Step-by-step fix]
 
-### コンパイルエラーでビルドが失敗する場合
-- **原因**: [一般的な原因]
-- **解決策**: [ステップバイステップの修正手順]
+### Build Fails with Compilation Errors
+- **Cause**: [Common causes]
+- **Solution**: [Step-by-step fix]
 ```
 
 ---
 
-## ステップ3: ユニットテスト実行手順の生成
+## Step 3: Generate Unit Test Execution Instructions
 
-`aidlc-docs/construction/build-and-test/unit-test-instructions.md` を作成します：
+Create `aidlc-docs/construction/build-and-test/unit-test-instructions.md`:
 
 ```markdown
-# ユニットテストの実行
+# Unit Test Execution
 
-## ユニットテストの実行
+## Run Unit Tests
 
-### 1. 全ユニットテストの実行
-```bash
-[全ユニットテストを実行するコマンド]
-# 例: mvn test, npm test, pytest tests/unit
-```
+### 1. Execute All Unit Tests
+\`\`\`bash
+[Command to run all unit tests]
+# Example: mvn test, npm test, pytest tests/unit
+\`\`\`
 
-### 2. テスト結果の確認
-- **期待値**: [X]個のテストが成功、0個の失敗
-- **テストカバレッジ**: [期待されるカバレッジ率]
-- **テストレポートの場所**: [テストレポートへのパス]
+### 2. Review Test Results
+- **Expected**: [X] tests pass, 0 failures
+- **Test Coverage**: [Expected coverage percentage]
+- **Test Report Location**: [Path to test reports]
 
-### 3. 失敗したテストの修正
-テストが失敗した場合：
-1. [場所]でテスト出力を確認する
-2. 失敗したテストケースを特定する
-3. コードの問題を修正する
-4. すべてのテストが成功するまで再実行する
+### 3. Fix Failing Tests
+If tests fail:
+1. Review test output in [location]
+2. Identify failing test cases
+3. Fix code issues
+4. Rerun tests until all pass
 ```
 
 ---
 
-## ステップ4: 統合テスト手順の生成
+## Step 4: Generate Integration Test Instructions
 
-`aidlc-docs/construction/build-and-test/integration-test-instructions.md` を作成します：
+Create `aidlc-docs/construction/build-and-test/integration-test-instructions.md`:
 
 ```markdown
-# 統合テスト手順
+# Integration Test Instructions
 
-## 目的
-ユニット/サービス間の相互作用をテストし、それらが正しく連携して動作することを確認します。
+## Purpose
+Test interactions between units/services to ensure they work together correctly.
 
-## テストシナリオ
+## Test Scenarios
 
-### シナリオ1: [ユニットA] → [ユニットB] 統合
-- **説明**: [テスト対象]
-- **セットアップ**: [必要なテスト環境のセットアップ]
-- **テスト手順**: [ステップバイステップのテスト実行]
-- **期待される結果**: [どうなるべきか]
-- **クリーンアップ**: [テスト後のクリーンアップ方法]
+### Scenario 1: [Unit A] → [Unit B] Integration
+- **Description**: [What is being tested]
+- **Setup**: [Required test environment setup]
+- **Test Steps**: [Step-by-step test execution]
+- **Expected Results**: [What should happen]
+- **Cleanup**: [How to clean up after test]
 
-### シナリオ2: [ユニットB] → [ユニットC] 統合
-[同様の構造]
+### Scenario 2: [Unit B] → [Unit C] Integration
+[Similar structure]
 
-## 統合テスト環境のセットアップ
+## Setup Integration Test Environment
 
-### 1. 必要なサービスの開始
-```bash
-[サービスを開始するコマンド]
-# 例: docker-compose up, テストデータベースの開始
-```
+### 1. Start Required Services
+\`\`\`bash
+[Commands to start services]
+# Example: docker-compose up, start test database
+\`\`\`
 
-### 2. サービスエンドポイントの設定
-```bash
-[エンドポイントを設定するコマンド]
-# 例: export API_URL=http://localhost:8080
-```
+### 2. Configure Service Endpoints
+\`\`\`bash
+[Commands to configure endpoints]
+# Example: export API_URL=http://localhost:8080
+\`\`\`
 
-## 統合テストの実行
+## Run Integration Tests
 
-### 1. 統合テストスイートの実行
-```bash
-[統合テストを実行するコマンド]
-# 例: mvn integration-test, npm run test:integration
-```
+### 1. Execute Integration Test Suite
+\`\`\`bash
+[Command to run integration tests]
+# Example: mvn integration-test, npm run test:integration
+\`\`\`
 
-### 2. サービス相互作用の検証
-- **テストシナリオ**: [主要な統合テストシナリオのリスト]
-- **期待される結果**: [期待される結果の説明]
-- **ログの場所**: [ログを確認する場所]
+### 2. Verify Service Interactions
+- **Test Scenarios**: [List key integration test scenarios]
+- **Expected Results**: [Describe expected outcomes]
+- **Logs Location**: [Where to check logs]
 
-### 3. クリーンアップ
-```bash
-[テスト環境をクリーンアップするコマンド]
-# 例: docker-compose down, テストサービスの停止
-```
+### 3. Cleanup
+\`\`\`bash
+[Commands to clean up test environment]
+# Example: docker-compose down, stop test services
+\`\`\`
 ```
 
 ---
 
-## ステップ5: パフォーマンステスト手順の生成（該当する場合）
+## Step 5: Generate Performance Test Instructions (If Applicable)
 
-`aidlc-docs/construction/build-and-test/performance-test-instructions.md` を作成します：
+Create `aidlc-docs/construction/build-and-test/performance-test-instructions.md`:
 
 ```markdown
-# パフォーマンステスト手順
+# Performance Test Instructions
 
-## 目的
-負荷のかかった状態でシステムのパフォーマンスを検証し、要件を満たしていることを確認します。
+## Purpose
+Validate system performance under load to ensure it meets requirements.
 
-## パフォーマンス要件
-- **応答時間**: リクエストの[Y]%で[X]ミリ秒未満
-- **スループット**: [X]リクエスト/秒
-- **同時ユーザー数**: [X]人の同時ユーザーをサポート
-- **エラー率**: [X]%未満
+## Performance Requirements
+- **Response Time**: < [X]ms for [Y]% of requests
+- **Throughput**: [X] requests/second
+- **Concurrent Users**: Support [X] concurrent users
+- **Error Rate**: < [X]%
 
-## パフォーマンステスト環境のセットアップ
+## Setup Performance Test Environment
 
-### 1. テスト環境の準備
-```bash
-[パフォーマンステストを設定するコマンド]
-# 例: サービスのスケーリング、ロードバランサーの設定
-```
+### 1. Prepare Test Environment
+\`\`\`bash
+[Commands to set up performance testing]
+# Example: scale services, configure load balancers
+\`\`\`
 
-### 2. テストパラメータの設定
-- **テスト期間**: [X]分
-- **ランプアップ時間**: [X]秒
-- **仮想ユーザー数**: [X]人
+### 2. Configure Test Parameters
+- **Test Duration**: [X] minutes
+- **Ramp-up Time**: [X] seconds
+- **Virtual Users**: [X] users
 
-## パフォーマンステストの実行
+## Run Performance Tests
 
-### 1. 負荷テストの実行
-```bash
-[負荷テストを実行するコマンド]
-# 例: jmeter -n -t test.jmx, k6 run script.js
-```
+### 1. Execute Load Tests
+\`\`\`bash
+[Command to run load tests]
+# Example: jmeter -n -t test.jmx, k6 run script.js
+\`\`\`
 
-### 2. ストレステストの実行
-```bash
-[ストレステストを実行するコマンド]
-# 例: 障害が発生するまで徐々に負荷を増やす
-```
+### 2. Execute Stress Tests
+\`\`\`bash
+[Command to run stress tests]
+# Example: gradually increase load until failure
+\`\`\`
 
-### 3. パフォーマンス結果の分析
-- **応答時間**: [実際] vs [期待値]
-- **スループット**: [実際] vs [期待値]
-- **エラー率**: [実際] vs [期待値]
-- **ボトルネック**: [特定されたボトルネック]
-- **結果の場所**: [パフォーマンスレポートへのパス]
+### 3. Analyze Performance Results
+- **Response Time**: [Actual vs Expected]
+- **Throughput**: [Actual vs Expected]
+- **Error Rate**: [Actual vs Expected]
+- **Bottlenecks**: [Identified bottlenecks]
+- **Results Location**: [Path to performance reports]
 
-## パフォーマンス最適化
+## Performance Optimization
 
-パフォーマンスが要件を満たさない場合：
-1. テスト結果からボトルネックを特定する
-2. コード/クエリ/設定を最適化する
-3. 改善を検証するためにテストを再実行する
+If performance doesn't meet requirements:
+1. Identify bottlenecks from test results
+2. Optimize code/queries/configurations
+3. Rerun tests to validate improvements
 ```
 
 ---
 
-## ステップ6: 追加のテスト手順の生成（必要に応じて）
+## Step 6: Generate Additional Test Instructions (As Needed)
 
-プロジェクト要件に基づき、追加のテスト手順ファイルを生成します：
+Based on project requirements, generate additional test instruction files:
 
-### 契約テスト（マイクロサービス向け）
-`aidlc-docs/construction/build-and-test/contract-test-instructions.md` を作成：
-- サービス間のAPI契約検証
-- 消費者駆動契約テスト
-- スキーマ検証
+### Contract Tests (For Microservices)
+Create `aidlc-docs/construction/build-and-test/contract-test-instructions.md`:
+- API contract validation between services
+- Consumer-driven contract testing
+- Schema validation
 
-### セキュリティテスト
-`aidlc-docs/construction/build-and-test/security-test-instructions.md` を作成：
-- 脆弱性スキャン
-- 依存関係のセキュリティチェック
-- 認証/認可テスト
-- 入力検証テスト
+### Security Tests
+Create `aidlc-docs/construction/build-and-test/security-test-instructions.md`:
+- Vulnerability scanning
+- Dependency security checks
+- Authentication/authorization testing
+- Input validation testing
 
-### エンドツーエンドテスト
-`aidlc-docs/construction/build-and-test/e2e-test-instructions.md` を作成：
-- 完全なユーザーワークフローテスト
-- サービス横断シナリオ
-- UIテスト（該当する場合）
+### End-to-End Tests
+Create `aidlc-docs/construction/build-and-test/e2e-test-instructions.md`:
+- Complete user workflow testing
+- Cross-service scenarios
+- UI testing (if applicable)
 
 ---
 
-## ステップ7: テストサマリーの生成
+## Step 7: Generate Test Summary
 
-`aidlc-docs/construction/build-and-test/build-and-test-summary.md` を作成します：
+Create `aidlc-docs/construction/build-and-test/build-and-test-summary.md`:
 
 ```markdown
-# ビルドとテストのサマリー
+# Build and Test Summary
 
-## ビルドステータス
-- **ビルドツール**: [ツール名]
-- **ビルドステータス**: [成功/失敗]
-- **ビルド成果物**: [成果物のリスト]
-- **ビルド時間**: [期間]
+## Build Status
+- **Build Tool**: [Tool name]
+- **Build Status**: [Success/Failed]
+- **Build Artifacts**: [List artifacts]
+- **Build Time**: [Duration]
 
-## テスト実行サマリー
+## Test Execution Summary
 
-### ユニットテスト
-- **合計テスト数**: [X]
-- **成功**: [X]
-- **失敗**: [X]
-- **カバレッジ**: [X]%
-- **ステータス**: [成功/失敗]
+### Unit Tests
+- **Total Tests**: [X]
+- **Passed**: [X]
+- **Failed**: [X]
+- **Coverage**: [X]%
+- **Status**: [Pass/Fail]
 
-### 統合テスト
-- **テストシナリオ**: [X]
-- **成功**: [X]
-- **失敗**: [X]
-- **ステータス**: [成功/失敗]
+### Integration Tests
+- **Test Scenarios**: [X]
+- **Passed**: [X]
+- **Failed**: [X]
+- **Status**: [Pass/Fail]
 
-### パフォーマンステスト
-- **応答時間**: [実際] (目標: [期待値])
-- **スループット**: [実際] (目標: [期待値])
-- **エラー率**: [実際] (目標: [期待値])
-- **ステータス**: [成功/失敗]
+### Performance Tests
+- **Response Time**: [Actual] (Target: [Expected])
+- **Throughput**: [Actual] (Target: [Expected])
+- **Error Rate**: [Actual] (Target: [Expected])
+- **Status**: [Pass/Fail]
 
-### 追加テスト
-- **契約テスト**: [成功/失敗/N/A]
-- **セキュリティテスト**: [成功/失敗/N/A]
-- **E2Eテスト**: [成功/失敗/N/A]
+### Additional Tests
+- **Contract Tests**: [Pass/Fail/N/A]
+- **Security Tests**: [Pass/Fail/N/A]
+- **E2E Tests**: [Pass/Fail/N/A]
 
-## 全体ステータス
-- **ビルド**: [成功/失敗]
-- **全テスト**: [成功/失敗]
-- **運用準備完了**: [はい/いいえ]
+## Overall Status
+- **Build**: [Success/Failed]
+- **All Tests**: [Pass/Fail]
+- **Ready for Operations**: [Yes/No]
 
-## 次のステップ
-[すべて成功した場合]: 運用フェーズに進み、デプロイ計画の準備完了
-[失敗がある場合]: 失敗したテストに対処し、再ビルド
+## Next Steps
+[If all pass]: Ready to proceed to Operations phase for deployment planning
+[If failures]: Address failing tests and rebuild
 ```
 
 ---
 
-## ステップ8: 状態追跡の更新
+## Step 8: Update State Tracking
 
-`aidlc-docs/aidlc-state.md` を更新します：
-- ビルドとテストステージを完了とマークする
-- 現在のステータスを更新する
+Update `aidlc-docs/aidlc-state.md`:
+- Mark Build and Test stage as complete
+- Update current status
 
 ---
 
-## ステップ9: ユーザーへの結果提示
+## Step 9: Present Results to User
 
-包括的なメッセージを提示します：
+Present comprehensive message:
 
 ```
-"🔨 ビルドとテスト完了！
+"🔨 Build and Test Complete!
 
-**ビルドステータス**: [成功/失敗]
+**Build Status**: [Success/Failed]
 
-**テスト結果**:
-✅ ユニットテスト: [X]個成功
-✅ 統合テスト: [X]シナリオ成功
-✅ パフォーマンステスト: [ステータス]
-✅ 追加テスト: [ステータス]
+**Test Results**:
+✅ Unit Tests: [X] passed
+✅ Integration Tests: [X] scenarios passed
+✅ Performance Tests: [Status]
+✅ Additional Tests: [Status]
 
-**生成されたファイル**:
+**Generated Files**:
 1. ✅ build-instructions.md
 2. ✅ unit-test-instructions.md
 3. ✅ integration-test-instructions.md
-4. ✅ performance-test-instructions.md (該当する場合)
-5. ✅ [必要に応じた追加テストファイル]
+4. ✅ performance-test-instructions.md (if applicable)
+5. ✅ [additional test files as needed]
 6. ✅ build-and-test-summary.md
 
-`aidlc-docs/construction/build-and-test/build-and-test-summary.md` でサマリーを確認してください。
+Review the summary in aidlc-docs/construction/build-and-test/build-and-test-summary.md
 
-**デプロイ計画のために運用ステージに進む準備はできましたか？"
+**Ready to proceed to Operations stage for deployment planning?""
 ```
 
 ---
 
-## ステップ10: 対話の記録
+## Step 10: Log Interaction
 
-**必須**: `aidlc-docs/audit.md` にフェーズ完了を記録します：
+**MANDATORY**: Log the phase completion in `aidlc-docs/audit.md`:
 
 ```markdown
-## ビルドとテストステージ
-**タイムスタンプ**: [ISOタイムスタンプ]
-**ビルドステータス**: [成功/失敗]
-**テストステータス**: [成功/失敗]
-**生成されたファイル**:
+## Build and Test Stage
+**Timestamp**: [ISO timestamp]
+**Build Status**: [Success/Failed]
+**Test Status**: [Pass/Fail]
+**Files Generated**:
 - build-instructions.md
 - unit-test-instructions.md
 - integration-test-instructions.md

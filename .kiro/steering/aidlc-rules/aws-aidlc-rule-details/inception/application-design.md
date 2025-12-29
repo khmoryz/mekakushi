@@ -1,146 +1,145 @@
-# アプリケーション設計 - 詳細ステップ
+# Application Design - Detailed Steps
 
-## 目的
-**高レベルのコンポーネント特定とサービスレイヤーの設計**
+## Purpose
+**High-level component identification and service layer design**
 
-アプリケーション設計は以下に焦点を当てます：
-- 主要な機能コンポーネントとその責任の特定
-- コンポーネントインターフェースの定義（詳細なビジネスロジックではない）
-- オーケストレーションのためのサービスレイヤーの設計
-- コンポーネントの依存関係と通信パターンの確立
+Application Design focuses on:
+- Identifying main functional components and their responsibilities
+- Defining component interfaces (not detailed business logic)
+- Designing service layer for orchestration
+- Establishing component dependencies and communication patterns
 
-**注意**: 詳細なビジネスロジックの設計は、後の機能設計（ユニットごと、CONSTRUCTIONフェーズ）で行われます。
+**Note**: Detailed business logic design happens later in Functional Design (per-unit, CONSTRUCTION phase)
 
-## 前提条件
-- コンテキスト評価が完了していること
-- 要件評価が推奨される（機能的なコンテキストを提供）
-- ストーリー開発が推奨される（ユーザーストーリーが設計の決定を導く）
-- 実行計画でアプリケーション設計ステージが実行されるべきであることが示されていること
+## Prerequisites
+- Context Assessment must be complete
+- Requirements Assessment recommended (provides functional context)
+- Story Development recommended (user stories guide design decisions)
+- Execution plan must indicate Application Design stage should execute
 
-## ステップバイステップの実行
+## Step-by-Step Execution
 
-### 1. コンテキストの分析
-- `aidlc-docs/inception/requirements/requirements.md` と `aidlc-docs/inception/user-stories/stories.md` を読む
-- 主要なビジネス能力と機能領域を特定する
-- 設計のスコープと複雑さを決定する
+### 1. Analyze Context
+- Read `aidlc-docs/inception/requirements/requirements.md` and `aidlc-docs/inception/user-stories/stories.md`
+- Identify key business capabilities and functional areas
+- Determine design scope and complexity
 
-### 2. アプリケーション設計計画の作成
-- アプリケーション設計のためのチェックボックス `[]` 付きの計画を生成する
-- コンポーネント、責任、メソッド、ビジネスルール、サービスに焦点を当てる
-- 各ステップとサブステップにはチェックボックス `[]` を付ける
+### 2. Create Application Design Plan
+- Generate plan with checkboxes [] for application design
+- Focus on components, responsibilities, methods, business rules, and services
+- Each step and sub-step should have a checkbox []
 
-### 3. 計画に必須の設計成果物を含める
-- **常に**これらの必須成果物を設計計画に含める：
-  - [ ] コンポーネントの定義と高レベルの責任を記述した `components.md` を生成する
-  - [ ] メソッドのシグネチャを記述した `component-methods.md` を生成する（ビジネスルールの詳細は後の機能設計で）
-  - [ ] サービスの定義とオーケストレーションパターンを記述した `services.md` を生成する
-  - [ ] 依存関係と通信パターンを記述した `component-dependency.md` を生成する
-  - [ ] 設計の完全性と一貫性を検証する
+### 3. Include Mandatory Design Artifacts in Plan
+- **ALWAYS** include these mandatory artifacts in the design plan:
+  - [ ] Generate components.md with component definitions and high-level responsibilities
+  - [ ] Generate component-methods.md with method signatures (business rules detailed later in Functional Design)
+  - [ ] Generate services.md with service definitions and orchestration patterns
+  - [ ] Generate component-dependency.md with dependency relationships and communication patterns
+  - [ ] Validate design completeness and consistency
 
-### 4. コンテキストに応じた質問の生成
-**指示**: 要件とストーリーを分析し、この特定のアプリケーション設計にのみ関連する質問を生成します。以下のカテゴリをインスピレーションとして使用し、必須のチェックリストとしては使用しないでください。適用できない場合はカテゴリ全体をスキップしてください。
+### 4. Generate Context-Appropriate Questions
+**DIRECTIVE**: Analyze the requirements and stories to generate ONLY questions relevant to THIS specific application design. Use the categories below as inspiration, NOT as a mandatory checklist. Skip entire categories if not applicable.
 
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- このコンテキストに特有の曖昧さや欠落情報に焦点を当てる
-- 設計の決定にユーザーの入力が必要な場合にのみ質問を生成する
+- EMBED questions using [Answer]: tag format
+- Focus on ambiguities and missing information specific to this context
+- Generate questions only where user input is needed for design decisions
 
-**質問カテゴリの例**（必要に応じて適応）：
-- **コンポーネントの特定** - コンポーネントの境界や構成が不明確な場合のみ
-- **コンポーネントのメソッド** - メソッドのシグネチャに明確化が必要な場合のみ（詳細なビジネスルールは後で）
-- **サービスレイヤーの設計** - サービスのオーケストレーションや境界が曖昧な場合のみ
-- **コンポーネントの依存関係** - 通信パターンや依存関係管理が不明確な場合のみ
-- **デザインパターン** - アーキテクチャスタイルやパターンの選択にユーザーの入力が必要な場合のみ
+**Example question categories** (adapt as needed):
+- **Component Identification** - Only if component boundaries or organization is unclear
+- **Component Methods** - Only if method signatures need clarification (detailed business rules come later)
+- **Service Layer Design** - Only if service orchestration or boundaries are ambiguous
+- **Component Dependencies** - Only if communication patterns or dependency management is unclear
+- **Design Patterns** - Only if architectural style or pattern choice needs user input
 
-### 5. アプリケーション設計計画の保存
-- `aidlc-docs/inception/plans/application-design-plan.md` として保存する
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
-- 計画がすべての設計側面をカバーしていることを確認する
+### 5. Store Application Design Plan
+- Save as `aidlc-docs/inception/plans/application-design-plan.md`
+- Include all [Answer]: tags for user input
+- Ensure plan covers all design aspects
 
-### 6. ユーザー入力の要求
-- ユーザーに計画文書内の `[Answer]:` タグを直接入力するように依頼する
-- 設計決定の重要性を強調する
-- `[Answer]:` タグの入力方法について明確な指示を提供する
+### 6. Request User Input
+- Ask user to fill [Answer]: tags directly in the plan document
+- Emphasize importance of design decisions
+- Provide clear instructions on completing the [Answer]: tags
 
-### 7. 回答の収集
-- ユーザーが文書内の `[Answer]:` タグを使用してすべての質問に回答するのを待つ
-- すべての `[Answer]:` タグが完了するまで進行しない
-- `[Answer]:` タグが空白のままになっていないことを確認するために文書を確認する
+### 7. Collect Answers
+- Wait for user to provide answers to all questions using [Answer]: tags in the document
+- Do not proceed until ALL [Answer]: tags are completed
+- Review the document to ensure no [Answer]: tags are left blank
 
-### 8. 回答の分析（必須）
-進行する前に、すべてのユーザーの回答を注意深く確認する必要があります：
-- **曖昧または不明確な応答**: 「混合」、「中間」、「わからない」、「場合による」
-- **未定義の基準または用語**: 明確な定義のない概念への言及
-- **矛盾した回答**: 互いに矛盾する応答
-- **設計の詳細が欠落**: 具体的なガイダンスが欠けている回答
-- **選択肢を組み合わせた回答**: 明確な決定ルールなしに異なるアプローチを統合する応答
+### 8. ANALYZE ANSWERS (MANDATORY)
+Before proceeding, you MUST carefully review all user answers for:
+- **Vague or ambiguous responses**: "mix of", "somewhere between", "not sure", "depends"
+- **Undefined criteria or terms**: References to concepts without clear definitions
+- **Contradictory answers**: Responses that conflict with each other
+- **Missing design details**: Answers that lack specific guidance
+- **Answers that combine options**: Responses that merge different approaches without clear decision rules
 
-### 9. 必須のフォローアップ質問
-ステップ8の分析で曖昧な回答が明らかになった場合は、**必ず**以下を実行する必要があります：
-- `[Answer]:` タグを使用して計画文書に特定のフォローアップ質問を追加する
-- すべての曖昧さが解決されるまで承認に進まない
-- 必要なフォローアップの例：
-  - 「AとBの『混合』について言及しましたが、AとBをいつ使用するかを決定するための具体的な基準は何ですか？」
-  - 「AとBの『中間』と言いましたが、その正確な中間アプローチを定義できますか？」
-  - 「『わからない』と示しましたが、決定するのに役立つ追加情報はありますか？」
-  - 「『複雑さによる』と述べましたが、複雑さのレベルをどのように定義しますか？」
+### 9. MANDATORY Follow-up Questions
+If the analysis in step 8 reveals ANY ambiguous answers, you MUST:
+- Add specific follow-up questions to the plan document using [Answer]: tags
+- DO NOT proceed to approval until all ambiguities are resolved
+- Examples of required follow-ups:
+  - "You mentioned 'mix of A and B' - what specific criteria should determine when to use A vs B?"
+  - "You said 'somewhere between A and B' - can you define the exact middle ground approach?"
+  - "You indicated 'not sure' - what additional information would help you decide?"
+  - "You mentioned 'depends on complexity' - how do you define complexity levels?"
 
-### 10. アプリケーション設計成果物の生成
-- 承認された計画を実行して設計成果物を生成する
-- `aidlc-docs/inception/application-design/components.md` を作成し、以下を含める：
-  - コンポーネント名と目的
-  - コンポーネントの責任
-  - コンポーネントインターフェース
-- `aidlc-docs/inception/application-design/component-methods.md` を作成し、以下を含める：
-  - 各コンポーネントのメソッドシグネチャ
-  - 各メソッドの高レベルな目的
-  - 入出力タイプ
-  - 注意: 詳細なビジネスルールは機能設計（ユニットごと、CONSTRUCTIONフェーズ）で定義されます
-- `aidlc-docs/inception/application-design/services.md` を作成し、以下を含める：
-  - サービス定義
-  - サービスの責任
-  - サービスの相互作用とオーケストレーション
-- `aidlc-docs/inception/application-design/component-dependency.md` を作成し、以下を含める：
-  - 関係を示す依存関係マトリックス
-  - コンポーネント間の通信パターン
-  - データフロー図
+### 10. Generate Application Design Artifacts
+- Execute the approved plan to generate design artifacts
+- Create `aidlc-docs/inception/application-design/components.md` with:
+  - Component name and purpose
+  - Component responsibilities
+  - Component interfaces
+- Create `aidlc-docs/inception/application-design/component-methods.md` with:
+  - Method signatures for each component
+  - High-level purpose of each method
+  - Input/output types
+  - Note: Detailed business rules will be defined in Functional Design (per-unit, CONSTRUCTION phase)
+- Create `aidlc-docs/inception/application-design/services.md` with:
+  - Service definitions
+  - Service responsibilities
+  - Service interactions and orchestration
+- Create `aidlc-docs/inception/application-design/component-dependency.md` with:
+  - Dependency matrix showing relationships
+  - Communication patterns between components
+  - Data flow diagrams
 
-### 11. 承認の記録
-- `aidlc-docs/audit.md` にタイムスタンプ付きで承認プロンプトを記録する
-- 完全な承認プロンプトテキストを含める
-- ISO 8601タイムスタンプ形式を使用する
+### 11. Log Approval
+- Log approval prompt with timestamp in `aidlc-docs/audit.md`
+- Include complete approval prompt text
+- Use ISO 8601 timestamp format
 
-### 12. 完了メッセージの提示
+### 12. Present Completion Message
 
 ```markdown
-# 🏗️ アプリケーション設計完了
+# 🏗️ Application Design Complete
 
-[AIが生成したアプリケーション設計成果物の箇条書きサマリー]
+[AI-generated summary of application design artifacts created in bullet points]
 
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/inception/application-design/` でアプリケーション設計の成果物を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the application design artifacts at: `aidlc-docs/inception/application-design/`
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - 必要に応じてアプリケーション設計の修正を依頼します
-> [ユニット生成がスキップされる場合:]
-> 📝 **ユニット生成を追加** - （現在スキップされている）**ユニット生成**ステージを含めることを選択します
-> ✅ **承認して続行** - 設計を承認し、**[ユニット生成/CONSTRUCTIONフェーズ]**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the application design if required
+> [IF Units Generation is skipped:]
+> 📝 **Add Units Generation** - Choose to include **Units Generation** stage (currently skipped)
+> ✅ **Approve & Continue** - Approve design and proceed to **[Units Generation/CONSTRUCTION PHASE]**
 ```
 
-### 13. 明示的な承認を待つ
-- ユーザーがアプリケーション設計を明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、設計を更新し、承認プロセスを繰り返す
+### 13. Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the application design
+- Approval must be clear and unambiguous
+- If user requests changes, update the design and repeat the approval process
 
-### 14. 承認応答の記録
-- ユーザーの承認応答をタイムスタンプ付きで `aidlc-docs/audit.md` に記録する
-- 正確なユーザー応答テキストを含める
-- 承認ステータスを明確にマークする
+### 14. Record Approval Response
+- Log the user's approval response with timestamp in `aidlc-docs/audit.md`
+- Include the exact user response text
+- Mark the approval status clearly
 
-### 15. 進捗の更新
-- `aidlc-state.md` でアプリケーション設計ステージを完了とマークする
-- 「現在のステータス」セクションを更新する
-- 次のステージへの移行を準備する
-```
+### 15. Update Progress
+- Mark Application Design stage complete in `aidlc-docs/aidlc-state.md`
+- Update the "Current Status" section
+- Prepare for transition to next stage

@@ -1,190 +1,189 @@
-# AI-DLC 用語集
+# AI-DLC Terminology Glossary
 
-## コア用語
+## Core Terminology
 
-### フェーズ vs ステージ
+### Phase vs Stage
 
-**フェーズ**: AI-DLCにおける3つの高レベルライフサイクルフェーズの1つ
-- 🔵 **INCEPTIONフェーズ** - 計画とアーキテクチャ (何を、なぜ)
-- 🟢 **CONSTRUCTIONフェーズ** - 設計、実装、テスト (どのように)
-- 🟡 **OPERATIONSフェーズ** - デプロイと監視 (将来の拡張)
+**Phase**: One of the three high-level lifecycle phases in AI-DLC
+- 🔵 **INCEPTION PHASE** - Planning & Architecture (WHAT and WHY)
+- 🟢 **CONSTRUCTION PHASE** - Design, Implementation & Test (HOW)
+- 🟡 **OPERATIONS PHASE** - Deployment & Monitoring (future expansion)
 
-**ステージ**: フェーズ内の個々のワークフローアクティビティ
-- 例: コンテキスト評価ステージ、要件評価ステージ、コード計画ステージ
-- 各ステージには特定の前提条件、ステップ、成果物があります
-- ステージには常時実行(ALWAYS-EXECUTE)または条件的(CONDITIONAL)なものがあります
+**Stage**: An individual workflow activity within a phase
+- Examples: Context Assessment stage, Requirements Assessment stage, Code Planning stage
+- Each stage has specific prerequisites, steps, and outputs
+- Stages can be ALWAYS-EXECUTE or CONDITIONAL
 
-**使用例**:
-- ✅ 「CONSTRUCTIONフェーズには7つのステージが含まれます」
-- ✅ 「コード計画ステージは常に実行されます」
-- ✅ 「現在INCEPTIONフェーズで、要件評価ステージを実行中です」
-- ❌ 「要件評価フェーズ」（「ステージ」であるべき）
-- ❌ 「CONSTRUCTIONステージ」（「フェーズ」であるべき）
+**Usage Examples**:
+- ✅ "The CONSTRUCTION phase contains 7 stages"
+- ✅ "The Code Planning stage is always executed"
+- ✅ "We're in the INCEPTION phase, executing the Requirements Assessment stage"
+- ❌ "The Requirements Assessment phase" (should be "stage")
+- ❌ "The CONSTRUCTION stage" (should be "phase")
 
-## 3フェーズライフサイクル
+## Three-Phase Lifecycle
 
-### INCEPTIONフェーズ
-**目的**: 計画とアーキテクチャ決定  
-**焦点**: 何を、なぜ構築するかを決定する  
-**場所**: `inception/` ディレクトリ
+### INCEPTION PHASE
+**Purpose**: Planning and architectural decisions  
+**Focus**: Determine WHAT to build and WHY  
+**Location**: `inception/` directory
 
-**ステージ**:
-- ワークスペース検出 (常時)
-- リバースエンジニアリング (条件的 - ブラウンフィールドのみ)
-- 要件分析 (常時 - 適応的な深さ)
-- ユーザーストーリー (条件的)
-- ワークフロー計画 (常時)
-- アプリケーション設計 (条件的)
-- 設計 - ユニット計画/生成 (条件的)
+**Stages**:
+- Workspace Detection (ALWAYS)
+- Reverse Engineering (CONDITIONAL - Brownfield only)
+- Requirements Analysis (ALWAYS - Adaptive depth)
+- User Stories (CONDITIONAL)
+- Workflow Planning (ALWAYS)
+- Application Design (CONDITIONAL)
+- Design - Units Planning/Generation (CONDITIONAL)
 
-**成果物**: 要件、ユーザーストーリー、アーキテクチャ決定、ユニット定義
+**Outputs**: Requirements, user stories, architectural decisions, unit definitions
 
-### CONSTRUCTIONフェーズ
-**目的**: 詳細設計と実装  
-**焦点**: どのように構築するかを決定する  
-**場所**: `construction/` ディレクトリ
+### CONSTRUCTION PHASE
+**Purpose**: Detailed design and implementation  
+**Focus**: Determine HOW to build it  
+**Location**: `construction/` directory
 
-**ステージ**:
-- 機能設計 (条件的、ユニットごと)
-- NFR要件 (条件的、ユニットごと)
-- NFR設計 (条件的、ユニットごと)
-- インフラストラクチャ設計 (条件的、ユニットごと)
-- コード計画 (常時)
-- コード生成 (常時)
-- ビルドとテスト (常時)
+**Stages**:
+- Functional Design (CONDITIONAL, per-unit)
+- NFR Requirements (CONDITIONAL, per-unit)
+- NFR Design (CONDITIONAL, per-unit)
+- Infrastructure Design (CONDITIONAL, per-unit)
+- Code Planning (ALWAYS)
+- Code Generation (ALWAYS)
+- Build and Test (ALWAYS)
 
-**成果物**: 設計成果物、NFR実装、コード、テスト
+**Outputs**: Design artifacts, NFR implementations, code, tests
 
-### OPERATIONSフェーズ
-**目的**: デプロイと運用準備  
-**焦点**: どのようにデプロイし、実行するか  
-**場所**: `operations/` ディレクトリ
+### OPERATIONS PHASE
+**Purpose**: Deployment and operational readiness  
+**Focus**: How to DEPLOY and RUN it  
+**Location**: `operations/` directory
 
-**ステージ**:
-- オペレーション (プレースホルダー)
+**Stages**:
+- Operations (PLACEHOLDER)
 
-**成果物**: ビルド手順、デプロイガイド、監視設定、検証手順
+**Outputs**: Build instructions, deployment guides, monitoring setup, verification procedures
 
 ---
 
-## ワークフローステージ
+## Workflow Stages
 
-### 常時実行ステージ
-- **ワークスペース検出**: ワークスペースの状態とプロジェクトタイプの初期分析
-- **要件分析**: 要件の収集（複雑さに基づいて深さが変わる）
-- **ワークフロー計画**: 実行するフェーズの実行計画を作成
-- **コード計画**: コード生成のための詳細な実装計画を作成
-- **コード生成**: 計画と事前の成果物に基づいて実際のコードを生成
-- **ビルドとテスト**: すべてのユニットをビルドし、包括的なテストを実行
+### Always-Execute Stages
+- **Workspace Detection**: Initial analysis of workspace state and project type
+- **Requirements Analysis**: Gathering requirements (depth varies based on complexity)
+- **Workflow Planning**: Creating execution plan for which phases to run
+- **Code Planning**: Creating detailed implementation plans for code generation
+- **Code Generation**: Generating actual code based on plans and prior artifacts
+- **Build and Test**: Building all units and executing comprehensive testing
 
-### 条件付きステージ
-- **リバースエンジニアリング**: 既存のコードベースを分析（ブラウンフィールドプロジェクトのみ）
-- **ユーザーストーリー**: ユーザーストーリーとペルソナを作成（ストーリー計画とストーリー生成を含む）
-- **アプリケーション設計**: アプリケーションコンポーネント、メソッド、ビジネスルール、サービスを設計
-- **設計**: システムコンポーネントを設計（ユニット計画、ユニット生成、ユニットごと設計を含む）
-- **機能設計**: 技術に依存しないビジネスロジック設計（ユニットごと）
-- **NFR要件**: NFRを決定し、技術スタックを選択（ユニットごと）
-- **NFR設計**: NFRパターンと論理コンポーネントを組み込む（ユニットごと）
-- **インフラストラクチャ設計**: 実際のインフラストラクチャサービスにマッピング（ユニットごと）
+### Conditional Stages
+- **Reverse Engineering**: Analyzing existing codebase (brownfield projects only)
+- **User Stories**: Creating user stories and personas (includes Story Planning and Story Generation)
+- **Application Design**: Designing application components, methods, business rules, and services
+- **Design**: Designing system components (includes Units Planning, Units Generation, per-unit design)
+- **Functional Design**: Technology-agnostic business logic design (per-unit)
+- **NFR Requirements**: Determining NFRs and selecting tech stack (per-unit)
+- **NFR Design**: Incorporating NFR patterns and logical components (per-unit)
+- **Infrastructure Design**: Mapping to actual infrastructure services (per-unit)
 
-## アプリケーション設計用語
+## Application Design Terms
 
-- **コンポーネント**: 特定の責任を持つ機能単位
-- **メソッド**: 定義されたビジネスルールを持つコンポーネント内の関数または操作
-- **ビジネスルール**: メソッドの振る舞いと検証を規定するロジック
-- **サービス**: コンポーネント間のビジネスロジックを調整するオーケストレーションレイヤー
-- **コンポーネント依存関係**: コンポーネント間の関係と通信パターン
+- **Component**: A functional unit with specific responsibilities
+- **Method**: A function or operation within a component with defined business rules
+- **Business Rule**: Logic that governs method behavior and validation
+- **Service**: Orchestration layer that coordinates business logic across components
+- **Component Dependency**: Relationship and communication pattern between components
 
-## アーキテクチャ用語（インフラストラクチャ）
+## Architecture Terms (Infrastructure)
 
-### 作業単位 (Unit of Work)
-開発目的でユーザーストーリーを論理的にグループ化したもの。計画と分解の際に使用される用語。
+### Unit of Work
+A logical grouping of user stories for development purposes. The term used during planning and decomposition.
 
-**使用法**: 「システムを作業単位に分解する必要があります」
+**Usage**: "We need to decompose the system into units of work"
 
-### サービス (Service)
-マイクロサービスアーキテクチャにおける独立してデプロイ可能なコンポーネント。各サービスは個別の作業単位です。
+### Service
+An independently deployable component in a microservices architecture. Each service is a separate unit of work.
 
-**使用法**: 「支払いサービスはすべての支払い処理を扱います」
+**Usage**: "The Payment Service handles all payment processing"
 
-### モジュール (Module)
-単一のサービスまたはモノリス内の機能の論理的なグループ。モジュールは独立してデプロイ可能ではありません。
+### Module
+A logical grouping of functionality within a single service or monolith. Modules are not independently deployable.
 
-**使用法**: 「ユーザーサービス内の認証モジュール」
+**Usage**: "The authentication module within the User Service"
 
-### コンポーネント (Component)
-サービスまたはモジュール内の再利用可能なビルディングブロック。コンポーネントは、特定の機能を提供するクラス、関数、またはパッケージです。
+### Component
+A reusable building block within a service or module. Components are classes, functions, or packages that provide specific functionality.
 
-**使用法**: 「EmailValidatorコンポーネントはメールアドレスを検証します」
+**Usage**: "The EmailValidator component validates email addresses"
 
-## 用語ガイドライン
+## Terminology Guidelines
 
-### 各用語の使用時期
+### When to Use Each Term
 
-**作業単位 (Unit of Work)**:
-- ユニット計画およびユニット生成フェーズ中
-- システムの分解について議論する際
-- 計画文書や議論において
-- 例: 「これをどのように作業単位に分解すべきですか？」
+**Unit of Work**:
+- During Units Planning and Units Generation phases
+- When discussing system decomposition
+- In planning documents and discussions
+- Example: "How should we decompose this into units of work?"
 
-**サービス (Service)**:
-- 独立してデプロイ可能なコンポーネントを指す場合
-- マイクロサービスアーキテクチャの文脈で
-- デプロイメントとインフラストラクチャの議論において
-- 例: 「注文サービスはECSにデプロイされます」
+**Service**:
+- When referring to independently deployable components
+- In microservices architecture contexts
+- In deployment and infrastructure discussions
+- Example: "The Order Service will be deployed to ECS"
 
-**モジュール (Module)**:
-- サービス内の論理的なグループを指す場合
-- モノリスアーキテクチャの文脈で
-- 内部構成について議論する際
-- 例: 「レポートモジュールがすべてのレポートを生成します」
+**Module**:
+- When referring to logical groupings within a service
+- In monolith architecture contexts
+- When discussing internal organization
+- Example: "The reporting module generates all reports"
 
-**コンポーネント (Component)**:
-- 特定のクラス、関数、またはパッケージを指す場合
-- 設計と実装の議論において
-- 再利用可能なビルディングブロックについて議論する際
-- 例: 「DatabaseConnectionコンポーネントが接続を管理します」
+**Component**:
+- When referring to specific classes, functions, or packages
+- In design and implementation discussions
+- When discussing reusable building blocks
+- Example: "The DatabaseConnection component manages connections"
 
-## ステージ用語
+## Stage Terminology
 
-### 計画 vs 生成
-- **計画**: 実行のための質問とチェックボックス付きの計画を作成すること
-- **生成**: 計画を実行して成果物を作成すること
+### Planning vs Generation
+- **Planning**: Creating a plan with questions and checkboxes for execution
+- **Generation**: Executing the plan to create artifacts
 
-例:
-- ストーリー計画 → ストーリー生成
-- ユニット計画 → ユニット生成
-- ユニット設計計画 → ユニット設計生成
-- NFR計画 → NFR生成
-- コード計画 → コード生成
+Examples:
+- Story Planning → Story Generation
+- Units Planning → Units Generation
+- Unit Design Planning → Unit Design Generation
+- NFR Planning → NFR Generation
+- Code Planning → Code Generation
 
-### 深さレベル
-- **最小限**: 単純な変更のための迅速で集中した実行
-- **標準**: 一般的なプロジェクトのための標準的な成果物を持つ通常の深さ
-- **包括的**: 複雑/高リスクプロジェクトのためのすべての成果物を持つ完全な深さ
+### Depth Levels
+- **Minimal**: Quick, focused execution for simple changes
+- **Standard**: Normal depth with standard artifacts for typical projects
+- **Comprehensive**: Full depth with all artifacts for complex/high-risk projects
 
-## 成果物の種類
+## Artifact Types
 
-### 計画 (Plans)
-実行をガイドするチェックボックスと質問を含む文書。
-- `aidlc-docs/plans/` に配置
-- 例: `story-generation-plan.md`, `unit-of-work-plan.md`
+### Plans
+Documents with checkboxes and questions that guide execution.
+- Located in `aidlc-docs/plans/`
+- Examples: `story-generation-plan.md`, `unit-of-work-plan.md`
 
-### 成果物 (Artifacts)
-計画を実行して得られる生成された出力。
-- `aidlc-docs/` のさまざまなサブディレクトリに配置
-- 例: `requirements.md`, `stories.md`, `design.md`
+### Artifacts
+Generated outputs from executing plans.
+- Located in various `aidlc-docs/` subdirectories
+- Examples: `requirements.md`, `stories.md`, `design.md`
 
-### 状態ファイル (State Files)
-ワークフローの進捗とステータスを追跡するファイル。
-- `aidlc-state.md`: ワークフロー全体の状態
-- `audit.md`: すべての対話の完全な監査証跡
+### State Files
+Files tracking workflow progress and status.
+- `aidlc-state.md`: Overall workflow state
+- `audit.md`: Complete audit trail of all interactions
 
-## 一般的な略語
+## Common Abbreviations
 
-- **AI-DLC**: AI駆動開発ライフサイクル (AI-Driven Development Life Cycle)
-- **NFR**: 非機能要件 (Non-Functional Requirements)
-- **UOW**: 作業単位 (Unit of Work)
-- **API**: アプリケーションプログラミングインターフェース (Application Programming Interface)
-- **CDK**: クラウド開発キット (Cloud Development Kit) (AWS)
-```
+- **AI-DLC**: AI-Driven Development Life Cycle
+- **NFR**: Non-Functional Requirements
+- **UOW**: Unit of Work
+- **API**: Application Programming Interface
+- **CDK**: Cloud Development Kit (AWS)

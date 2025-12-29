@@ -76,6 +76,29 @@
             resize: none;
             outline: none;
             transition: border-color 0.2s;
+            background: transparent;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* ハイライト表示用のオーバーレイ */
+        .highlight-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 40px;
+            /* コピーボタンのスペースを除く */
+            bottom: 0;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 6px;
         }
 
         .text-panel textarea:focus {
@@ -83,7 +106,7 @@
         }
 
         .text-panel textarea:read-only {
-            background-color: #f8f8f8;
+            background-color: transparent;
             color: #666;
         }
 
@@ -126,6 +149,20 @@
             font-size: 20px;
             opacity: 0.4;
             pointer-events: none;
+        }
+
+        /* マスクされた文字列のハイライト */
+        .masked-highlight {
+            background-color: #E3F2FD;
+            /* 薄い青色 */
+            border-radius: 3px;
+            padding: 1px 2px;
+            transition: background-color 0.2s;
+        }
+
+        .masked-highlight:hover {
+            background-color: #BBDEFB;
+            /* ホバー時に少し濃い青色 */
         }
 
         /* 右側辞書パネル */
@@ -360,6 +397,7 @@
                 <div class="text-panel">
                     <h2>📝 入力テキスト</h2>
                     <div class="textarea-container">
+                        <div class="highlight-overlay" id="inputHighlight"></div>
                         <textarea id="inputText"
                             placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
                         <button class="copy-button" onclick="copyInputText()" title="入力テキストをコピー">📋</button>
@@ -376,6 +414,7 @@
                 <div class="text-panel">
                     <h2>🔒 マスキング済みテキスト</h2>
                     <div class="textarea-container">
+                        <div class="highlight-overlay" id="outputHighlight"></div>
                         <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
                         <button class="copy-button" onclick="copyOutputText()" title="マスキング済みテキストをコピー">📋</button>
                     </div>
@@ -467,6 +506,63 @@
             }
 
             outputTextArea.value = outputText;
+
+            // ハイライト表示を更新
+            updateHighlights();
+        }
+
+        // マスクされた文字列をハイライト表示する関数
+        function updateHighlights() {
+            // 入力テキストのハイライト更新
+            updateTextHighlight('inputText', 'inputHighlight');
+            // 出力テキストのハイライト更新
+            updateTextHighlight('outputText', 'outputHighlight');
+        }
+
+        // 指定されたテキストエリアのハイライトを更新
+        function updateTextHighlight(textareaId, highlightId) {
+            const textarea = document.getElementById(textareaId);
+            const highlightDiv = document.getElementById(highlightId);
+
+            if (!textarea || !highlightDiv) return;
+
+            let text = textarea.value;
+
+            // まずHTMLエスケープを行う
+            let highlightedText = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // 辞書の各エントリに対してハイライトを適用
+            for (const [key, entry] of maskingDictionary.entries()) {
+                // 元の文字列をハイライト（入力テキストの場合）
+                if (textareaId === 'inputText') {
+                    const escapedOriginal = entry.original
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    const originalRegex = new RegExp(escapeRegExp(escapedOriginal), 'gi');
+                    highlightedText = highlightedText.replace(originalRegex,
+                        `<span class="masked-highlight">${escapedOriginal}</span>`);
+                }
+
+                // マスクされた文字列をハイライト（出力テキストの場合）
+                if (textareaId === 'outputText') {
+                    const escapedMasked = entry.masked
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    const maskedRegex = new RegExp(escapeRegExp(escapedMasked), 'gi');
+                    highlightedText = highlightedText.replace(maskedRegex,
+                        `<span class="masked-highlight">${escapedMasked}</span>`);
+                }
+            }
+
+            // 改行を<br>に変換
+            highlightedText = highlightedText.replace(/\n/g, '<br>');
+
+            highlightDiv.innerHTML = highlightedText;
         }
 
         // 正規表現エスケープ関数
@@ -607,6 +703,9 @@
                     <button class="dictionary-delete" onclick="deleteDictionaryEntry('${key}')" title="削除">🗑️</button>
                 </div>
             `).join('');
+
+            // ハイライト表示を更新
+            updateHighlights();
         }
 
         // 辞書エントリを削除する関数
@@ -674,6 +773,9 @@
             // サンプルテキストを設定
             inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
             syncInputToOutput();
+
+            // 初期ハイライト表示
+            updateHighlights();
         });
 
         // キーボードショートカット

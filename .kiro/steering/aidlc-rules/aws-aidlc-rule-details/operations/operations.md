@@ -1,19 +1,19 @@
-# オペレーション
+# Operations
 
-**目的**: 将来の運用フェーズ（デプロイ、監視、メンテナンス）のためのプレースホルダー
+**Purpose**: Placeholder for future operational phases (deployment, monitoring, maintenance)
 
-**ステータス**: このフェーズは現在プレースホルダーであり、将来のバージョンで拡張される予定です。
+**Status**: This phase is currently a placeholder and will be expanded in future versions.
 
-## 将来のスコープ
+## Future Scope
 
-オペレーションフェーズには、最終的に以下が含まれる予定です：
-- デプロイ計画と実行
-- 監視とオブザーバビリティ（可観測性）の設定
-- インシデント対応手順
-- メンテナンスとサポートのワークフロー
-- 本番準備チェックリスト
+The Operations phase will eventually include:
+- Deployment planning and execution
+- Monitoring and observability setup
+- Incident response procedures
+- Maintenance and support workflows
+- Production readiness checklists
 
-## 現在の状態
+## Current State
 
-すべてのビルドとテストのアクティビティは、CONSTRUCTION（構築）フェーズに移動されました。
-AI-DLCワークフローは現在、CONSTRUCTIONフェーズのビルドとテストの後に終了します。
+All build and test activities have been moved to the CONSTRUCTION phase.
+The AI-DLC workflow currently ends after the Build and Test phase in CONSTRUCTION.

@@ -1,101 +1,100 @@
-# 過信防止ガイド
+# Overconfidence Prevention Guide
 
-## 問題提起
+## Problem Statement
 
-AI-DLCは、複雑なプロジェクトの意図表明に対しても、十分な明確化の質問をしないことで過信を示していました。これにより、適切な要件を収集する代わりに仮定が立てられていました。
+AI-DLC was exhibiting overconfidence by not asking enough clarifying questions, even for complex project intent statements. This led to assumptions being made instead of gathering proper requirements.
 
-## 根本原因分析
+## Root Cause Analysis
 
-過信の問題は、質問をスキップすることを奨励する複数のステージの指示によって引き起こされていました：
+The overconfidence issue was caused by directives in multiple stages that encouraged skipping questions:
 
-1. **機能設計**: 「適用できない場合はカテゴリ全体をスキップする」
-2. **ユーザーストーリー**: 「カテゴリをインスピレーションとして使用し、必須のチェックリストとしては使用しない」
-3. **要件分析**: 最小限の質問を奨励する同様のパターン
-4. **NFR要件**: 徹底的な分析を妨げる「～の場合のみ」という条件
+1. **Functional Design**: "Skip entire categories if not applicable"
+2. **User Stories**: "Use categories as inspiration, NOT as mandatory checklist"
+3. **Requirements Analysis**: Similar patterns encouraging minimal questioning
+4. **NFR Requirements**: "Only if" conditions that discouraged thorough analysis
 
-これらの指示は、AIに包括的な要件収集を奨励するのではなく、質問を避けるように指示していました。
+These directives were telling the AI to avoid asking questions rather than encouraging comprehensive requirements gathering.
 
-## 実装された解決策
+## Solution Implemented
 
-### 更新された質問生成の哲学
+### Updated Question Generation Philosophy
 
-**旧アプローチ**: 「絶対に必要な場合にのみ質問する」
-**新アプローチ**: 「迷った場合は質問する - 過信は質の低い結果につながる」
+**OLD APPROACH**: "Only ask questions if absolutely necessary"
+**NEW APPROACH**: "When in doubt, ask the question - overconfidence leads to poor outcomes"
 
-### 主な変更点
+### Key Changes Made
 
-#### 1. 要件分析ステージ
-- 「必要な場合のみ」から「例外的に明確でない限り常に質問を作成する」に変更
-- 包括的な評価領域（機能的、非機能的、ビジネスコンテキスト、技術コンテキスト）を追加
-- 積極的な質問アプローチを強調
+#### 1. Requirements Analysis Stage
+- Changed from "only if needed" to "ALWAYS create questions unless exceptionally clear"
+- Added comprehensive evaluation areas (functional, non-functional, business context, technical context)
+- Emphasized proactive questioning approach
 
-#### 2. ユーザーストーリーステージ
-- 「カテゴリ全体をスキップする」指示を削除
-- 評価するための包括的な質問カテゴリを追加
-- 回答分析要件を強化
-- フォローアップ質問の義務を強化
+#### 2. User Stories Stage
+- Removed "skip entire categories" directive
+- Added comprehensive question categories to evaluate
+- Enhanced answer analysis requirements
+- Strengthened follow-up question mandates
 
-#### 3. 機能設計ステージ
-- 「～の場合のみ」の条件を包括的な評価に置き換え
-- より多くの質問カテゴリ（データフロー、統合ポイント、エラーハンドリング）を追加
-- 曖昧さの検出と解決の要件を強化
+#### 3. Functional Design Stage
+- Replaced "only if" conditions with comprehensive evaluation
+- Added more question categories (data flow, integration points, error handling)
+- Strengthened ambiguity detection and resolution requirements
 
-#### 4. NFR要件ステージ
-- 基本的なNFRを超えて質問カテゴリを拡張
-- 信頼性、保守性、ユーザビリティの考慮事項を追加
-- 技術的な曖昧さに対する回答分析を強化
+#### 4. NFR Requirements Stage
+- Expanded question categories beyond basic NFRs
+- Added reliability, maintainability, and usability considerations
+- Enhanced answer analysis for technical ambiguities
 
-### 新しい指導原則
+### New Guiding Principles
 
-1. **デフォルトで質問する**: 曖昧さがある場合は、明確化の質問をする
-2. **包括的なカバレッジ**: 関連するすべてのカテゴリを評価し、領域をスキップしない
-3. **徹底的な分析**: すべてのユーザーの応答を注意深く分析し、曖昧さを探す
-4. **必須のフォローアップ**: 不明瞭な応答にはフォローアップの質問を作成する
-5. **曖昧なまま進行しない**: すべての曖昧さが解決されるまで前進しない
+1. **Default to Asking**: When there's any ambiguity, ask clarifying questions
+2. **Comprehensive Coverage**: Evaluate ALL relevant categories, don't skip areas
+3. **Thorough Analysis**: Carefully analyze ALL user responses for ambiguities
+4. **Mandatory Follow-up**: Create follow-up questions for ANY unclear responses
+5. **No Proceeding with Ambiguity**: Don't move forward until ALL ambiguities are resolved
 
-## 実装ガイドライン
+## Implementation Guidelines
 
-### 質問生成のために
-- すべての質問カテゴリを評価し、何もスキップしない
-- 明確化が品質を向上させる場所では質問をする
-- 各ステージに包括的な質問カテゴリを含める
-- 質問の除外ではなく、包含をデフォルトとする
+### For Question Generation
+- Evaluate ALL question categories, don't skip any
+- Ask questions wherever clarification would improve quality
+- Include comprehensive question categories in each stage
+- Default to inclusion rather than exclusion of questions
 
-### 回答分析のために
-- 「場合による」、「多分」、「わからない」、「混合」、「中間」などの曖昧な応答を探す
-- 未定義の用語や外部概念への参照を検出する
-- 矛盾した、または不完全な回答を特定する
-- 曖昧さがあればフォローアップの質問を作成する
+### For Answer Analysis
+- Look for vague responses: "depends", "maybe", "not sure", "mix of", "somewhere between"
+- Detect undefined terms and references to external concepts
+- Identify contradictory or incomplete answers
+- Create follow-up questions for ANY ambiguities
 
-### フォローアップ質問のために
-- 曖昧さが検出された場合、別の明確化ファイルを作成する
-- 各曖昧さを解決するために特定の質問をする
-- すべての不明瞭な応答が明確になるまで進行しない
-- 徹底的に行う - 過剰に明確化する方が、不十分に明確化するよりも良い
+### For Follow-up Questions
+- Create separate clarification files when ambiguities are detected
+- Ask specific questions to resolve each ambiguity
+- Don't proceed until ALL unclear responses are clarified
+- Be thorough - better to over-clarify than under-clarify
 
-## 品質保証
+## Quality Assurance
 
-### 注意すべき危険信号
-- 複雑なプロジェクトで質問をせずにステージが完了する
-- 曖昧または不明瞭なユーザーの応答で進行する
-- 正当な理由なく質問カテゴリ全体をスキップする
-- 明確化を求める代わりに仮定を立てる
+### Red Flags to Watch For
+- Stages completing without asking any questions on complex projects
+- Proceeding with vague or ambiguous user responses
+- Skipping entire question categories without justification
+- Making assumptions instead of asking for clarification
 
-### 成功指標
-- プロジェクトの複雑さに応じた適切な数の明確化の質問
-- 必要に応じたフォローアップを伴うユーザー応答の徹底的な分析
-- 実装に進む前の明確で曖昧さのない要件
-- 事前のより良い明確化による後のステージでの変更の必要性の減少
+### Success Indicators
+- Appropriate number of clarifying questions for project complexity
+- Thorough analysis of user responses with follow-up when needed
+- Clear, unambiguous requirements before proceeding to implementation
+- Reduced need for changes during later stages due to better upfront clarification
 
-## メンテナンス
+## Maintenance
 
-このガイドは以下の場合に参照されるべきです：
-- AI-DLCに新しいステージを追加する場合
-- 既存のステージの指示を更新する場合
-- 過信の問題についてAI-DLCのパフォーマンスをレビューする場合
-- AI-DLCの質問生成原則についてチームメンバーをトレーニングする場合
+This guide should be referenced when:
+- Adding new stages to AI-DLC
+- Updating existing stage instructions
+- Reviewing AI-DLC performance for overconfidence issues
+- Training team members on AI-DLC question generation principles
 
-## 重要なポイント
+## Key Takeaway
 
-**不正確な仮定に基づいて間違った解決策を実装するコストよりも、事前に明確化の質問をするコストの方がはるかに低い。**
-```
+**It's better to ask too many questions than to make incorrect assumptions.** The cost of asking clarifying questions upfront is far less than the cost of implementing the wrong solution based on assumptions.

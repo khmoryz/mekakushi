@@ -1,48 +1,47 @@
-# セッション継続性テンプレート
+# Session Continuity Templates
 
-## おかえりなさいプロンプトテンプレート
-ユーザーが既存のAI-DLCプロジェクトの作業を続けるために戻ってきた場合、このプロンプトを提示します：
+## Welcome Back Prompt Template
+When a user returns to continue work on an existing AI-DLC project, present this prompt:
 
 ```markdown
-**おかえりなさい！進行中のAI-DLCプロジェクトがあるようです。**
+**Welcome back! I can see you have an existing AI-DLC project in progress.**
 
-aidlc-state.mdに基づくと、現在のステータスは以下の通りです：
-- **プロジェクト**: [project-name]
-- **現在のフェーズ**: [INCEPTION/CONSTRUCTION/OPERATIONS]
-- **現在のステージ**: [ステージ名]
-- **最終完了**: [最後に完了したステップ]
-- **次のステップ**: [次に取り組むステップ]
+Based on your aidlc-state.md, here's your current status:
+- **Project**: [project-name]
+- **Current Phase**: [INCEPTION/CONSTRUCTION/OPERATIONS]
+- **Current Stage**: [Stage Name]
+- **Last Completed**: [Last completed step]
+- **Next Step**: [Next step to work on]
 
-**今日は何をしますか？**
+**What would you like to work on today?**
 
-A) 中断したところから続ける ([次のステップの説明])
-B) 以前のステージを確認する ([利用可能なステージを表示])
+A) Continue where you left off ([Next step description])
+B) Review a previous stage ([Show available stages])
 
 [Answer]: 
 ```
 
-## 必須: セッション継続性の指示
-1. **最初に常にaidlc-state.mdを読む**: 既存のプロジェクトを検出した場合
-2. **現在のステータスを解析する**: ワークフローファイルからプロンプトを埋めるために
-3. **必須: 以前のステージの成果物を読み込む**: いずれかのステージを再開する前に、以前のステージから関連するすべての成果物を自動的に読み込みます：
-   - **リバースエンジニアリング**: architecture.md, code-structure.md, api-documentation.md を読む
-   - **要件分析**: requirements.md, requirement-verification-questions.md を読む
-   - **ユーザーストーリー**: stories.md, personas.md, story-generation-plan.md を読む
-   - **アプリケーション設計**: アプリケーション設計の成果物（components.md, component-methods.md, services.md）を読む
-   - **設計（ユニット）**: unit-of-work.md, unit-of-work-dependency.md, unit-of-work-story-map.md を読む
-   - **ユニットごと設計**: functional-design.md, nfr-requirements.md, nfr-design.md, infrastructure-design.md を読む
-   - **コードステージ**: すべてのコードファイル、計画、および以前のすべての成果物を読む
-4. **ステージごとのスマートなコンテキスト読み込み**:
-   - **初期ステージ（ワークスペース検出、リバースエンジニアリング）**: ワークスペース分析を読み込む
-   - **要件/ストーリー**: リバースエンジニアリング + 要件の成果物を読み込む
-   - **設計ステージ**: 要件 + ストーリー + アーキテクチャ + 設計の成果物を読み込む
-   - **コードステージ**: すべての成果物 + 既存のコードファイルを読み込む
-5. **アーキテクチャの選択と現在のフェーズに基づいて**オプションを適応させる
-6. **一般的な説明ではなく**、具体的な次のステップを示す
-7. **継続性プロンプトを**タイムスタンプ付きでaudit.mdに記録する
-8. **コンテキストサマリー**: 成果物を読み込んだ後、ユーザーの認識のために読み込まれた内容の簡単なサマリーを提供する
-9. **質問**: 常に.mdファイルに質問を配置して、明確化やユーザーフィードバックを求めます。チャットセッションに直接多肢選択式の質問を配置しないでください。
+## MANDATORY: Session Continuity Instructions
+1. **Always read aidlc-state.md first** when detecting existing project
+2. **Parse current status** from the workflow file to populate the prompt
+3. **MANDATORY: Load Previous Stage Artifacts** - Before resuming any stage, automatically read all relevant artifacts from previous stages:
+   - **Reverse Engineering**: Read architecture.md, code-structure.md, api-documentation.md
+   - **Requirements Analysis**: Read requirements.md, requirement-verification-questions.md
+   - **User Stories**: Read stories.md, personas.md, story-generation-plan.md
+   - **Application Design**: Read application-design artifacts (components.md, component-methods.md, services.md)
+   - **Design (Units)**: Read unit-of-work.md, unit-of-work-dependency.md, unit-of-work-story-map.md
+   - **Per-Unit Design**: Read functional-design.md, nfr-requirements.md, nfr-design.md, infrastructure-design.md
+   - **Code Stages**: Read all code files, plans, AND all previous artifacts
+4. **Smart Context Loading by Stage**:
+   - **Early Stages (Workspace Detection, Reverse Engineering)**: Load workspace analysis
+   - **Requirements/Stories**: Load reverse engineering + requirements artifacts
+   - **Design Stages**: Load requirements + stories + architecture + design artifacts
+   - **Code Stages**: Load ALL artifacts + existing code files
+5. **Adapt options** based on architectural choice and current phase
+6. **Show specific next steps** rather than generic descriptions
+7. **Log the continuity prompt** in audit.md with timestamp
+8. **Context Summary**: After loading artifacts, provide brief summary of what was loaded for user awareness
+9. **Asking questions**: ALWAYS ask clarification or user feedback questions by placing them in .md files. DO NOT place the multiple-choice questions in-line in the chat session.
 
-## エラーハンドリング
-セッション再開中に成果物が見つからないか破損している場合は、回復手順のガイダンスについて[error-handling.md](error-handling.md)を参照してください。
-```
+## Error Handling
+If artifacts are missing or corrupted during session resumption, see [error-handling.md](error-handling.md) for guidance on recovery procedures. 

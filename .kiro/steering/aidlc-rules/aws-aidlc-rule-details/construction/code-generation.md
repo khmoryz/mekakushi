@@ -1,176 +1,175 @@
-# コード生成 - 詳細ステップ
+# Code Generation - Detailed Steps
 
-## 概要
-このステージでは、2つの統合されたパートを通じて、作業単位ごとにコードを生成します：
-- **パート1 - 計画**: 明示的なステップを含む詳細なコード生成計画を作成する
-- **パート2 - 生成**: 承認された計画を実行してコード、テスト、成果物を生成する
+## Overview
+This stage generates code for each unit of work through two integrated parts:
+- **Part 1 - Planning**: Create detailed code generation plan with explicit steps
+- **Part 2 - Generation**: Execute approved plan to generate code, tests, and artifacts
 
-## 前提条件
-- ユニットのユニット設計生成が完了していること
-- NFR実装（実行された場合）がユニットに対して完了していること
-- すべてのユニット設計成果物が利用可能であること
-- ユニットがコード生成の準備ができていること
-
----
-
-# パート1: 計画
-
-## ステップ1: ユニットコンテキストの分析
-- [ ] ユニット設計生成からのユニット設計成果物を読み込む
-- [ ] 割り当てられたストーリーを理解するためにユニットストーリーマップを読み込む
-- [ ] ユニットの依存関係とインターフェースを特定する
-- [ ] ユニットがコード生成の準備ができていることを検証する
-
-## ステップ2: 詳細なユニットコード生成計画の作成
-- [ ] ユニット生成のための明示的なステップを作成する：
-  - ビジネスロジック生成
-  - ビジネスロジックユニットテスト
-  - ビジネスロジックサマリー
-  - APIレイヤー生成
-  - APIレイヤーユニットテスト
-  - APIレイヤーサマリー
-  - リポジトリレイヤー生成
-  - リポジトリレイヤーユニットテスト
-  - リポジトリレイヤーサマリー
-  - データベース移行スクリプト生成（データモデルが存在する場合）
-  - ドキュメンテーション生成（APIドキュメント、README更新）
-  - デプロイメント成果物生成
-- [ ] 各ステップに連番を付ける
-- [ ] このユニットのストーリーマッピング参照を含める
-- [ ] 各ステップにチェックボックス `[]` を追加する
-
-## ステップ3: ユニット生成コンテキストの包含
-- [ ] このユニットについて、以下を含める：
-  - このユニットによって実装されるストーリー
-  - 他のユニット/サービスへの依存関係
-  - 期待されるインターフェースと契約
-  - このユニットが所有するデータベースエンティティ
-  - サービスの境界と責任
-
-## ステップ4: ユニット計画ドキュメントの作成
-- [ ] 完全な計画を `aidlc-docs/construction/plans/{unit-name}-code-generation-plan.md` として保存する
-- [ ] ステップ番号（ステップ1、ステップ2など）を含める
-- [ ] ユニットのコンテキストと依存関係を含める
-- [ ] ストーリーのトレーサビリティを含める
-- [ ] 計画がステップバイステップで実行可能であることを確認する
-- [ ] この計画がコード生成の唯一の信頼できる情報源であることを強調する
-
-## ステップ5: ユニット計画の要約
-- [ ] ユニットコード生成計画のサマリーをユーザーに提供する
-- [ ] ユニット生成アプローチを強調する
-- [ ] ステップシーケンスとストーリーカバレッジを説明する
-- [ ] ステップの総数と推定スコープを記載する
-
-## ステップ6: 承認プロンプトの記録
-- [ ] 承認を求める前に、`aidlc-docs/audit.md` にタイムスタンプ付きでプロンプトを記録する
-- [ ] 完全なユニットコード生成計画への参照を含める
-- [ ] ISO 8601タイムスタンプ形式を使用する
-
-## ステップ7: 明示的な承認を待つ
-- [ ] ユーザーがユニットコード生成計画を明示的に承認するまで進行しない
-- [ ] 承認は計画全体と生成シーケンスをカバーしなければならない
-- [ ] ユーザーが変更を要求した場合、計画を更新し、承認プロセスを繰り返す
-
-## ステップ8: 承認応答の記録
-- [ ] `aidlc-docs/audit.md` にユーザーの承認応答をタイムスタンプ付きで記録する
-- [ ] 正確なユーザー応答テキストを含める
-- [ ] 承認ステータスを明確にマークする
-
-## ステップ9: 進捗の更新
-- [ ] `aidlc-state.md` でコード計画を完了とマークする
-- [ ] 「現在のステータス」セクションを更新する
-- [ ] コード生成への移行を準備する
+## Prerequisites
+- Unit Design Generation must be complete for the unit
+- NFR Implementation (if executed) must be complete for the unit
+- All unit design artifacts must be available
+- Unit is ready for code generation
 
 ---
 
-# パート2: 生成
+# PART 1: PLANNING
 
-## ステップ10: ユニットコード生成計画の読み込み
-- [ ] `aidlc-docs/construction/plans/{unit-name}-code-generation-plan.md` から完全な計画を読み込む
-- [ ] 次の未完了のステップ（最初の `[]` チェックボックス）を特定する
-- [ ] そのステップのコンテキスト（ユニット、依存関係、ストーリー）を読み込む
+## Step 1: Analyze Unit Context
+- [ ] Read unit design artifacts from Unit Design Generation
+- [ ] Read unit story map to understand assigned stories
+- [ ] Identify unit dependencies and interfaces
+- [ ] Validate unit is ready for code generation
 
-## ステップ11: 現在のステップの実行
-- [ ] 現在のステップが記述していることを正確に実行する
-- [ ] 指定された通りにコード、テスト、またはドキュメンテーションを生成する
-- [ ] ユニットのストーリー要件に従う
-- [ ] 計画で定義された依存関係とインターフェースを尊重する
+## Step 2: Create Detailed Unit Code Generation Plan
+- [ ] Create explicit steps for unit generation:
+  - Business Logic Generation
+  - Business Logic Unit Testing
+  - Business Logic Summary
+  - API Layer Generation
+  - API Layer Unit Testing
+  - API Layer Summary
+  - Repository Layer Generation
+  - Repository Layer Unit Testing
+  - Repository Layer Summary
+  - Database Migration Scripts Generation (if data models exist)
+  - Documentation Generation (API docs, README updates)
+  - Deployment Artifacts Generation
+- [ ] Number each step sequentially
+- [ ] Include story mapping references for this unit
+- [ ] Add checkboxes [ ] for each step
 
-## ステップ12: 進捗の更新
-- [ ] 完了したステップをユニットコード生成計画で `[x]` とマークする
-- [ ] 生成が完了したら、関連するユニットストーリーを `[x]` とマークする
-- [ ] `aidlc-docs/aidlc-state.md` の現在のステータスを更新する
-- [ ] 生成されたすべての成果物を保存する
+## Step 3: Include Unit Generation Context
+- [ ] For this unit, include:
+  - Stories implemented by this unit
+  - Dependencies on other units/services
+  - Expected interfaces and contracts
+  - Database entities owned by this unit
+  - Service boundaries and responsibilities
 
-## ステップ13: 生成の続行または完了
-- [ ] さらにステップが残っている場合は、ステップ10に戻る
-- [ ] すべてのステップが完了したら、完了メッセージの提示に進む
+## Step 4: Create Unit Plan Document
+- [ ] Save complete plan as `aidlc-docs/construction/plans/{unit-name}-code-generation-plan.md`
+- [ ] Include step numbering (Step 1, Step 2, etc.)
+- [ ] Include unit context and dependencies
+- [ ] Include story traceability
+- [ ] Ensure plan is executable step-by-step
+- [ ] Emphasize that this plan is the single source of truth for Code Generation
 
-## ステップ14: 完了メッセージの提示
-- この構造で完了メッセージを提示する：
-     1. **完了のお知らせ**（必須）: 常にこれで始める：
+## Step 5: Summarize Unit Plan
+- [ ] Provide summary of the unit code generation plan to the user
+- [ ] Highlight unit generation approach
+- [ ] Explain step sequence and story coverage
+- [ ] Note total number of steps and estimated scope
+
+## Step 6: Log Approval Prompt
+- [ ] Before asking for approval, log the prompt with timestamp in `aidlc-docs/audit.md`
+- [ ] Include reference to the complete unit code generation plan
+- [ ] Use ISO 8601 timestamp format
+
+## Step 7: Wait for Explicit Approval
+- [ ] Do not proceed until the user explicitly approves the unit code generation plan
+- [ ] Approval must cover the entire plan and generation sequence
+- [ ] If user requests changes, update the plan and repeat approval process
+
+## Step 8: Record Approval Response
+- [ ] Log the user's approval response with timestamp in `aidlc-docs/audit.md`
+- [ ] Include the exact user response text
+- [ ] Mark the approval status clearly
+
+## Step 9: Update Progress
+- [ ] Mark Code Planning complete in `aidlc-state.md`
+- [ ] Update the "Current Status" section
+- [ ] Prepare for transition to Code Generation
+
+---
+
+# PART 2: GENERATION
+
+## Step 10: Load Unit Code Generation Plan
+- [ ] Read the complete plan from `aidlc-docs/construction/plans/{unit-name}-code-generation-plan.md`
+- [ ] Identify the next uncompleted step (first [ ] checkbox)
+- [ ] Load the context for that step (unit, dependencies, stories)
+
+## Step 11: Execute Current Step
+- [ ] Perform exactly what the current step describes
+- [ ] Generate code, tests, or documentation as specified
+- [ ] Follow the unit's story requirements
+- [ ] Respect dependencies and interfaces defined in the plan
+
+## Step 12: Update Progress
+- [ ] Mark the completed step as [x] in the unit code generation plan
+- [ ] Mark associated unit stories as [x] when their generation is finished
+- [ ] Update `aidlc-docs/aidlc-state.md` current status
+- [ ] Save all generated artifacts
+
+## Step 13: Continue or Complete Generation
+- [ ] If more steps remain, return to Step 10
+- [ ] If all steps complete, proceed to present completion message
+
+## Step 14: Present Completion Message
+- Present completion message in this structure:
+     1. **Completion Announcement** (mandatory): Always start with this:
 
 ```markdown
-# 💻 コード生成完了 - [unit-name]
+# 💻 Code Generation Complete - [unit-name]
 ```
 
-     2. **AIサマリー**（任意）: コード生成の構造化された箇条書きサマリーを提供する
-        - フォーマット: 「コード生成により、[説明]が作成されました：」
-        - 生成された主要なコード成果物をリストアップ（箇条書き）
-        - 作成されたテストカバレッジとドキュメンテーションをリストアップ
-        - デプロイメント成果物と設定ファイルについて言及する
-        - ワークフローの指示（「レビューしてください」、「お知らせください」、「次のフェーズに進みます」、「進む前に」）を含めない
-        - 事実に基づき、コンテンツに焦点を当てる
-     3. **フォーマットされたワークフローメッセージ**（必須）: 常にこの正確なフォーマットで終える：
+     2. **AI Summary** (optional): Provide structured bullet-point summary of code generation
+        - Format: "Code generation has created [description]:"
+        - List key code artifacts generated (bullet points)
+        - List test coverage and documentation created
+        - Mention deployment artifacts and configuration files
+        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - Keep factual and content-focused
+     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
 
 ```markdown
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/construction/[unit-name]/code/` で生成されたコードを確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the generated code at: `aidlc-docs/construction/[unit-name]/code/`
 
 
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - レビューに基づいて生成されたコードの修正を依頼します  
-> ✅ **次のステージへ進む** - コード生成を承認し、**[next-unit/Build & Test]**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the generated code based on your review  
+> ✅ **Continue to Next Stage** - Approve code generation and proceed to **[next-unit/Build & Test]**
 
 ---
 ```
 
-## ステップ15: 明示的な承認を待つ
-- ユーザーが生成されたコードを明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、コードを更新し、承認プロセスを繰り返す
+## Step 15: Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the generated code
+- Approval must be clear and unambiguous
+- If user requests changes, update the code and repeat the approval process
 
-## ステップ16: 承認の記録と進捗の更新
-- `audit.md` にタイムスタンプ付きで承認を記録する
-- ユーザーの承認応答をタイムスタンプ付きで記録する
-- このユニットのコード生成ステージを `aidlc-state.md` で完了とマークする
+## Step 16: Record Approval and Update Progress
+- Log approval in audit.md with timestamp
+- Record the user's approval response with timestamp
+- Mark Code Generation stage as complete for this unit in aidlc-state.md
 
 ---
 
-## 重要ルール
+## Critical Rules
 
-### 計画フェーズのルール
-- すべての生成活動に対して明示的で番号付きのステップを作成する
-- 計画にストーリーのトレーサビリティを含める
-- ユニットのコンテキストと依存関係を文書化する
-- 生成前にユーザーの明示的な承認を得る
+### Planning Phase Rules
+- Create explicit, numbered steps for all generation activities
+- Include story traceability in the plan
+- Document unit context and dependencies
+- Get explicit user approval before generation
 
-### 生成フェーズのルール
-- **ハードコードされたロジックなし**: ユニット計画に書かれていることだけを実行する
-- **計画に正確に従う**: ステップの順序から逸脱しない
-- **チェックボックスの更新**: 各ステップ完了直後に `[x]` とマークする
-- **ストーリーのトレーサビリティ**: 機能が実装されたらユニットストーリーを `[x]` とマークする
-- **依存関係の尊重**: ユニットの依存関係が満たされている場合にのみ実装する
+### Generation Phase Rules
+- **NO HARDCODED LOGIC**: Only execute what's written in the unit plan
+- **FOLLOW PLAN EXACTLY**: Do not deviate from the step sequence
+- **UPDATE CHECKBOXES**: Mark [x] immediately after completing each step
+- **STORY TRACEABILITY**: Mark unit stories [x] when functionality is implemented
+- **RESPECT DEPENDENCIES**: Only implement when unit dependencies are satisfied
 
-## 完了基準
-- 完全なユニットコード生成計画が作成され、承認されている
-- ユニットコード生成計画のすべてのステップが `[x]` とマークされている
-- すべてのユニットストーリーが計画に従って実装されている
-- すべてのコードとテストが生成されている（テストはビルド＆テストフェーズで実行される）
-- デプロイメント成果物が生成されている
-- 完全なユニットがビルドと検証の準備ができている
-```
+## Completion Criteria
+- Complete unit code generation plan created and approved
+- All steps in unit code generation plan marked [x]
+- All unit stories implemented according to plan
+- All code and tests generated (tests will be executed in Build & Test phase)
+- Deployment artifacts generated
+- Complete unit ready for build and verification

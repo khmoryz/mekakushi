@@ -1,206 +1,206 @@
-# ワークフロー計画
+# Workflow Planning
 
-**目的**: 実行するフェーズを決定し、包括的な実行計画を作成します。
+**Purpose**: Determine which phases to execute and create comprehensive execution plan
 
-**常時実行**: このフェーズは、要件とスコープを理解した後に常に実行されます。
+**Always Execute**: This phase always runs after understanding requirements and scope
 
-## ステップ1: すべての事前コンテキストの読み込み
+## Step 1: Load All Prior Context
 
-### 1.1 リバースエンジニアリング成果物の読み込み（ブラウンフィールドの場合）
+### 1.1 Load Reverse Engineering Artifacts (if brownfield)
 - architecture.md
 - component-inventory.md
 - technology-stack.md
 - dependencies.md
 
-### 1.2 要件分析の読み込み
-- requirements.md（意図分析を含む）
-- requirement-verification-questions.md（回答付き）
+### 1.2 Load Requirements Analysis
+- requirements.md (includes intent analysis)
+- requirement-verification-questions.md (with answers)
 
-### 1.3 ユーザーストーリーの読み込み（実行された場合）
+### 1.3 Load User Stories (if executed)
 - stories.md
 - personas.md
 
-## ステップ2: 詳細なスコープと影響分析
+## Step 2: Detailed Scope and Impact Analysis
 
-**完全なコンテキスト（要件＋ストーリー）が得られたので、詳細な分析を実行します：**
+**Now that we have complete context (requirements + stories), perform detailed analysis:**
 
-### 2.1 変換スコープの検出（ブラウンフィールドのみ）
+### 2.1 Transformation Scope Detection (Brownfield Only)
 
-**ブラウンフィールドプロジェクトの場合**、変換スコープを分析します：
+**IF brownfield project**, analyze transformation scope:
 
-#### アーキテクチャ変換
-- **単一コンポーネントの変更** vs **アーキテクチャ変換**
-- **インフラストラクチャの変更** vs **アプリケーションの変更**
-- **デプロイメントモデルの変更**（Lambda→コンテナ、EC2→サーバーレスなど）
+#### Architectural Transformation
+- **Single component change** vs **architectural transformation**
+- **Infrastructure changes** vs **application changes**
+- **Deployment model changes** (Lambda→Container, EC2→Serverless, etc.)
 
-#### 関連コンポーネントの特定
-変換のために、以下を特定します：
-- 更新が必要な**インフラストラクチャコード**
-- 変更が必要な**CDKスタック**
-- **API Gateway** の設定
-- **ロードバランサー**の要件
-- 必要な**ネットワーキング**の変更
-- **監視/ロギング**の適応
+#### Related Component Identification
+For transformations, identify:
+- **Infrastructure code** that needs updates
+- **CDK stacks** requiring changes
+- **API Gateway** configurations
+- **Load balancer** requirements
+- **Networking** changes needed
+- **Monitoring/logging** adaptations
 
-#### パッケージ横断的な影響
-- 更新が必要な**CDKインフラストラクチャ**パッケージ
-- バージョン更新が必要な**共有モデル**
-- エンドポイント変更が必要な**クライアントライブラリ**
-- 新しいテストシナリオが必要な**テストパッケージ**
+#### Cross-Package Impact
+- **CDK infrastructure** packages requiring updates
+- **Shared models** needing version updates
+- **Client libraries** requiring endpoint changes
+- **Test packages** needing new test scenarios
 
-### 2.2 変更影響評価
+### 2.2 Change Impact Assessment
 
-#### 影響領域
-1. **ユーザー向けの変更**: これはユーザーエクスペリエンスに影響しますか？
-2. **構造的な変更**: これはシステムアーキテクチャを変更しますか？
-3. **データモデルの変更**: これはデータベーススキーマやデータ構造に影響しますか？
-4. **APIの変更**: これはインターフェースや契約に影響しますか？
-5. **NFRへの影響**: これはパフォーマンス、セキュリティ、またはスケーラビリティに影響しますか？
+#### Impact Areas
+1. **User-facing changes**: Does this affect user experience?
+2. **Structural changes**: Does this change system architecture?
+3. **Data model changes**: Does this affect database schemas or data structures?
+4. **API changes**: Does this affect interfaces or contracts?
+5. **NFR impact**: Does this affect performance, security, or scalability?
 
-#### アプリケーション層への影響（該当する場合）
-- **コード変更**: 新しいエントリーポイント、アダプター、設定
-- **依存関係**: 新しいライブラリ、フレームワークの変更
-- **設定**: 環境変数、設定ファイル
-- **テスト**: ユニットテスト、統合テスト
+#### Application Layer Impact (if applicable)
+- **Code changes**: New entry points, adapters, configurations
+- **Dependencies**: New libraries, framework changes
+- **Configuration**: Environment variables, config files
+- **Testing**: Unit tests, integration tests
 
-#### インフラストラクチャ層への影響（該当する場合）
-- **デプロイメントモデル**: Lambda→ECS、EC2→Fargateなど
-- **ネットワーキング**: VPC、セキュリティグループ、ロードバランサー
-- **ストレージ**: 永続ボリューム、共有ストレージ
-- **スケーリング**: 自動スケーリングポリシー、キャパシティプランニング
+#### Infrastructure Layer Impact (if applicable)
+- **Deployment model**: Lambda→ECS, EC2→Fargate, etc.
+- **Networking**: VPC, security groups, load balancers
+- **Storage**: Persistent volumes, shared storage
+- **Scaling**: Auto-scaling policies, capacity planning
 
-#### 運用層への影響（該当する場合）
-- **監視**: CloudWatch、カスタムメトリクス、ダッシュボード
-- **ロギング**: ログ集約、構造化ロギング
-- **アラート**: アラーム設定、通知チャネル
-- **デプロイメント**: CI/CDパイプラインの変更、ロールバック戦略
+#### Operations Layer Impact (if applicable)
+- **Monitoring**: CloudWatch, custom metrics, dashboards
+- **Logging**: Log aggregation, structured logging
+- **Alerting**: Alarm configurations, notification channels
+- **Deployment**: CI/CD pipeline changes, rollback strategies
 
-### 2.3 コンポーネント関係マッピング（ブラウンフィールドのみ）
+### 2.3 Component Relationship Mapping (Brownfield Only)
 
-**ブラウンフィールドプロジェクトの場合**、コンポーネント依存グラフを作成します：
+**IF brownfield project**, create component dependency graph:
 
 ```markdown
-## コンポーネント関係
-- **主要コンポーネント**: [変更されるパッケージ]
-- **インフラストラクチャコンポーネント**: [CDK/Terraformパッケージ]
-- **共有コンポーネント**: [モデル、ユーティリティ、クライアント]
-- **依存コンポーネント**: [このコンポーネントを呼び出すサービス]
-- **サポートコンポーネント**: [監視、ロギング、デプロイメント]
+## Component Relationships
+- **Primary Component**: [Package being changed]
+- **Infrastructure Components**: [CDK/Terraform packages]
+- **Shared Components**: [Models, utilities, clients]
+- **Dependent Components**: [Services that call this component]
+- **Supporting Components**: [Monitoring, logging, deployment]
 ```
 
-各関連コンポーネントについて：
-- **変更タイプ**: メジャー、マイナー、設定のみ
-- **変更理由**: 直接依存、デプロイメントモデル、ネットワーキング
-- **変更優先度**: クリティカル、重要、任意
+For each related component:
+- **Change Type**: Major, Minor, Configuration-only
+- **Change Reason**: Direct dependency, deployment model, networking
+- **Change Priority**: Critical, Important, Optional
 
-### 2.4 リスク評価
+### 2.4 Risk Assessment
 
-リスクレベルを評価します：
-1. **低**: 隔離された変更、簡単なロールバック、よく理解されている
-2. **中**: 複数のコンポーネント、中程度のロールバック、いくつかの未知数
-3. **高**: システム全体への影響、複雑なロールバック、重大な未知数
-4. **クリティカル**: 本番環境で重要、困難なロールバック、高い不確実性
+Evaluate risk level:
+1. **Low**: Isolated change, easy rollback, well-understood
+2. **Medium**: Multiple components, moderate rollback, some unknowns
+3. **High**: System-wide impact, complex rollback, significant unknowns
+4. **Critical**: Production-critical, difficult rollback, high uncertainty
 
-## ステップ3: フェーズ決定
+## Step 3: Phase Determination
 
-### 3.1 ユーザーストーリー - 実行済みかスキップか？
-**実行済み**: 次の決定へ
-**未実行 - 実行条件**:
-- 複数のユーザーペルソナ
-- ユーザーエクスペリエンスへの影響
-- 受け入れ基準が必要
-- チームの協力が必要
+### 3.1 User Stories - Already Executed or Skip?
+**Already executed**: Move to next determination
+**Not executed - Execute IF**:
+- Multiple user personas
+- User experience impact
+- Acceptance criteria needed
+- Team collaboration required
 
-**スキップ条件**:
-- 内部リファクタリング
-- 明確な再現手順があるバグ修正
-- 技術的負債の削減
-- インフラストラクチャの変更
+**Skip IF**:
+- Internal refactoring
+- Bug fix with clear reproduction
+- Technical debt reduction
+- Infrastructure changes
 
-### 3.2 アプリケーション設計 - 実行条件:
-- 新しいコンポーネントやサービスが必要
-- コンポーネントのメソッドとビジネスルールの定義が必要
-- サービスレイヤーの設計が必要
-- コンポーネントの依存関係の明確化が必要
+### 3.2 Application Design - Execute IF:
+- New components or services needed
+- Component methods and business rules need definition
+- Service layer design required
+- Component dependencies need clarification
 
-**スキップ条件**:
-- 既存のコンポーネント境界内での変更
-- 新しいコンポーネントやメソッドがない
-- 純粋な実装の変更
+**Skip IF**:
+- Changes within existing component boundaries
+- No new components or methods
+- Pure implementation changes
 
-### 3.3 設計（ユニット計画/生成） - 実行条件:
-- 新しいデータモデルやスキーマ
-- APIの変更または新しいエンドポイント
-- 複雑なアルゴリズムやビジネスロジック
-- 状態管理の変更
-- 複数のパッケージで変更が必要
-- Infrastructure-as-Codeの更新が必要
+### 3.3 Design (Units Planning/Generation) - Execute IF:
+- New data models or schemas
+- API changes or new endpoints
+- Complex algorithms or business logic
+- State management changes
+- Multiple packages require changes
+- Infrastructure-as-code updates needed
 
-**スキップ条件**:
-- 単純なロジックの変更
-- UIのみの変更
-- 設定の更新
-- 単純な実装
+**Skip IF**:
+- Simple logic changes
+- UI-only changes
+- Configuration updates
+- Straightforward implementations
 
-### 3.4 NFR実装 - 実行条件:
-- パフォーマンス要件
-- セキュリティの考慮事項
-- スケーラビリティの懸念
-- 監視/オブザーバビリティが必要
+### 3.4 NFR Implementation - Execute IF:
+- Performance requirements
+- Security considerations
+- Scalability concerns
+- Monitoring/observability needed
 
-**スキップ条件**:
-- 既存のNFR設定で十分
-- 新しいNFR要件がない
-- NFRへの影響がない単純な変更
+**Skip IF**:
+- Existing NFR setup sufficient
+- No new NFR requirements
+- Simple changes with no NFR impact
 
-## ステップ4: 適応的な詳細度の注記
+## Step 4: Note Adaptive Detail
 
-**適応的な詳細度の説明については `[depth-levels.md](../common/depth-levels.md)` を参照してください**
+**See [depth-levels.md](../common/depth-levels.md) for adaptive depth explanation**
 
-実行される各ステージについて：
-- 定義されたすべての成果物が作成されます
-- 成果物内の詳細レベルは問題の複雑さに適応します
-- モデルは問題の特性に基づいて適切な詳細度を決定します
+For each stage that will execute:
+- All defined artifacts will be created
+- Detail level within artifacts adapts to problem complexity
+- Model determines appropriate detail based on problem characteristics
 
-## ステップ5: マルチモジュール調整分析（ブラウンフィールドのみ）
+## Step 5: Multi-Module Coordination Analysis (Brownfield Only)
 
-**複数のモジュール/パッケージを持つブラウンフィールドの場合**、依存関係を分析し、最適な更新戦略を決定します：
+**IF brownfield with multiple modules/packages**, analyze dependencies and determine optimal update strategy:
 
-### 5.1 モジュール依存関係の分析
-- ビルドシステムの依存関係と依存マニフェストを調査します
-- ビルド時と実行時の依存関係を特定します
-- モジュール間のAPI契約と共有インターフェースをマッピングします
+### 5.1 Analyze Module Dependencies
+- Examine build system dependencies and dependency manifests
+- Identify build-time vs runtime dependencies
+- Map API contracts and shared interfaces between modules
 
-### 5.2 更新戦略の決定
-依存関係分析に基づき、以下を決定します：
-- **更新順序**: 依存関係のために最初に更新する必要があるモジュール
-- **並列化の機会**: 同時に更新できるモジュール
-- **調整要件**: バージョンの互換性、API契約、デプロイ順序
-- **テスト戦略**: モジュールごと vs 統合テストアプローチ
-- **ロールバック戦略**: シーケンス途中で障害が発生した場合の回復計画
+### 5.2 Determine Update Strategy
+Based on dependency analysis, decide:
+- **Update sequence**: Which modules must be updated first due to dependencies
+- **Parallelization opportunities**: Which modules can be updated simultaneously
+- **Coordination requirements**: Version compatibility, API contracts, deployment order
+- **Testing strategy**: Per-module vs integrated testing approach
+- **Rollback strategy**: Recovery plan if mid-sequence failures occur
 
-### 5.3 調整計画の文書化
+### 5.3 Document Coordination Plan
 ```markdown
-## モジュール更新戦略
-- **更新アプローチ**: [シーケンシャル/パラレル/ハイブリッド]
-- **クリティカルパス**: [他の更新をブロックするモジュール]
-- **調整ポイント**: [共有API、インフラストラクチャ、データ契約]
-- **テストチェックポイント**: [統合を検証するタイミング]
+## Module Update Strategy
+- **Update Approach**: [Sequential/Parallel/Hybrid]
+- **Critical Path**: [Modules that block other updates]
+- **Coordination Points**: [Shared APIs, infrastructure, data contracts]
+- **Testing Checkpoints**: [When to validate integration]
 ```
 
-影響を受ける各モジュールについて特定します：
-- **更新優先度**: 最初に更新必須 vs 後で更新可能
-- **依存関係の制約**: 何に依存しているか、何がそれに依存しているか
-- **変更範囲**: メジャー（破壊的）、マイナー（互換性あり）、パッチ（修正）
+Identify for each affected module:
+- **Update priority**: Must-update-first vs can-update-later
+- **Dependency constraints**: What it depends on, what depends on it
+- **Change scope**: Major (breaking), Minor (compatible), Patch (fixes)
 
-## ステップ6: ワークフローの視覚化の生成
+## Step 6: Generate Workflow Visualization
 
-以下を示すMermaidフローチャートを作成します：
-- すべてのフェーズを順に表示
-- 各条件付きフェーズの実行またはスキップの決定
-- 各フェーズの状態に応じた適切なスタイリング
+Create Mermaid flowchart showing:
+- All phases in sequence
+- EXECUTE or SKIP decision for each conditional phase
+- Proper styling for each phase state
 
-**スタイリングルール**（フローチャートの後に追加）：
+**Styling rules** (add after flowchart):
 ```
 style WD fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
 style CP fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
@@ -213,71 +213,71 @@ style End fill:#CE93D8,stroke:#6A1B9A,stroke-width:3px,color:#000
 linkStyle default stroke:#333,stroke-width:2px
 ```
 
-**スタイルガイドライン**:
-- 完了/常時実行: `fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff` (マテリアルグリーン、白文字)
-- 条件付き実行: `fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000` (マテリアルオレンジ、黒文字)
-- 条件付きスキップ: `fill:#BDBDBD,stroke:#424242,stroke-width:2px,stroke-dasharray: 5 5,color:#000` (マテリアルグレー、黒文字)
-- 開始/終了: `fill:#CE93D8,stroke:#6A1B9A,stroke-width:3px,color:#000` (マテリアルパープル、黒文字)
-- フェーズコンテナ: 明るいマテリアルカラーを使用 (INCEPTION: #BBDEFB, CONSTRUCTION: #C8E6C9, OPERATIONS: #FFF59D)
+**Style Guidelines**:
+- Completed/Always execute: `fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff` (Material Green with white text)
+- Conditional EXECUTE: `fill:#FFA726,stroke:#E65100,stroke-width:3px,stroke-dasharray: 5 5,color:#000` (Material Orange with black text)
+- Conditional SKIP: `fill:#BDBDBD,stroke:#424242,stroke-width:2px,stroke-dasharray: 5 5,color:#000` (Material Gray with black text)
+- Start/End: `fill:#CE93D8,stroke:#6A1B9A,stroke-width:3px,color:#000` (Material Purple with black text)
+- Phase containers: Use lighter Material colors (INCEPTION: #BBDEFB, CONSTRUCTION: #C8E6C9, OPERATIONS: #FFF59D)
 
-## ステップ7: 実行計画ドキュメントの作成
+## Step 7: Create Execution Plan Document
 
-`aidlc-docs/inception/plans/execution-plan.md` を作成します：
+Create `aidlc-docs/inception/plans/execution-plan.md`:
 
 ```markdown
-# 実行計画
+# Execution Plan
 
-## 詳細分析サマリー
+## Detailed Analysis Summary
 
-### 変換スコープ（ブラウンフィールドのみ）
-- **変換タイプ**: [単一コンポーネント/アーキテクチャ/インフラストラクチャ]
-- **主な変更**: [説明]
-- **関連コンポーネント**: [リスト]
+### Transformation Scope (Brownfield Only)
+- **Transformation Type**: [Single component/Architectural/Infrastructure]
+- **Primary Changes**: [Description]
+- **Related Components**: [List]
 
-### 変更影響評価
-- **ユーザー向けの変更**: [はい/いいえ - 説明]
-- **構造的な変更**: [はい/いいえ - 説明]
-- **データモデルの変更**: [はい/いいえ - 説明]
-- **APIの変更**: [はい/いいえ - 説明]
-- **NFRへの影響**: [はい/いいえ - 説明]
+### Change Impact Assessment
+- **User-facing changes**: [Yes/No - Description]
+- **Structural changes**: [Yes/No - Description]
+- **Data model changes**: [Yes/No - Description]
+- **API changes**: [Yes/No - Description]
+- **NFR impact**: [Yes/No - Description]
 
-### コンポーネント関係（ブラウンフィールドのみ）
-[コンポーネント依存グラフ]
+### Component Relationships (Brownfield Only)
+[Component dependency graph]
 
-### リスク評価
-- **リスクレベル**: [低/中/高/クリティカル]
-- **ロールバックの複雑さ**: [容易/中程度/困難]
-- **テストの複雑さ**: [単純/中程度/複雑]
+### Risk Assessment
+- **Risk Level**: [Low/Medium/High/Critical]
+- **Rollback Complexity**: [Easy/Moderate/Difficult]
+- **Testing Complexity**: [Simple/Moderate/Complex]
 
-## ワークフローの視覚化
+## Workflow Visualization
 
 ```mermaid
 flowchart TD
-    Start(["ユーザーリクエスト"])
+    Start(["User Request"])
     
-    subgraph INCEPTION["🔵 INCEPTIONフェーズ"]
-        WD["ワークスペース検出<br/><b>ステータス</b>"]
-        RE["リバースエンジニアリング<br/><b>ステータス</b>"]
-        RA["要件分析<br/><b>ステータス</b>"]
-        US["ユーザーストーリー<br/><b>ステータス</b>"]
-        WP["ワークフロー計画<br/><b>ステータス</b>"]
-        AD["アプリケーション設計<br/><b>ステータス</b>"]
-        UP["ユニット計画<br/><b>ステータス</b>"]
-        UG["ユニット生成<br/><b>ステータス</b>"]
+    subgraph INCEPTION["🔵 INCEPTION PHASE"]
+        WD["Workspace Detection<br/><b>STATUS</b>"]
+        RE["Reverse Engineering<br/><b>STATUS</b>"]
+        RA["Requirements Analysis<br/><b>STATUS</b>"]
+        US["User Stories<br/><b>STATUS</b>"]
+        WP["Workflow Planning<br/><b>STATUS</b>"]
+        AD["Application Design<br/><b>STATUS</b>"]
+        UP["Units Planning<br/><b>STATUS</b>"]
+        UG["Units Generation<br/><b>STATUS</b>"]
     end
     
-    subgraph CONSTRUCTION["🟢 CONSTRUCTIONフェーズ"]
-        FD["機能設計<br/><b>ステータス</b>"]
-        NFRA["NFR要件<br/><b>ステータス</b>"]
-        NFRD["NFR設計<br/><b>ステータス</b>"]
-        ID["インフラストラクチャ設計<br/><b>ステータス</b>"]
-        CP["コード計画<br/><b>実行</b>"]
-        CG["コード生成<br/><b>実行</b>"]
-        BT["ビルドとテスト<br/><b>実行</b>"]
+    subgraph CONSTRUCTION["🟢 CONSTRUCTION PHASE"]
+        FD["Functional Design<br/><b>STATUS</b>"]
+        NFRA["NFR Requirements<br/><b>STATUS</b>"]
+        NFRD["NFR Design<br/><b>STATUS</b>"]
+        ID["Infrastructure Design<br/><b>STATUS</b>"]
+        CP["Code Planning<br/><b>EXECUTE</b>"]
+        CG["Code Generation<br/><b>EXECUTE</b>"]
+        BT["Build and Test<br/><b>EXECUTE</b>"]
     end
     
-    subgraph OPERATIONS["🟡 OPERATIONSフェーズ"]
-        OPS["オペレーション<br/><b>プレースホルダー</b>"]
+    subgraph OPERATIONS["🟡 OPERATIONS PHASE"]
+        OPS["Operations<br/><b>PLACEHOLDER</b>"]
     end
     
     Start --> WD
@@ -286,194 +286,194 @@ flowchart TD
     WP --> CP
     CP --> CG
     CG --> BT
-    BT --> End(["完了"])
+    BT --> End(["Complete"])
     
-    %% ステータスを適宜 COMPLETED, SKIP, EXECUTE に置き換える
-    %% ステータスに基づいてスタイリングを適用する
+    %% Replace STATUS with COMPLETED, SKIP, EXECUTE as appropriate
+    %% Apply styling based on status
 ```
 
-**注意**: ステータスのプレースホルダーを実際のフェーズの状態（COMPLETED/SKIP/EXECUTE）に置き換え、適切なスタイリングを適用してください。
+**Note**: Replace STATUS placeholders with actual phase status (COMPLETED/SKIP/EXECUTE) and apply appropriate styling
 
-## 実行するフェーズ
+## Phases to Execute
 
-### 🔵 INCEPTIONフェーズ
-- [x] ワークスペース検出 (完了)
-- [x] リバースエンジニアリング (完了/スキップ)
-- [x] 要件詳細化 (完了)
-- [x] ユーザーストーリー (完了/スキップ)
-- [x] 実行計画 (進行中)
-- [ ] アプリケーション設計 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
-- [ ] ユニット計画 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
-- [ ] ユニット生成 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
+### 🔵 INCEPTION PHASE
+- [x] Workspace Detection (COMPLETED)
+- [x] Reverse Engineering (COMPLETED/SKIPPED)
+- [x] Requirements Elaboration (COMPLETED)
+- [x] User Stories (COMPLETED/SKIPPED)
+- [x] Execution Plan (IN PROGRESS)
+- [ ] Application Design - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
+- [ ] Units Planning - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
+- [ ] Units Generation - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
 
-### 🟢 CONSTRUCTIONフェーズ
-- [ ] 機能設計 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
-- [ ] NFR要件 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
-- [ ] NFR設計 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
-- [ ] インフラストラクチャ設計 - [実行/スキップ]
-  - **根拠**: [実行またはスキップする理由]
-- [ ] コード計画 - 実行 (常時)
-  - **根拠**: 実装アプローチが必要
-- [ ] コード生成 - 実行 (常時)
-  - **根拠**: コード実装が必要
-- [ ] ビルドとテスト - 実行 (常時)
-  - **根拠**: ビルド、テスト、検証が必要
+### 🟢 CONSTRUCTION PHASE
+- [ ] Functional Design - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
+- [ ] NFR Requirements - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
+- [ ] NFR Design - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
+- [ ] Infrastructure Design - [EXECUTE/SKIP]
+  - **Rationale**: [Why executing or skipping]
+- [ ] Code Planning - EXECUTE (ALWAYS)
+  - **Rationale**: Implementation approach needed
+- [ ] Code Generation - EXECUTE (ALWAYS)
+  - **Rationale**: Code implementation needed
+- [ ] Build and Test - EXECUTE (ALWAYS)
+  - **Rationale**: Build, test, and verification needed
 
-### 🟡 OPERATIONSフェーズ
-- [ ] オペレーション - プレースホルダー
-  - **根拠**: 将来のデプロイメントと監視ワークフロー
+### 🟡 OPERATIONS PHASE
+- [ ] Operations - PLACEHOLDER
+  - **Rationale**: Future deployment and monitoring workflows
 
-## パッケージ変更シーケンス（ブラウンフィールドのみ）
-[該当する場合、依存関係とともにパッケージ更新シーケンスをリストアップ]
+## Package Change Sequence (Brownfield Only)
+[If applicable, list package update sequence with dependencies]
 
-## 推定タイムライン
-- **合計フェーズ数**: [数]
-- **推定期間**: [時間見積もり]
+## Estimated Timeline
+- **Total Phases**: [Number]
+- **Estimated Duration**: [Time estimate]
 
-## 成功基準
-- **主要目標**: [主目的]
-- **主要成果物**: [リスト]
-- **品質ゲート**: [リスト]
+## Success Criteria
+- **Primary Goal**: [Main objective]
+- **Key Deliverables**: [List]
+- **Quality Gates**: [List]
 
-[ブラウンフィールドの場合]
-- **統合テスト**: すべてのコンポーネントが連携して動作する
-- **運用準備**: 監視、ロギング、アラートが動作する
+[IF brownfield]
+- **Integration Testing**: All components working together
+- **Operational Readiness**: Monitoring, logging, alerting working
 ```
 
-## ステップ8: 状態追跡の初期化
+## Step 8: Initialize State Tracking
 
-`aidlc-docs/aidlc-state.md` を更新します：
+Update `aidlc-docs/aidlc-state.md`:
 
 ```markdown
-# AI-DLC 状態追跡
+# AI-DLC State Tracking
 
-## プロジェクト情報
-- **プロジェクトタイプ**: [グリーンフィールド/ブラウンフィールド]
-- **開始日**: [ISOタイムスタンプ]
-- **現在のステージ**: INCEPTION - ワークフロー計画
+## Project Information
+- **Project Type**: [Greenfield/Brownfield]
+- **Start Date**: [ISO timestamp]
+- **Current Stage**: INCEPTION - Workflow Planning
 
-## 実行計画サマリー
-- **合計ステージ数**: [数]
-- **実行するステージ**: [リスト]
-- **スキップするステージ**: [理由付きリスト]
+## Execution Plan Summary
+- **Total Stages**: [Number]
+- **Stages to Execute**: [List]
+- **Stages to Skip**: [List with reasons]
 
-## ステージの進捗
+## Stage Progress
 
-### 🔵 INCEPTIONフェーズ
-- [x] ワークスペース検出
-- [x] リバースエンジニアリング（該当する場合）
-- [x] 要件分析
-- [x] ユーザーストーリー（該当する場合）
-- [x] ワークフロー計画
-- [ ] アプリケーション設計 - [実行/スキップ]
-- [ ] ユニット計画 - [実行/スキップ]
-- [ ] ユニット生成 - [実行/スキップ]
+### 🔵 INCEPTION PHASE
+- [x] Workspace Detection
+- [x] Reverse Engineering (if applicable)
+- [x] Requirements Analysis
+- [x] User Stories (if applicable)
+- [x] Workflow Planning
+- [ ] Application Design - [EXECUTE/SKIP]
+- [ ] Units Planning - [EXECUTE/SKIP]
+- [ ] Units Generation - [EXECUTE/SKIP]
 
-### 🟢 CONSTRUCTIONフェーズ
-- [ ] 機能設計 - [実行/スキップ]
-- [ ] NFR要件 - [実行/スキップ]
-- [ ] NFR設計 - [実行/スキップ]
-- [ ] インフラストラクチャ設計 - [実行/スキップ]
-- [ ] コード計画 - 実行
-- [ ] コード生成 - 実行
-- [ ] ビルドとテスト - 実行
+### 🟢 CONSTRUCTION PHASE
+- [ ] Functional Design - [EXECUTE/SKIP]
+- [ ] NFR Requirements - [EXECUTE/SKIP]
+- [ ] NFR Design - [EXECUTE/SKIP]
+- [ ] Infrastructure Design - [EXECUTE/SKIP]
+- [ ] Code Planning - EXECUTE
+- [ ] Code Generation - EXECUTE
+- [ ] Build and Test - EXECUTE
 
-### 🟡 OPERATIONSフェーズ
-- [ ] オペレーション - プレースホルダー
+### 🟡 OPERATIONS PHASE
+- [ ] Operations - PLACEHOLDER
 
-## 現在の状態
-- **ライフサイクルフェーズ**: INCEPTION
-- **現在のステージ**: ワークフロー計画完了
-- **次のステージ**: [次に実行するステージ]
-- **ステータス**: 進行準備完了
+## Current Status
+- **Lifecycle Phase**: INCEPTION
+- **Current Stage**: Workflow Planning Complete
+- **Next Stage**: [Next stage to execute]
+- **Status**: Ready to proceed
 ```
 
-## ステップ9: ユーザーへの計画提示
+## Step 9: Present Plan to User
 
 ```markdown
-# 📋 ワークフロー計画完了
+# 📋 Workflow Planning Complete
 
-以下に基づいて包括的な実行計画を作成しました：
-- あなたのリクエスト: [サマリー]
-- 既存システム: [ブラウンフィールドの場合のサマリー]
-- 要件: [実行された場合のサマリー]
-- ユーザーストーリー: [実行された場合のサマリー]
+I've created a comprehensive execution plan based on:
+- Your request: [Summary]
+- Existing system: [Summary if brownfield]
+- Requirements: [Summary if executed]
+- User stories: [Summary if executed]
 
-**詳細分析**:
-- リスクレベル: [レベル]
-- 影響: [主な影響のサマリー]
-- 影響を受けるコンポーネント: [リスト]
+**Detailed Analysis**:
+- Risk level: [Level]
+- Impact: [Summary of key impacts]
+- Components affected: [List]
 
-**推奨実行計画**:
+**Recommended Execution Plan**:
 
-[X]個のステージを実行することを推奨します：
+I recommend executing [X] stages:
 
-🔵 **INCEPTIONフェーズ:**
-1. [ステージ名] - *根拠:* [実行する理由]
-2. [ステージ名] - *根拠:* [実行する理由]
+🔵 **INCEPTION PHASE:**
+1. [Stage name] - *Rationale:* [Why executing]
+2. [Stage name] - *Rationale:* [Why executing]
 ...
 
-🟢 **CONSTRUCTIONフェーズ:**
-3. [ステージ名] - *根拠:* [実行する理由]
-4. [ステージ名] - *根拠:* [実行する理由]
+🟢 **CONSTRUCTION PHASE:**
+3. [Stage name] - *Rationale:* [Why executing]
+4. [Stage name] - *Rationale:* [Why executing]
 ...
 
-[Y]個のステージをスキップすることを推奨します：
+I recommend skipping [Y] stages:
 
-🔵 **INCEPTIONフェーズ:**
-1. [ステージ名] - *根拠:* [スキップする理由]
-2. [ステージ名] - *根拠:* [スキップする理由]
+🔵 **INCEPTION PHASE:**
+1. [Stage name] - *Rationale:* [Why skipping]
+2. [Stage name] - *Rationale:* [Why skipping]
 ...
 
-🟢 **CONSTRUCTIONフェーズ:**
-3. [ステージ名] - *根拠:* [スキップする理由]
-4. [ステージ名] - *根拠:* [スキップする理由]
+🟢 **CONSTRUCTION PHASE:**
+3. [Stage name] - *Rationale:* [Why skipping]
+4. [Stage name] - *Rationale:* [Why skipping]
 ...
 
-[複数のパッケージを持つブラウンフィールドの場合]
-**推奨パッケージ更新シーケンス**:
-1. [パッケージ] - [理由]
-2. [パッケージ] - [理由]
+[IF brownfield with multiple packages]
+**Recommended Package Update Sequence**:
+1. [Package] - [Reason]
+2. [Package] - [Reason]
 ...
 
-**推定タイムライン**: [期間]
+**Estimated Timeline**: [Duration]
 
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/inception/plans/execution-plan.md` で実行計画を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the execution plan at: `aidlc-docs/inception/plans/execution-plan.md`
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - 必要に応じて実行計画の修正を依頼します
-> [スキップされたステージがある場合:]
-> 📝 **スキップされたステージを追加** - 現在スキップとマークされているステージを含めることを選択します
-> ✅ **承認して続行** - 計画を承認し、**[次のステージ名]**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the execution plan if required
+> [IF any stages are skipped:]
+> 📝 **Add Skipped Stages** - Choose to include stages currently marked as SKIP
+> ✅ **Approve & Continue** - Approve plan and proceed to **[Next Stage Name]**
 ```
 
-## ステップ10: ユーザーの応答を処理
+## Step 10: Handle User Response
 
-- **承認された場合**: 実行計画の次のステージに進みます
-- **変更が要求された場合**: 実行計画を更新し、再確認します
-- **ユーザーがステージの強制的な包含/除外を希望する場合**: それに応じて計画を更新します
+- **If approved**: Proceed to next stage in execution plan
+- **If changes requested**: Update execution plan and re-confirm
+- **If user wants to force include/exclude stages**: Update plan accordingly
 
-## ステップ11: 対話の記録
+## Step 11: Log Interaction
 
-`aidlc-docs/audit.md` に記録します：
+Log in `aidlc-docs/audit.md`:
 
 ```markdown
-## ワークフロー計画 - 承認
-**タイムスタンプ**: [ISOタイムスタンプ]
-**AIプロンプト**: "この計画で進行してよろしいですか？"
-**ユーザーの応答**: "[ユーザーの完全な生の応答]"
-**ステータス**: [承認済み/変更要求あり]
-**コンテキスト**: [X]個の実行ステージを持つワークフロー計画が作成されました
+## Workflow Planning - Approval
+**Timestamp**: [ISO timestamp]
+**AI Prompt**: "Ready to proceed with this plan?"
+**User Response**: "[User's COMPLETE RAW response]"
+**Status**: [Approved/Changes Requested]
+**Context**: Workflow plan created with [X] stages to execute
 
 ---
 ```

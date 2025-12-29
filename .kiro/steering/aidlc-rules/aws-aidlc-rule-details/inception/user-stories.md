@@ -1,328 +1,327 @@
-# ユーザーストーリー - 詳細ステップ
+# User Stories - Detailed Steps
 
-## 目的
-**要件を、受け入れ基準を持つユーザー中心のストーリーに変換する**
+## Purpose
+**Convert requirements into user-centered stories with acceptance criteria**
 
-ユーザーストーリーは以下に焦点を当てます：
-- ビジネス要件をユーザー中心の物語に翻訳する
-- 各ストーリーの明確な受け入れ基準を定義する
-- さまざまなステークホルダータイプを代表するユーザーペルソナを作成する
-- チーム間で共通の理解を確立する
-- 実装のためのテスト可能な仕様を提供する
+User Stories focus on:
+- Translating business requirements into user-centered narratives
+- Defining clear acceptance criteria for each story
+- Creating user personas that represent different stakeholder types
+- Establishing shared understanding across teams
+- Providing testable specifications for implementation
 
-## 前提条件
-- ワークスペース検出が完了していること
-- 要件分析が推奨される（利用可能な場合は要件を参照できる）
-- ワークフロー計画でユーザーストーリーステージが実行されるべきであることが示されていること
+## Prerequisites
+- Workspace Detection must be complete
+- Requirements Analysis recommended (can reference requirements if available)
+- Workflow Planning must indicate User Stories stage should execute
 
-## インテリジェントな評価ガイドライン
+## Intelligent Assessment Guidelines
 
-**ユーザーストーリーを実行するタイミング**: 先に進む前に、この強化された評価を使用してください：
+**WHEN TO EXECUTE USER STORIES**: Use this enhanced assessment before proceeding:
 
-### 高優先度の実行（常に実行）
-- **新規ユーザー機能**: ユーザーが直接操作する新しい機能
-- **ユーザーエクスペリエンスの変更**: 既存のユーザーワークフローやインターフェースの修正
-- **マルチペルソナシステム**: さまざまなタイプのユーザーにサービスを提供するアプリケーション
-- **顧客向けAPI**: 外部のユーザーやシステムが利用するサービス
-- **複雑なビジネスロジック**: 複数のシナリオやビジネスルールを持つ要件
-- **クロスチームプロジェクト**: 複数のチーム間で共通の理解が必要な作業
+### High Priority Execution (ALWAYS Execute)
+- **New User Features**: Any new functionality users will directly interact with
+- **User Experience Changes**: Modifications to existing user workflows or interfaces
+- **Multi-Persona Systems**: Applications serving different types of users
+- **Customer-Facing APIs**: Services that external users or systems will consume
+- **Complex Business Logic**: Requirements with multiple scenarios or business rules
+- **Cross-Team Projects**: Work requiring shared understanding across multiple teams
 
-### 中優先度の実行（複雑さを評価）
-- **バックエンドのユーザーへの影響**: 間接的にユーザーエクスペリエンスに影響を与える内部変更
-- **パフォーマンス改善**: ユーザーに可視な利益をもたらす機能強化
-- **統合作業**: ユーザーワークフローに影響を与えるシステム間の接続
-- **データ変更**: ユーザーデータ、レポート、または分析に影響を与える修正
-- **セキュリティ強化**: ユーザー認証や権限に影響を与える変更
+### Medium Priority Execution (Assess Complexity)
+- **Backend User Impact**: Internal changes that indirectly affect user experience
+- **Performance Improvements**: Enhancements with user-visible benefits
+- **Integration Work**: Connecting systems that affect user workflows
+- **Data Changes**: Modifications affecting user data, reports, or analytics
+- **Security Enhancements**: Changes affecting user authentication or permissions
 
-### 複雑さの評価要因
-中優先度のケースでは、以下のいずれかが当てはまる場合にユーザーストーリーを実行します：
-- **スコープ**: 変更が複数のコンポーネントやユーザー接点にまたがる
-- **曖昧さ**: 要件に不明確な点があり、ストーリーで明確化できる
-- **リスク**: ビジネスへの影響が大きい、または誤解の可能性がある
-- **ステークホルダー**: 要件に複数のビジネスステークホルダーが関与している
-- **テスト**: ユーザー受け入れテストが必要になる
-- **選択肢**: 複数の妥当な実装アプローチが存在する
+### Complexity Assessment Factors
+For medium priority cases, execute user stories if ANY of these apply:
+- **Scope**: Changes span multiple components or user touchpoints
+- **Ambiguity**: Requirements have unclear aspects that stories could clarify
+- **Risk**: High business impact or potential for misunderstanding
+- **Stakeholders**: Multiple business stakeholders involved in requirements
+- **Testing**: User acceptance testing will be required
+- **Options**: Multiple valid implementation approaches exist
 
-### 単純なケースのみスキップ
-- **純粋なリファクタリング**: ユーザーへの影響がゼロの内部コード改善
-- **隔離されたバグ修正**: スコープが明確で単純な、十分に定義された修正
-- **インフラストラクチャのみ**: ユーザー向けの変更がない変更
-- **開発者向けツール**: ビルドプロセス、CI/CD、または開発環境の変更
-- **ドキュメンテーション**: 機能に影響しない更新
+### Skip Only For Simple Cases
+- **Pure Refactoring**: Internal code improvements with zero user impact
+- **Isolated Bug Fixes**: Simple, well-defined fixes with clear scope
+- **Infrastructure Only**: Changes with no user-facing effects
+- **Developer Tooling**: Build processes, CI/CD, or development environment changes
+- **Documentation**: Updates that don't affect functionality
 
-### デフォルトの決定ルール
-**迷った場合は、ユーザーストーリーを含め、明確化のための質問をしてください。** 適切な明確化を伴う包括的なストーリーを作成するオーバーヘッドは、通常、以下の利点によって上回ります：
-- より明確な要件理解
-- より良いチームのアライメント
-- 改善されたテスト基準
-- 強化されたステークホルダーとのコミュニケーション
-- 削減された実装リスク
-- 開発中のコストのかかる変更の減少
-- より良いユーザーエクスペリエンスの成果
-
----
-
-# パート1: 計画
-
-## ステップ1: ユーザーストーリーの必要性の検証（必須）
-
-**重要**: ユーザーストーリーを進める前に、この評価を実行してください：
-
-### 評価プロセス
-1. **リクエストコンテキストの分析**:
-   - 元のユーザーリクエストと要件を確認する
-   - ユーザー向けか内部のみの変更かを特定する
-   - 作業の複雑さとスコープを評価する
-   - ビジネスステークホルダーの関与を評価する
-
-2. **評価基準の適用**:
-   - 高優先度指標（常に実行）と照合する
-   - 中優先度要因（複雑さに基づく決定）を評価する
-   - これがスキップすべき単純なケースでないことを確認する
-
-3. **評価決定の文書化**:
-   - `aidlc-docs/inception/plans/user-stories-assessment.md` を作成する
-   - このリクエストに対してユーザーストーリーが価値を持つ理由を含める
-   - 適用される特定の評価基準を参照する
-   - 期待される利点（明確さ、テスト、ステークホルダーのアライメント）を説明する
-
-4. **正当化される場合のみ進行**:
-   - ユーザーストーリーはプロジェクトに明確な価値を加えなければならない
-   - 評価は、具体的な利点がオーバーヘッドを上回ることを示さなければならない
-   - 決定はプロジェクトのステークホルダーに対して防御可能でなければならない
-
-### 評価文書テンプレート
-```markdown
-# ユーザーストーリー評価
-
-## リクエスト分析
-- **元のリクエスト**: [簡単な要約]
-- **ユーザーへの影響**: [直接/間接/なし]
-- **複雑さレベル**: [単純/中/複雑]
-- **ステークホルダー**: [関与する関係者のリスト]
-
-## 満たされた評価基準
-- [ ] 高優先度: [適用される基準のリスト]
-- [ ] 中優先度: [複雑さの正当化を伴う適用される基準のリスト]
-- [ ] 利点: [ユーザーストーリーから期待される価値]
-
-## 決定
-**ユーザーストーリーを実行**: [はい/いいえ]
-**理由**: [詳細な正当化]
-
-## 期待される成果
-- [ユーザーストーリーが提供する具体的な利点のリスト]
-- [ストーリーがプロジェクトの成功をどのように改善するか]
-```
-
-## ステップ2: ストーリー計画の作成
-- プロダクトオーナーの役割を担う
-- ストーリー開発のためのステップバイステップの実行チェックリストを含む包括的な計画を生成する
-- 各ステップとサブステップにはチェックボックス `[]` を付ける
-- 要件をユーザーストーリーに変換するための方法論とアプローチに焦点を当てる
-
-## ステップ3: コンテキストに応じた質問の生成
-**指示**: 要件とコンテキストを徹底的に分析し、明確化がストーリーの品質とチームの理解を向上させるすべての領域を特定します。包括的なユーザーストーリー開発を確実にするために、積極的に質問してください。
-
-**重要**: ストーリーの品質に影響を与える可能性のある曖昧さや欠落した詳細がある場合は、デフォルトで質問をしてください。不完全または不明確なストーリーを作成するよりも、多すぎる質問をする方が良いです。
-
-**質問のフォーマットルールについては `common/question-format-guide.md` を参照してください**
-
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- 曖昧さ、欠落情報、または明確化が必要な領域に焦点を当てる
-- ユーザーの入力がストーリー作成の決定を改善する場所で質問を生成する
-- **迷った場合は質問する** - 過信は質の低いストーリーにつながります
-
-**評価する質問カテゴリ**（すべてのカテゴリを考慮）：
-- **ユーザーペルソナ** - ユーザータイプ、役割、特徴、動機について尋ねる
-- **ストーリーの粒度** - 適切な詳細レベル、ストーリーのサイズ、分割アプローチについて尋ねる
-- **ストーリーのフォーマット** - フォーマットの好み、テンプレートの使用、文書化基準について尋ねる
-- **分割アプローチ** - 整理方法、優先順位付け、グループ化戦略について尋ねる
-- **受け入れ基準** - 詳細レベル、フォーマット、テストアプローチ、検証方法について尋ねる
-- **ユーザージャーニー** - ユーザーのワークフロー、インタラクションパターン、エクスペリエンスフローについて尋ねる
-- **ビジネスコンテキスト** - ビジネス目標、成功指標、ステークホルダーのニーズについて尋ねる
-- **技術的制約** - 技術的制限、統合要件、システム境界について尋ねる
-
-## ステップ4: 計画に必須のストーリー成果物を含める
-- **常に**これらの必須成果物をストーリー計画に含める：
-  - [ ] INVEST基準に従うユーザーストーリーを含む `stories.md` を生成する
-  - [ ] ユーザーのアーキタイプと特徴を持つ `personas.md` を生成する
-  - [ ] ストーリーが独立し(Independent)、交渉可能で(Negotiable)、価値があり(Valuable)、見積もり可能で(Estimable)、小さく(Small)、テスト可能(Testable)であることを確認する
-  - [ ] 各ストーリーに受け入れ基準を含める
-  - [ ] ペルソナを関連するユーザーストーリーにマッピングする
-
-## ステップ5: ストーリーの選択肢を提示する
-- 計画文書にストーリー分割のためのさまざまなアプローチを含める：
-  - **ユーザージャーニーベース**: ストーリーはユーザーのワークフローとインタラクションに従う
-  - **機能ベース**: ストーリーはシステムの機能と能力を中心に整理される
-  - **ペルソナベース**: ストーリーはさまざまなユーザータイプとそのニーズによってグループ化される
-  - **ドメインベース**: ストーリーはビジネスドメインまたはコンテキストを中心に整理される
-  - **エピックベース**: ストーリーはサブストーリーを持つ階層的なエピックとして構造化される
-- 各アプローチのトレードオフと利点を説明する
-- 明確な決定基準を持つハイブリッドアプローチを許可する
-
-## ステップ6: ストーリー計画の保存
-- 埋め込まれた質問を含む完全なストーリー計画を `aidlc-docs/inception/plans/` ディレクトリに保存する
-- ファイル名: `story-generation-plan.md`
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
-- 計画が包括的であり、すべてのストーリー開発側面をカバーしていることを確認する
-
-## ステップ7: ユーザー入力の要求
-- ユーザーにストーリー計画文書内のすべての `[Answer]:` タグを直接入力するように依頼する
-- 監査証跡と決定文書の重要性を強調する
-- `[Answer]:` タグの入力方法について明確な指示を提供する
-- 続行する前にすべての質問に回答する必要があることを説明する
-
-## ステップ8: 回答の収集
-- ユーザーが文書内の `[Answer]:` タグを使用してすべての質問に回答するのを待つ
-- すべての `[Answer]:` タグが完了するまで進行しない
-- `[Answer]:` タグが空白のままになっていないことを確認するために文書を確認する
-
-## ステップ9: 回答の分析（必須）
-進行する前に、すべてのユーザーの回答を注意深く確認する必要があります：
-- **曖昧または不明確な応答**: 「混合」、「中間」、「わからない」、「場合による」、「多分」、「おそらく」
-- **未定義の基準または用語**: 明確な定義のない概念への言及
-- **矛盾した回答**: 互いに矛盾する応答
-- **生成の詳細が欠落**: 実装のための具体的なガイダンスが欠けている回答
-- **選択肢を組み合わせた回答**: 明確な決定ルールなしに異なるアプローチを統合する応答
-- **不完全な説明**: 明示的に述べられていない外部要因を参照する回答
-- **仮定に基づく応答**: 明示的に述べられていない知識を前提とする回答
-
-## ステップ10: 必須のフォローアップ質問
-ステップ9の分析で曖昧な回答が明らかになった場合は、**必ず**以下を実行する必要があります：
-- `[Answer]:` タグを使用して別の明確化質問ファイルを作成する
-- すべての曖昧さが完全に解決されるまで承認に進まない
-- **重要**: 徹底的に行う - 不明瞭な応答ごとにフォローアップの質問をする
-- 必要なフォローアップの例：
-  - 「AとBの『混合』について言及しましたが、AとBをいつ使用するかを決定するための具体的な基準は何ですか？」
-  - 「AとBの『中間』と言いましたが、その正確な中間アプローチを定義できますか？」
-  - 「『わからない』と示しましたが、決定するのに役立つ追加情報はありますか？」
-  - 「『複雑さによる』と述べましたが、複雑さのレベルとしきい値をどのように定義しますか？」
-  - 「『ハイブリッドアプローチ』を選択しましたが、各メソッドをいつ使用するかの具体的なルールは何ですか？」
-  - 「『おそらくX』と言いましたが、それを間違いなくXにする要因と、間違いなくXにしない要因は何ですか？」
-  - 「『標準的な慣行』に言及しましたが、その標準的な慣行が何であるかを定義できますか？」
-
-## ステップ11: 実装の詳細を避ける
-- 優先順位付けや開発タスクではなく、ストーリー作成の方法論に焦点を当てる
-- この段階で技術的な生成について議論しない
-- 開発タイムラインやスプリント計画を作成しない
-- ストーリーの構造とフォーマットの決定に焦点を合わせ続ける
-
-## ステップ12: 承認プロンプトの記録
-- 承認を求める前に、プロンプトをタイムスタンプ付きで `aidlc-docs/audit.md` に記録する
-- 完全な承認プロンプトテキストを含める
-- ISO 8601タイムスタンプ形式を使用する
-
-## ステップ13: 計画の明示的な承認を待つ
-- ユーザーがストーリーのアプローチを明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、計画を更新し、承認プロセスを繰り返す
-
-## ステップ14: 承認応答の記録
-- ユーザーの承認応答をタイムスタンプ付きで `aidlc-docs/audit.md` に記録する
-- 正確なユーザー応答テキストを含める
-- 承認ステータスを明確にマークする
+### Default Decision Rule
+**When in doubt, include user stories AND ask clarifying questions.** The overhead of creating comprehensive stories with proper clarification is typically outweighed by the benefits of:
+- Clearer requirements understanding
+- Better team alignment
+- Improved testing criteria
+- Enhanced stakeholder communication
+- Reduced implementation risks
+- Fewer costly changes during development
+- Better user experience outcomes
 
 ---
 
-# パート2: 生成
+# PART 1: PLANNING
 
-## ステップ15: ストーリー生成計画の読み込み
-- [ ] `aidlc-docs/inception/plans/story-generation-plan.md` から完全なストーリー計画を読み込む
-- [ ] 次の未完了のステップ（最初の `[]` チェックボックス）を特定する
-- [ ] そのステップのコンテキストと要件を読み込む
+## Step 1: Validate User Stories Need (MANDATORY)
 
-## ステップ16: 現在のステップの実行
-- [ ] 現在のステップが記述していることを正確に実行する
-- [ ] 計画で指定されたストーリー成果物を生成する
-- [ ] 計画からの承認された方法論とフォーマットに従う
-- [ ] 計画で指定されたストーリー分割アプローチを使用する
+**CRITICAL**: Before proceeding with user stories, perform this assessment:
 
-## ステップ17: 進捗の更新
-- [ ] 完了したステップをストーリー生成計画で `[x]` とマークする
-- [ ] `aidlc-docs/aidlc-state.md` の現在のステータスを更新する
-- [ ] 生成されたすべての成果物を保存する
+### Assessment Process
+1. **Analyze Request Context**:
+   - Review the original user request and requirements
+   - Identify user-facing vs internal-only changes
+   - Assess complexity and scope of the work
+   - Evaluate business stakeholder involvement
 
-## ステップ18: 生成の続行または完了
-- [ ] さらにステップが残っている場合は、ステップ14に戻る
-- [ ] すべてのステップが完了した場合、ストーリーが次のステージの準備ができていることを確認する
-- [ ] すべての必須成果物が生成されていることを確認する
+2. **Apply Assessment Criteria**:
+   - Check against High Priority indicators (always execute)
+   - Evaluate Medium Priority factors (complexity-based decision)
+   - Confirm this isn't a simple case that should be skipped
 
-## ステップ19: 承認プロンプトの記録
-- 承認を求める前に、プロンプトをタイムスタンプ付きで `aidlc-docs/audit.md` に記録する
-- 完全な承認プロンプトテキストを含める
-- ISO 8601タイムスタンプ形式を使用する
+3. **Document Assessment Decision**:
+   - Create `aidlc-docs/inception/plans/user-stories-assessment.md`
+   - Include reasoning for why user stories are valuable for this request
+   - Reference specific assessment criteria that apply
+   - Explain expected benefits (clarity, testing, stakeholder alignment)
 
-## ステップ20: 完了メッセージの提示
-- この構造で完了メッセージを提示する：
-     1. **完了のお知らせ**（必須）: 常にこれで始める：
+4. **Proceed Only If Justified**:
+   - User stories must add clear value to the project
+   - Assessment must show concrete benefits outweigh overhead
+   - Decision should be defensible to project stakeholders
 
+### Assessment Documentation Template
 ```markdown
-# 📚 ユーザーストーリー完了
+# User Stories Assessment
+
+## Request Analysis
+- **Original Request**: [Brief summary]
+- **User Impact**: [Direct/Indirect/None]
+- **Complexity Level**: [Simple/Medium/Complex]
+- **Stakeholders**: [List involved parties]
+
+## Assessment Criteria Met
+- [ ] High Priority: [List applicable criteria]
+- [ ] Medium Priority: [List applicable criteria with complexity justification]
+- [ ] Benefits: [Expected value from user stories]
+
+## Decision
+**Execute User Stories**: [Yes/No]
+**Reasoning**: [Detailed justification]
+
+## Expected Outcomes
+- [List specific benefits user stories will provide]
+- [How stories will improve project success]
 ```
 
-     2. **AIサマリー**（任意）: 生成されたストーリーの構造化された箇条書きサマリーを提供する
-        - フォーマット: 「ユーザーストーリーの生成により、[説明]が作成されました：」
-        - 生成された主要なペルソナをリストアップ（箇条書き）
-        - 作成されたユーザーストーリーを数と構成とともにリストアップ
-        - ストーリーの構造と準拠（INVEST基準、受け入れ基準）について言及する
-        - ワークフローの指示（「レビューしてください」、「お知らせください」、「次のフェーズに進みます」、「進む前に」）を含めない
-        - 事実に基づき、コンテンツに焦点を当てる
-     3. **フォーマットされたワークフローメッセージ**（必須）: 常にこの正確なフォーマットで終える：
+## Step 2: Create Story Plan
+- Assume the role of a product owner
+- Generate a comprehensive plan with step-by-step execution checklist for story development
+- Each step and sub-step should have a checkbox []
+- Focus on methodology and approach for converting requirements into user stories
+
+## Step 3: Generate Context-Appropriate Questions
+**DIRECTIVE**: Thoroughly analyze the requirements and context to identify ALL areas where clarification would improve story quality and team understanding. Be proactive in asking questions to ensure comprehensive user story development.
+
+**CRITICAL**: Default to asking questions when there is ANY ambiguity or missing detail that could affect story quality. It's better to ask too many questions than to create incomplete or unclear stories.
+
+**See `common/question-format-guide.md` for question formatting rules**
+
+- EMBED questions using [Answer]: tag format
+- Focus on ANY ambiguities, missing information, or areas needing clarification
+- Generate questions wherever user input would improve story creation decisions
+- **When in doubt, ask the question** - overconfidence leads to poor stories
+
+**Question categories to evaluate** (consider ALL categories):
+- **User Personas** - Ask about user types, roles, characteristics, and motivations
+- **Story Granularity** - Ask about appropriate level of detail, story size, and breakdown approach
+- **Story Format** - Ask about format preferences, template usage, and documentation standards
+- **Breakdown Approach** - Ask about organization method, prioritization, and grouping strategies
+- **Acceptance Criteria** - Ask about detail level, format, testing approach, and validation methods
+- **User Journeys** - Ask about user workflows, interaction patterns, and experience flows
+- **Business Context** - Ask about business goals, success metrics, and stakeholder needs
+- **Technical Constraints** - Ask about technical limitations, integration requirements, and system boundaries
+
+## Step 4: Include Mandatory Story Artifacts in Plan
+- **ALWAYS** include these mandatory artifacts in the story plan:
+  - [ ] Generate stories.md with user stories following INVEST criteria
+  - [ ] Generate personas.md with user archetypes and characteristics
+  - [ ] Ensure stories are Independent, Negotiable, Valuable, Estimable, Small, Testable
+  - [ ] Include acceptance criteria for each story
+  - [ ] Map personas to relevant user stories
+
+## Step 5: Present Story Options
+- Include different approaches for story breakdown in the plan document:
+  - **User Journey-Based**: Stories follow user workflows and interactions
+  - **Feature-Based**: Stories organized around system features and capabilities
+  - **Persona-Based**: Stories grouped by different user types and their needs
+  - **Domain-Based**: Stories organized around business domains or contexts
+  - **Epic-Based**: Stories structured as hierarchical epics with sub-stories
+- Explain trade-offs and benefits of each approach
+- Allow for hybrid approaches with clear decision criteria
+
+## Step 6: Store Story Plan
+- Save the complete story plan with embedded questions in `aidlc-docs/inception/plans/` directory
+- Filename: `story-generation-plan.md`
+- Include all [Answer]: tags for user input
+- Ensure plan is comprehensive and covers all story development aspects
+
+## Step 7: Request User Input
+- Ask user to fill in all [Answer]: tags directly in the story plan document
+- Emphasize importance of audit trail and decision documentation
+- Provide clear instructions on how to fill in the [Answer]: tags
+- Explain that all questions must be answered before proceeding
+
+## Step 8: Collect Answers
+- Wait for user to provide answers to all questions using [Answer]: tags in the document
+- Do not proceed until ALL [Answer]: tags are completed
+- Review the document to ensure no [Answer]: tags are left blank
+
+## Step 9: ANALYZE ANSWERS (MANDATORY)
+Before proceeding, you MUST carefully review all user answers for:
+- **Vague or ambiguous responses**: "mix of", "somewhere between", "not sure", "depends", "maybe", "probably"
+- **Undefined criteria or terms**: References to concepts without clear definitions
+- **Contradictory answers**: Responses that conflict with each other
+- **Missing generation details**: Answers that lack specific guidance for implementation
+- **Answers that combine options**: Responses that merge different approaches without clear decision rules
+- **Incomplete explanations**: Answers that reference external factors without defining them
+- **Assumption-based responses**: Answers that assume knowledge not explicitly stated
+
+## Step 10: MANDATORY Follow-up Questions
+If the analysis in step 9 reveals ANY ambiguous answers, you MUST:
+- Create a separate clarification questions file using [Answer]: tags
+- DO NOT proceed to approval until ALL ambiguities are completely resolved
+- **CRITICAL**: Be thorough - ask follow-up questions for every unclear response
+- Examples of required follow-ups:
+  - "You mentioned 'mix of A and B' - what specific criteria should determine when to use A vs B?"
+  - "You said 'somewhere between A and B' - can you define the exact middle ground approach?"
+  - "You indicated 'not sure' - what additional information would help you decide?"
+  - "You mentioned 'depends on complexity' - how do you define complexity levels and thresholds?"
+  - "You chose 'hybrid approach' - what are the specific rules for when to use each method?"
+  - "You said 'probably X' - what factors would make it definitely X vs definitely not X?"
+  - "You referenced 'standard practice' - can you define what that standard practice is?"
+
+## Step 11: Avoid Implementation Details
+- Focus on story creation methodology, not prioritization or development tasks
+- Do not discuss technical generation at this stage
+- Avoid creating development timelines or sprint planning
+- Keep focus on story structure and format decisions
+
+## Step 12: Log Approval Prompt
+- Before asking for approval, log the prompt with timestamp in `aidlc-docs/audit.md`
+- Include the complete approval prompt text
+- Use ISO 8601 timestamp format
+
+## Step 13: Wait for Explicit Approval of Plan
+- Do not proceed until the user explicitly approves the story approach
+- Approval must be clear and unambiguous
+- If user requests changes, update the plan and repeat the approval process
+
+## Step 14: Record Approval Response
+- Log the user's approval response with timestamp in `aidlc-docs/audit.md`
+- Include the exact user response text
+- Mark the approval status clearly
+
+---
+
+# PART 2: GENERATION
+
+## Step 15: Load Story Generation Plan
+- [ ] Read the complete story plan from `aidlc-docs/inception/plans/story-generation-plan.md`
+- [ ] Identify the next uncompleted step (first [ ] checkbox)
+- [ ] Load the context and requirements for that step
+
+## Step 16: Execute Current Step
+- [ ] Perform exactly what the current step describes
+- [ ] Generate story artifacts as specified in the plan
+- [ ] Follow the approved methodology and format from Planning
+- [ ] Use the story breakdown approach specified in the plan
+
+## Step 17: Update Progress
+- [ ] Mark the completed step as [x] in the story generation plan
+- [ ] Update `aidlc-docs/aidlc-state.md` current status
+- [ ] Save all generated artifacts
+
+## Step 18: Continue or Complete Generation
+- [ ] If more steps remain, return to Step 14
+- [ ] If all steps complete, verify stories are ready for next stage
+- [ ] Ensure all mandatory artifacts are generated
+
+## Step 19: Log Approval Prompt
+- Before asking for approval, log the prompt with timestamp in `aidlc-docs/audit.md`
+- Include the complete approval prompt text
+- Use ISO 8601 timestamp format
+
+## Step 20: Present Completion Message
+- Present completion message in this structure:
+     1. **Completion Announcement** (mandatory): Always start with this:
 
 ```markdown
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/inception/user-stories/stories.md` と `aidlc-docs/inception/user-stories/personas.md` でユーザーストーリーとペルソナを確認してください。
+# 📚 User Stories Complete
+```
+
+     2. **AI Summary** (optional): Provide structured bullet-point summary of generated stories
+        - Format: "User stories generation has created [description]:"
+        - List key personas generated (bullet points)
+        - List user stories created with counts and organization
+        - Mention story structure and compliance (INVEST criteria, acceptance criteria)
+        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - Keep factual and content-focused
+     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
+
+```markdown
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the user stories and personas at: `aidlc-docs/inception/user-stories/stories.md` and `aidlc-docs/inception/user-stories/personas.md`
 
 
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** -  レビューに基づいてストーリーやペルソナの修正を依頼します  
-> ✅ **承認して続行** - ユーザーストーリーを承認し、**ワークフロー計画**に進みます
+> 🔧 **Request Changes** -  Ask for modifications to the stories or personas based on your review  
+> ✅ **Approve & Continue** - Approve user stories and proceed to **Workflow Planning**
 
 ---
 ```
 
-## ステップ21: 生成されたストーリーの明示的な承認を待つ
-- ユーザーが生成されたストーリーを明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、ストーリーを更新し、承認プロセスを繰り返す
+## Step 21: Wait for Explicit Approval of Generated Stories
+- Do not proceed until the user explicitly approves the generated stories
+- Approval must be clear and unambiguous
+- If user requests changes, update stories and repeat the approval process
 
-## ステップ22: 承認応答の記録
-- ユーザーの承認応答をタイムスタンプ付きで `aidlc-docs/audit.md` に記録する
-- 正確なユーザー応答テキストを含める
-- 承認ステータスを明確にマークする
+## Step 22: Record Approval Response
+- Log the user's approval response with timestamp in `aidlc-docs/audit.md`
+- Include the exact user response text
+- Mark the approval status clearly
 
-## ステップ23: 進捗の更新
-- `aidlc-state.md` でユーザーストーリーステージを完了とマークする
-- 「現在のステータス」セクションを更新する
-- 次のステージへの移行を準備する
+## Step 23: Update Progress
+- Mark User Stories stage complete in `aidlc-state.md`
+- Update the "Current Status" section
+- Prepare for transition to next stage
 
 ---
 
-# 重要ルール
+# CRITICAL RULES
 
-## 計画フェーズのルール
-- **コンテキストに応じた質問**: この特定のコンテキストに関連する質問のみをする
-- **必須の回答分析**: 進行する前に常に回答の曖昧さを分析する
-- **曖昧さのあるまま進行しない**: 生成前にすべての曖昧な回答を解決しなければならない
-- **明示的な承認が必要**: 生成を開始する前にユーザーが計画を承認しなければならない
+## Planning Phase Rules
+- **CONTEXT-APPROPRIATE QUESTIONS**: Only ask questions relevant to this specific context
+- **MANDATORY ANSWER ANALYSIS**: Always analyze answers for ambiguities before proceeding
+- **NO PROCEEDING WITH AMBIGUITY**: Must resolve all vague answers before generation
+- **EXPLICIT APPROVAL REQUIRED**: User must approve plan before generation starts
 
-## 生成フェーズのルール
-- **ハードコードされたロジックなし**: ストーリー生成計画に書かれていることだけを実行する
-- **計画に正確に従う**: ステップの順序から逸脱しない
-- **チェックボックスの更新**: 各ステップ完了直後に `[x]` とマークする
-- **承認された方法論を使用**: 計画からのストーリーアプローチに従う
-- **完了の検証**: 進行する前にすべてのストーリー成果物が完了していることを確認する
+## Generation Phase Rules
+- **NO HARDCODED LOGIC**: Only execute what's written in the story generation plan
+- **FOLLOW PLAN EXACTLY**: Do not deviate from the step sequence
+- **UPDATE CHECKBOXES**: Mark [x] immediately after completing each step
+- **USE APPROVED METHODOLOGY**: Follow the story approach from Planning
+- **VERIFY COMPLETION**: Ensure all story artifacts are complete before proceeding
 
-## 完了基準
-- すべての計画に関する質問に回答され、曖昧さが解決されている
-- ストーリー計画がユーザーによって明示的に承認されている
-- ストーリー生成計画のすべてのステップが `[x]` とマークされている
-- 計画に従ってすべてのストーリー成果物（stories.md, personas.md）が生成されている
-- 生成されたストーリーがユーザーによって明示的に承認されている
-- ストーリーが検証され、次のステージの準備ができている
-```
+## Completion Criteria
+- All planning questions answered and ambiguities resolved
+- Story plan explicitly approved by user
+- All steps in story generation plan marked [x]
+- All story artifacts generated according to plan (stories.md, personas.md)
+- Generated stories explicitly approved by user
+- Stories verified and ready for next stage

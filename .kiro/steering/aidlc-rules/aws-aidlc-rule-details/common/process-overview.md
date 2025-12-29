@@ -1,60 +1,60 @@
-# AI-DLC 適応型ワークフロー概要
+# AI-DLC Adaptive Workflow Overview
 
-**目的**: AIモデルと開発者が完全なワークフロー構造を理解するための技術的な参考資料。
+**Purpose**: Technical reference for AI model and developers to understand complete workflow structure.
 
-**注意**: 同様の内容が core-workflow.md (ユーザー向けウェルカムメッセージ) と README.md (ドキュメンテーション) にも存在します。この重複は意図的なものです - 各ファイルは異なる目的を果たします：
-- **このファイル**: AIモデルのコンテキスト読み込み用のMermaid図を含む詳細な技術参考資料
-- **core-workflow.md**: ASCII図を含むユーザー向けウェルカムメッセージ
-- **README.md**: リポジトリのための人間が読めるドキュメンテーション
+**Note**: Similar content exists in core-workflow.md (user welcome message) and README.md (documentation). This duplication is INTENTIONAL - each file serves a different purpose:
+- **This file**: Detailed technical reference with Mermaid diagram for AI model context loading
+- **core-workflow.md**: User-facing welcome message with ASCII diagram
+- **README.md**: Human-readable documentation for repository
 
-## 3フェーズのライフサイクル:
-• **INCEPTIONフェーズ**: 計画とアーキテクチャ (ワークスペース検出 + 条件付きフェーズ + ワークフロー計画)
-• **CONSTRUCTIONフェーズ**: 設計、実装、ビルド、テスト (ユニットごと設計 + コード計画/生成 + ビルド＆テスト)
-• **OPERATIONSフェーズ**: 将来のデプロイと監視ワークフローのためのプレースホルダー
+## The Three-Phase Lifecycle:
+• **INCEPTION PHASE**: Planning and architecture (Workspace Detection + conditional phases + Workflow Planning)
+• **CONSTRUCTION PHASE**: Design, implementation, build and test (per-unit design + Code Planning/Generation + Build & Test)
+• **OPERATIONS PHASE**: Placeholder for future deployment and monitoring workflows
 
-## 適応型ワークフロー:
-• **ワークスペース検出** (常時) → **リバースエンジニアリング** (ブラウンフィールドのみ) → **要件分析** (常時、適応的な深さ) → **条件付きフェーズ** (必要に応じて) → **ワークフロー計画** (常時) → **コード生成** (常時、ユニットごと) → **ビルドとテスト** (常時)
+## The Adaptive Workflow:
+• **Workspace Detection** (always) → **Reverse Engineering** (brownfield only) → **Requirements Analysis** (always, adaptive depth) → **Conditional Phases** (as needed) → **Workflow Planning** (always) → **Code Generation** (always, per-unit) → **Build and Test** (always)
 
-## 仕組み:
-• **AIが**あなたのリクエスト、ワークスペース、複雑さを分析し、どのステージが必要かを判断します
-• **これらのステージは常に実行されます**: ワークスペース検出、要件分析 (適応的な深さ)、ワークフロー計画、コード生成 (ユニットごと)、ビルドとテスト
-• **他のすべてのステージは条件的です**: リバースエンジニアリング、ユーザーストーリー、アプリケーション設計、ユニット生成、ユニットごと設計ステージ (機能設計、NFR要件、NFR設計、インフラストラクチャ設計)
-• **固定シーケンスなし**: ステージはあなたの特定のタスクにとって意味のある順序で実行されます
+## How It Works:
+• **AI analyzes** your request, workspace, and complexity to determine which stages are needed
+• **These stages always execute**: Workspace Detection, Requirements Analysis (adaptive depth), Workflow Planning, Code Generation (per-unit), Build and Test
+• **All other stages are conditional**: Reverse Engineering, User Stories, Application Design, Units Generation, per-unit design stages (Functional Design, NFR Requirements, NFR Design, Infrastructure Design)
+• **No fixed sequences**: Stages execute in the order that makes sense for your specific task
 
-## あなたのチームの役割:
-• 専用の質問ファイルで、文字の選択肢 (A, B, C, D, E) を使って `[Answer]:` タグで質問に答えます
-• **選択肢Eが利用可能**: 提供された選択肢が合わない場合、「その他」を選び、カスタムの回答を記述します
-• **チームとして協力し**、進行する前に各フェーズをレビューし、承認します
-• 必要に応じてアーキテクチャアプローチについて**集合的に決定します**
-• **重要**: これはチームの努力です - 各フェーズに関連するステークホルダーを関与させてください
+## Your Team's Role:
+• **Answer questions** in dedicated question files using [Answer]: tags with letter choices (A, B, C, D, E)
+• **Option E available**: Choose "Other" and describe your custom response if provided options don't match
+• **Work as a team** to review and approve each phase before proceeding
+• **Collectively decide** on architectural approach when needed
+• **Important**: This is a team effort - involve relevant stakeholders for each phase
 
-## AI-DLC 3フェーズワークフロー:
+## AI-DLC Three-Phase Workflow:
 
 ```mermaid
 flowchart TD
-    Start(["ユーザーリクエスト"])
+    Start(["User Request"])
     
-    subgraph INCEPTION["🔵 INCEPTIONフェーズ"]
-        WD["ワークスペース検出<br/><b>常時</b>"]
-        RE["リバースエンジニアリング<br/><b>条件的</b>"]
-        RA["要件分析<br/><b>常時</b>"]
-        Stories["ユーザーストーリー<br/><b>条件的</b>"]
-        WP["ワークフロー計画<br/><b>常時</b>"]
-        AppDesign["アプリケーション設計<br/><b>条件的</b>"]
-        UnitsG["ユニット生成<br/><b>条件的</b>"]
+    subgraph INCEPTION["🔵 INCEPTION PHASE"]
+        WD["Workspace Detection<br/><b>ALWAYS</b>"]
+        RE["Reverse Engineering<br/><b>CONDITIONAL</b>"]
+        RA["Requirements Analysis<br/><b>ALWAYS</b>"]
+        Stories["User Stories<br/><b>CONDITIONAL</b>"]
+        WP["Workflow Planning<br/><b>ALWAYS</b>"]
+        AppDesign["Application Design<br/><b>CONDITIONAL</b>"]
+        UnitsG["Units Generation<br/><b>CONDITIONAL</b>"]
     end
     
-    subgraph CONSTRUCTION["🟢 CONSTRUCTIONフェーズ"]
-        FD["機能設計<br/><b>条件的</b>"]
-        NFRA["NFR要件<br/><b>条件的</b>"]
-        NFRD["NFR設計<br/><b>条件的</b>"]
-        ID["インフラストラクチャ設計<br/><b>条件的</b>"]
-        CG["コード生成<br/><b>常時</b>"]
-        BT["ビルドとテスト<br/><b>常時</b>"]
+    subgraph CONSTRUCTION["🟢 CONSTRUCTION PHASE"]
+        FD["Functional Design<br/><b>CONDITIONAL</b>"]
+        NFRA["NFR Requirements<br/><b>CONDITIONAL</b>"]
+        NFRD["NFR Design<br/><b>CONDITIONAL</b>"]
+        ID["Infrastructure Design<br/><b>CONDITIONAL</b>"]
+        CG["Code Generation<br/><b>ALWAYS</b>"]
+        BT["Build and Test<br/><b>ALWAYS</b>"]
     end
     
-    subgraph OPERATIONS["🟡 OPERATIONSフェーズ"]
-        OPS["オペレーション<br/><b>プレースホルダー</b>"]
+    subgraph OPERATIONS["🟡 OPERATIONS PHASE"]
+        OPS["Operations<br/><b>PLACEHOLDER</b>"]
     end
     
     Start --> WD
@@ -79,10 +79,10 @@ flowchart TD
     NFRA --> CG
     NFRD --> CG
     ID --> CG
-    CG -.->|次のユニット| FD
+    CG -.->|Next Unit| FD
     CG --> BT
     BT -.-> OPS
-    BT --> End(["完了"])
+    BT --> End(["Complete"])
     
     style WD fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
     style RA fill:#4CAF50,stroke:#1B5E20,stroke-width:3px,color:#fff
@@ -109,34 +109,33 @@ flowchart TD
     linkStyle default stroke:#333,stroke-width:2px
 ```
 
-**ステージの説明:**
+**Stage Descriptions:**
 
-**🔵 INCEPTIONフェーズ** - 計画とアーキテクチャ
-- ワークスペース検出: ワークスペースの状態とプロジェクトタイプを分析 (常時)
-- リバースエンジニアリング: 既存のコードベースを分析 (条件的 - ブラウンフィールドのみ)
-- 要件分析: 要件を収集し検証 (常時 - 適応的な深さ)
-- ユーザーストーリー: ユーザーストーリーとペルソナを作成 (条件的)
-- ワークフロー計画: 実行計画を作成 (常時)
-- アプリケーション設計: 高レベルのコンポーネント特定とサービスレイヤー設計 (条件的)
-- ユニット生成: 作業単位に分解 (条件的)
+**🔵 INCEPTION PHASE** - Planning and Architecture
+- Workspace Detection: Analyze workspace state and project type (ALWAYS)
+- Reverse Engineering: Analyze existing codebase (CONDITIONAL - Brownfield only)
+- Requirements Analysis: Gather and validate requirements (ALWAYS - Adaptive depth)
+- User Stories: Create user stories and personas (CONDITIONAL)
+- Workflow Planning: Create execution plan (ALWAYS)
+- Application Design: High-level component identification and service layer design (CONDITIONAL)
+- Units Generation: Decompose into units of work (CONDITIONAL)
 
-**🟢 CONSTRUCTIONフェーズ** - 設計、実装、ビルド、テスト
-- 機能設計: ユニットごとの詳細なビジネスロジック設計 (条件的、ユニットごと)
-- NFR要件: NFRを決定し、技術スタックを選択 (条件的、ユニットごと)
-- NFR設計: NFRパターンと論理コンポーネントを組み込む (条件的、ユニットごと)
-- インフラストラクチャ設計: 実際のインフラサービスにマッピング (条件的、ユニットごと)
-- コード生成: パート1 - 計画、パート2 - 生成でコードを生成 (常時、ユニットごと)
-- ビルドとテスト: 全ユニットをビルドし、包括的なテストを実行 (常時)
+**🟢 CONSTRUCTION PHASE** - Design, Implementation, Build and Test
+- Functional Design: Detailed business logic design per unit (CONDITIONAL, per-unit)
+- NFR Requirements: Determine NFRs and select tech stack (CONDITIONAL, per-unit)
+- NFR Design: Incorporate NFR patterns and logical components (CONDITIONAL, per-unit)
+- Infrastructure Design: Map to actual infrastructure services (CONDITIONAL, per-unit)
+- Code Generation: Generate code with Part 1 - Planning, Part 2 - Generation (ALWAYS, per-unit)
+- Build and Test: Build all units and execute comprehensive testing (ALWAYS)
 
-**🟡 OPERATIONSフェーズ** - プレースホルダー
-- オペレーション: 将来のデプロイと監視ワークフローのためのプレースホルダー (プレースホルダー)
+**🟡 OPERATIONS PHASE** - Placeholder
+- Operations: Placeholder for future deployment and monitoring workflows (PLACEHOLDER)
 
-**主要原則:**
-- フェーズは価値をもたらす場合にのみ実行される
-- 各フェーズは独立して評価される
-- INCEPTIONは「何を」「なぜ」に焦点を当てる
-- CONSTRUCTIONは「どのように」に加え、「ビルドとテスト」に焦点を当てる
-- OPERATIONSは将来の拡張のためのプレースホルダー
-- 単純な変更は条件付きINCEPTIONステージをスキップすることがある
-- 複雑な変更は完全なINCEPTIONとCONSTRUCTIONの処理を受ける
-```
+**Key Principles:**
+- Phases execute only when they add value
+- Each phase independently evaluated
+- INCEPTION focuses on "what" and "why"
+- CONSTRUCTION focuses on "how" plus "build and test"
+- OPERATIONS is placeholder for future expansion
+- Simple changes may skip conditional INCEPTION stages
+- Complex changes get full INCEPTION and CONSTRUCTION treatment

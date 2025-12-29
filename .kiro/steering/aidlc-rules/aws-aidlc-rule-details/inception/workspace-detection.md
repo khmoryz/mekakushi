@@ -1,86 +1,85 @@
-# ワークスペースの検出
+# Workspace Detection
 
-**目的**: ワークスペースの状態を判断し、既存のAI-DLCプロジェクトを確認します。
+**Purpose**: Determine workspace state and check for existing AI-DLC projects
 
-## ステップ1: 既存のAI-DLCプロジェクトの確認
+## Step 1: Check for Existing AI-DLC Project
 
-`aidlc-docs/aidlc-state.md` が存在するか確認します：
-- **存在する場合**: 前のフェーズから再開します（前のフェーズからコンテキストを読み込みます）。
-- **存在しない場合**: 新しいプロジェクトの評価を続行します。
+Check if `aidlc-docs/aidlc-state.md` exists:
+- **If exists**: Resume from last phase (load context from previous phases)
+- **If not exists**: Continue with new project assessment
 
-## ステップ2: ワークスペースの既存コードのスキャン
+## Step 2: Scan Workspace for Existing Code
 
-**ワークスペースに既存のコードがあるか判断します：**
-- ソースコードファイル（.java, .py, .js, .tsなど）をスキャンします。
-- ビルドファイル（pom.xml, package.json, build.gradleなど）を確認します。
-- プロジェクト構造の指標を探します。
+**Determine if workspace has existing code:**
+- Scan workspace for source code files (.java, .py, .js, .ts, etc.)
+- Check for build files (pom.xml, package.json, build.gradle, etc.)
+- Look for project structure indicators
 
-**調査結果を記録します：**
+**Record findings:**
 ```markdown
-## ワークスペースの状態
-- **既存コード**: [はい/いいえ]
-- **プログラミング言語**: [見つかった場合はリスト]
-- **ビルドシステム**: [Maven/Gradle/npmなど、見つかった場合]
-- **プロジェクト構造**: [モノリス/マイクロサービス/ライブラリ/空]
+## Workspace State
+- **Existing Code**: [Yes/No]
+- **Programming Languages**: [List if found]
+- **Build System**: [Maven/Gradle/npm/etc. if found]
+- **Project Structure**: [Monolith/Microservices/Library/Empty]
 ```
 
-## ステップ3: 次のフェーズの決定
+## Step 3: Determine Next Phase
 
-**ワークスペースが空の場合（既存コードなし）**:
-- フラグを設定: `brownfield = false`
-- 次のフェーズ: 要件分析
+**IF workspace is empty (no existing code)**:
+- Set flag: `brownfield = false`
+- Next phase: Requirements Analysis
 
-**ワークスペースに既存コードがある場合**:
-- フラグを設定: `brownfield = true`
-- `aidlc-docs/inception/reverse-engineering/` に既存のリバースエンジニアリング成果物があるか確認します。
-- **リバースエンジニアリング成果物が存在する場合**: それらを読み込み、要件分析にスキップします。
-- **リバースエンジニアリング成果物がない場合**: 次のフェーズはリバースエンジニアリングです。
+**IF workspace has existing code**:
+- Set flag: `brownfield = true`
+- Check for existing reverse engineering artifacts in `aidlc-docs/inception/reverse-engineering/`
+- **IF reverse engineering artifacts exist**: Load them, skip to Requirements Analysis
+- **IF no reverse engineering artifacts**: Next phase is Reverse Engineering
 
-## ステップ4: 初期状態ファイルの作成
+## Step 4: Create Initial State File
 
-`aidlc-docs/aidlc-state.md` を作成します：
+Create `aidlc-docs/aidlc-state.md`:
 
 ```markdown
-# AI-DLC 状態追跡
+# AI-DLC State Tracking
 
-## プロジェクト情報
-- **プロジェクトタイプ**: [グリーンフィールド/ブラウンフィールド]
-- **開始日**: [ISOタイムスタンプ]
-- **現在のステージ**: INCEPTION - ワークスペース検出
+## Project Information
+- **Project Type**: [Greenfield/Brownfield]
+- **Start Date**: [ISO timestamp]
+- **Current Stage**: INCEPTION - Workspace Detection
 
-## ワークスペースの状態
-- **既存コード**: [はい/いいえ]
-- **リバースエンジニアリングが必要**: [はい/いいえ]
+## Workspace State
+- **Existing Code**: [Yes/No]
+- **Reverse Engineering Needed**: [Yes/No]
 
-## ステージの進捗
-[ワークフローの進行に応じて入力されます]
+## Stage Progress
+[Will be populated as workflow progresses]
 ```
 
-## ステップ5: 完了メッセージの提示
+## Step 5: Present Completion Message
 
-**ブラウンフィールドプロジェクトの場合：**
+**For Brownfield Projects:**
 ```markdown
-# 🔍 ワークスペース検出完了
+# 🔍 Workspace Detection Complete
 
-ワークスペース分析の結果：
-• **プロジェクトタイプ**: ブラウンフィールドプロジェクト
-• [AIが生成したワークスペースの調査結果の箇条書きサマリー]
-• **次のステップ**: 既存のコードベースを分析するため、**リバースエンジニアリング**に進みます...
+Workspace analysis findings:
+• **Project Type**: Brownfield project
+• [AI-generated summary of workspace findings in bullet points]
+• **Next Step**: Proceeding to **Reverse Engineering** to analyze existing codebase...
 ```
 
-**グリーンフィールドプロジェクトの場合：**
+**For Greenfield Projects:**
 ```markdown
-# 🔍 ワークスペース検出完了
+# 🔍 Workspace Detection Complete
 
-ワークスペース分析の結果：
-• **プロジェクトタイプ**: グリーンフィールドプロジェクト
-• **次のステップ**: **要件分析**に進みます...
+Workspace analysis findings:
+• **Project Type**: Greenfield project
+• **Next Step**: Proceeding to **Requirements Analysis**...
 ```
 
-## ステップ6: 自動的に進行
+## Step 6: Automatically Proceed
 
-- **ユーザーの承認は不要** - これは情報提供のみです。
-- 自動的に次のフェーズに進みます：
-  - **ブラウンフィールド**: リバースエンジニアリング（既存の成果物がない場合）または要件分析（成果物が存在する場合）
-  - **グリーンフィールド**: 要件分析
-```
+- **No user approval required** - this is informational only
+- Automatically proceed to next phase:
+  - **Brownfield**: Reverse Engineering (if no existing artifacts) or Requirements Analysis (if artifacts exist)
+  - **Greenfield**: Requirements Analysis

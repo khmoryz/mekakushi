@@ -1,100 +1,99 @@
-# NFR（非機能要件）
+# NFR Requirements
 
-## 前提条件
-- ユニットの機能設計が完了していること
-- ユニットの機能設計成果物が利用可能であること
-- 実行計画でNFR要件ステージが実行されるべきであることが示されていること
+## Prerequisites
+- Functional Design must be complete for the unit
+- Unit functional design artifacts must be available
+- Execution plan must indicate NFR Requirements stage should execute
 
-## 概要
-ユニットの非機能要件を決定し、技術スタックの選択を行います。
+## Overview
+Determine non-functional requirements for the unit and make tech stack choices.
 
-## 実行ステップ
+## Steps to Execute
 
-### ステップ1: 機能設計の分析
-- `aidlc-docs/construction/{unit-name}/functional-design/` から機能設計成果物を読み込む
-- ビジネスロジックの複雑さと要件を理解する
+### Step 1: Analyze Functional Design
+- Read functional design artifacts from `aidlc-docs/construction/{unit-name}/functional-design/`
+- Understand business logic complexity and requirements
 
-### ステップ2: NFR要件計画の作成
-- NFR評価のためのチェックボックス `[]` 付きの計画を生成する
-- スケーラビリティ、パフォーマンス、可用性、セキュリティに焦点を当てる
-- 各ステップにはチェックボックス `[]` を付ける
+### Step 2: Create NFR Requirements Plan
+- Generate plan with checkboxes [] for NFR assessment
+- Focus on scalability, performance, availability, security
+- Each step should have a checkbox []
 
-### ステップ3: コンテキストに応じた質問の生成
-**指示**: 機能設計を徹底的に分析し、NFRの明確化がシステム品質とアーキテクチャ決定を改善するすべての領域を特定します。包括的なNFRカバレッジを確保するために、積極的に質問してください。
+### Step 3: Generate Context-Appropriate Questions
+**DIRECTIVE**: Thoroughly analyze the functional design to identify ALL areas where NFR clarification would improve system quality and architecture decisions. Be proactive in asking questions to ensure comprehensive NFR coverage.
 
-**重要**: システム品質に影響を与える可能性のある曖昧さや欠落した詳細がある場合は、デフォルトで質問をしてください。不正確なNFRの仮定をするよりも、多すぎる質問をする方が良いです。
+**CRITICAL**: Default to asking questions when there is ANY ambiguity or missing detail that could affect system quality. It's better to ask too many questions than to make incorrect NFR assumptions.
 
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- 曖昧さ、欠落情報、または明確化が必要な領域に焦点を当てる
-- ユーザーの入力がNFRと技術スタックの決定を改善する場所で質問を生成する
-- **迷った場合は質問する** - 過信は質の低いシステム品質につながります
+- EMBED questions using [Answer]: tag format
+- Focus on ANY ambiguities, missing information, or areas needing clarification
+- Generate questions wherever user input would improve NFR and tech stack decisions
+- **When in doubt, ask the question** - overconfidence leads to poor system quality
 
-**評価する質問カテゴリ**（すべてのカテゴリを考慮）：
-- **スケーラビリティ要件** - 予想される負荷、成長パターン、スケーリングのトリガー、キャパシティプランニングについて尋ねる
-- **パフォーマンス要件** - 応答時間、スループット、レイテンシ、パフォーマンスベンチマークについて尋ねる
-- **可用性要件** - アップタイムの期待値、災害復旧、フェイルオーバー、事業継続性について尋ねる
-- **セキュリティ要件** - データ保護、コンプライアンス、認証、認可、脅威モデルについて尋ねる
-- **技術スタックの選択** - 技術の好み、制約、既存システム、統合要件について尋ねる
-- **信頼性要件** - エラーハンドリング、フォールトトレランス、監視、アラートのニーズについて尋ねる
-- **保守性要件** - コード品質、ドキュメンテーション、テスト、運用要件について尋ねる
-- **ユーザビリティ要件** - ユーザーエクスペリエンス、アクセシビリティ、インターフェース要件について尋ねる
+**Question categories to evaluate** (consider ALL categories):
+- **Scalability Requirements** - Ask about expected load, growth patterns, scaling triggers, and capacity planning
+- **Performance Requirements** - Ask about response times, throughput, latency, and performance benchmarks
+- **Availability Requirements** - Ask about uptime expectations, disaster recovery, failover, and business continuity
+- **Security Requirements** - Ask about data protection, compliance, authentication, authorization, and threat models
+- **Tech Stack Selection** - Ask about technology preferences, constraints, existing systems, and integration requirements
+- **Reliability Requirements** - Ask about error handling, fault tolerance, monitoring, and alerting needs
+- **Maintainability Requirements** - Ask about code quality, documentation, testing, and operational requirements
+- **Usability Requirements** - Ask about user experience, accessibility, and interface requirements
 
-### ステップ4: 計画の保存
-- `aidlc-docs/construction/plans/{unit-name}-nfr-requirements-plan.md` として保存する
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
+### Step 4: Store Plan
+- Save as `aidlc-docs/construction/plans/{unit-name}-nfr-requirements-plan.md`
+- Include all [Answer]: tags for user input
 
-### ステップ5: 回答の収集と分析
-- ユーザーがすべての `[Answer]:` タグを完了するのを待つ
-- **必須**: すべての応答を注意深くレビューし、曖昧な回答がないか確認する
-- **重要**: 不明瞭な応答にはフォローアップの質問を追加する - 曖昧なまま進行しない
-- 「場合による」、「多分」、「わからない」、「混合」、「中間」、「標準」、「典型的」などの応答を探す
-- 曖昧さが検出された場合は、明確化のための質問ファイルを作成する
-- **すべての曖昧さが解決されるまで進行しない**
+### Step 5: Collect and Analyze Answers
+- Wait for user to complete all [Answer]: tags
+- **MANDATORY**: Carefully review ALL responses for vague or ambiguous answers
+- **CRITICAL**: Add follow-up questions for ANY unclear responses - do not proceed with ambiguity
+- Look for responses like "depends", "maybe", "not sure", "mix of", "somewhere between", "standard", "typical"
+- Create clarification questions file if ANY ambiguities are detected
+- **Do not proceed until ALL ambiguities are resolved**
 
-### ステップ6: NFR要件成果物の生成
-- `aidlc-docs/construction/{unit-name}/nfr-requirements/nfr-requirements.md` を作成する
-- `aidlc-docs/construction/{unit-name}/nfr-requirements/tech-stack-decisions.md` を作成する
+### Step 6: Generate NFR Requirements Artifacts
+- Create `aidlc-docs/construction/{unit-name}/nfr-requirements/nfr-requirements.md`
+- Create `aidlc-docs/construction/{unit-name}/nfr-requirements/tech-stack-decisions.md`
 
-### ステップ7: 完了メッセージの提示
-- この構造で完了メッセージを提示する：
-     1. **完了のお知らせ**（必須）: 常にこれで始める：
+### Step 7: Present Completion Message
+- Present completion message in this structure:
+     1. **Completion Announcement** (mandatory): Always start with this:
 
 ```markdown
-# 📊 NFR要件完了 - [unit-name]
+# 📊 NFR Requirements Complete - [unit-name]
 ```
 
-     2. **AIサマリー**（任意）: NFR要件の構造化された箇条書きサマリーを提供する
-        - フォーマット: 「NFR要件評価により、[説明]が特定されました：」
-        - 主要なスケーラビリティ、パフォーマンス、可用性の要件をリストアップ（箇条書き）
-        - 特定されたセキュリティとコンプライアンスの要件をリストアップ
-        - 技術スタックの決定と根拠について言及する
-        - ワークフローの指示（「レビューしてください」、「お知らせください」、「次のフェーズに進みます」、「進む前に」）を含めない
-        - 事実に基づき、コンテンツに焦点を当てる
-     3. **フォーマットされたワークフローメッセージ**（必須）: 常にこの正確なフォーマットで終える：
+     2. **AI Summary** (optional): Provide structured bullet-point summary of NFR requirements
+        - Format: "NFR requirements assessment has identified [description]:"
+        - List key scalability, performance, availability requirements (bullet points)
+        - List security and compliance requirements identified
+        - Mention tech stack decisions and rationale
+        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - Keep factual and content-focused
+     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
 
 ```markdown
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/construction/[unit-name]/nfr-requirements/` でNFR要件を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the NFR requirements at: `aidlc-docs/construction/[unit-name]/nfr-requirements/`
 
 
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - レビューに基づいてNFR要件の修正を依頼します  
-> ✅ **次のステージへ進む** - NFR要件を承認し、**[next-stage-name]**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the NFR requirements based on your review  
+> ✅ **Continue to Next Stage** - Approve NFR requirements and proceed to **[next-stage-name]**
 
 ---
 ```
 
-### ステップ8: 明示的な承認を待つ
-- ユーザーがNFR要件を明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、要件を更新し、承認プロセスを繰り返す
+### Step 8: Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the NFR requirements
+- Approval must be clear and unambiguous
+- If user requests changes, update the requirements and repeat the approval process
 
-### ステップ9: 承認の記録と進捗の更新
-- `audit.md` にタイムスタンプ付きで承認を記録する
-- ユーザーの承認応答をタイムスタンプ付きで記録する
-- `aidlc-state.md` でNFR要件ステージを完了とマークする
-```
+### Step 9: Record Approval and Update Progress
+- Log approval in audit.md with timestamp
+- Record the user's approval response with timestamp
+- Mark NFR Requirements stage complete in aidlc-state.md

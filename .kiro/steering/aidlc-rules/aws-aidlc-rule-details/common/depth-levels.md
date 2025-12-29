@@ -1,74 +1,73 @@
-# 適応的な深さ
+# Adaptive Depth
 
-**目的**: AI-DLCが問題の複雑さに応じて詳細レベルをどのように適応させるかを説明します。
+**Purpose**: Explain how AI-DLC adapts detail level to problem complexity
 
-## コア原則
+## Core Principle
 
-**ステージが実行されるとき、その定義されたすべての成果物が作成されます。「深さ」とは、問題の複雑さに応じて適応する、それらの成果物内の詳細度と厳密さのレベルを指します。**
+**When a stage executes, ALL its defined artifacts are created. The "depth" refers to the level of detail and rigor within those artifacts, which adapts to the problem's complexity.**
 
-## ステージ選択 vs 詳細レベル
+## Stage Selection vs Detail Level
 
-### ステージ選択 (バイナリ)
-- **ワークフロー計画**が決定: 各ステージに対して実行(EXECUTE)またはスキップ(SKIP)
-- **実行の場合**: ステージが実行され、定義されたすべての成果物が作成されます
-- **スキップの場合**: ステージはまったく実行されません
+### Stage Selection (Binary)
+- **Workflow Planning** decides: EXECUTE or SKIP for each stage
+- **If EXECUTE**: Stage runs and creates ALL its defined artifacts
+- **If SKIP**: Stage doesn't run at all
 
-### 詳細レベル (適応的)
-- **単純な問題**: 本質的な詳細を持つ簡潔な成果物
-- **複雑な問題**: 広範な詳細を持つ包括的な成果物
-- **モデルが決定**: 規範的なルールではなく、問題の特性に基づいて
+### Detail Level (Adaptive)
+- **Simple problems**: Concise artifacts with essential detail
+- **Complex problems**: Comprehensive artifacts with extensive detail
+- **Model decides**: Based on problem characteristics, not prescriptive rules
 
-## 詳細レベルに影響を与える要因
+## Factors Influencing Detail Level
 
-モデルは、適切な詳細を決定する際にこれらの要因を考慮します：
+The model considers these factors when determining appropriate detail:
 
-1. **リクエストの明確さ**: ユーザーのリクエストはどれほど明確で完全か？
-2. **問題の複雑さ**: 解決策の空間はどれほど複雑か？
-3. **スコープ**: 単一ファイル、コンポーネント、複数コンポーネント、またはシステム全体か？
-4. **リスクレベル**: エラーや省略の影響は何か？
-5. **利用可能なコンテキスト**: グリーンフィールド vs ブラウンフィールド、既存のドキュメント
-6. **ユーザーの好み**: ユーザーは簡潔さまたは詳細さの好みを表明したか？
+1. **Request Clarity**: How clear and complete is the user's request?
+2. **Problem Complexity**: How intricate is the solution space?
+3. **Scope**: Single file, component, multiple components, or system-wide?
+4. **Risk Level**: What's the impact of errors or omissions?
+5. **Available Context**: Greenfield vs brownfield, existing documentation
+6. **User Preferences**: Has user expressed preference for brevity or detail?
 
-## 例: 要件分析の成果物
+## Example: Requirements Analysis Artifacts
 
-**すべてのシナリオで同じ成果物が作成されます**:
-- `requirement-verification-questions.md` (必要な場合)
+**All scenarios create the same artifacts**:
+- `requirement-verification-questions.md` (if needed)
 - `requirements.md`
 
-**注意**: ユーザーの初期リクエストは `audit.md` にキャプチャされます（別の `user-intent.md` は不要）。
+**Note**: User's initial request is captured in `audit.md` (no separate user-intent.md needed)
 
-**詳細レベルは複雑さによって異なります**:
+**Detail level varies by complexity**:
 
-### 単純なシナリオ (バグ修正)
-- **requirement-verification-questions.md**: 必要な明確化の質問
-- **requirements.md**: 簡潔な機能要件、最小限のセクション
+### Simple Scenario (Bug Fix)
+- **requirement-verification-questions.md**: necessary clarifying questions
+- **requirements.md**: Concise functional requirement, minimal sections
 
-### 複雑なシナリオ (システム移行)
-- **requirement-verification-questions.md**: 複数ラウンド、10以上の質問
-- **requirements.md**: 包括的な機能的＋非機能的要件、トレーサビリティ、受け入れ基準
+### Complex Scenario (System Migration)
+- **requirement-verification-questions.md**: Multiple rounds, 10+ questions
+- **requirements.md**: Comprehensive functional + non-functional requirements, traceability, acceptance criteria
 
-## 例: アプリケーション設計の成果物
+## Example: Application Design Artifacts
 
-**すべてのシナリオで同じ成果物が作成されます**:
+**All scenarios create the same artifacts**:
 - `application-design.md`
 - `component-diagram.md`
 
-**詳細レベルは複雑さによって異なります**:
+**Detail level varies by complexity**:
 
-### 単純なシナリオ (単一コンポーネント)
-- **application-design.md**: 基本的なコンポーネントの説明、主要なメソッド
-- **component-diagram.md**: 本質的な関係を持つ単純な図
+### Simple Scenario (Single Component)
+- **application-design.md**: Basic component description, key methods
+- **component-diagram.md**: Simple diagram with essential relationships
 
-### 複雑なシナリオ (複数コンポーネントシステム)
-- **application-design.md**: 詳細なコンポーネントの責任、シグネチャ付きのすべてのメソッド、デザインパターン、検討された代替案
-- **component-diagram.md**: すべての関係、データフロー、統合ポイントを含む包括的な図
+### Complex Scenario (Multi-Component System)
+- **application-design.md**: Detailed component responsibilities, all methods with signatures, design patterns, alternatives considered
+- **component-diagram.md**: Comprehensive diagram with all relationships, data flows, integration points
 
-## モデルのための指導原則
+## Guiding Principle for Model
 
-**「目の前の問題に必要な詳細だけを正確に作成する - それ以上でもそれ以下でもない。」**
+**"Create exactly the detail needed for the problem at hand - no more, no less."**
 
-- 不必要な詳細で単純な問題を人為的に膨らませない
-- 重要な詳細を省略して複雑な問題を軽視しない
-- 問題の特性が自然に詳細レベルを決定するようにする
-- ステージが実行されるとき、すべての必須成果物は常に作成される
-```
+- Don't artificially inflate simple problems with unnecessary detail
+- Don't shortchange complex problems by omitting critical detail
+- Let problem characteristics drive detail level naturally
+- All required artifacts are always created when stage executes

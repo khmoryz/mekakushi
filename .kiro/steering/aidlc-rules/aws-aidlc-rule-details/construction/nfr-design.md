@@ -1,91 +1,90 @@
-# NFR（非機能要件）設計
+# NFR Design
 
-## 前提条件
-- ユニットのNFR要件が完了していること
-- NFR要件の成果物が利用可能であること
-- 実行計画でNFR設計ステージが実行されるべきであることが示されていること
+## Prerequisites
+- NFR Requirements must be complete for the unit
+- NFR requirements artifacts must be available
+- Execution plan must indicate NFR Design stage should execute
 
-## 概要
-NFR要件を、パターンと論理コンポーネントを使用してユニット設計に組み込みます。
+## Overview
+Incorporate NFR requirements into unit design using patterns and logical components.
 
-## 実行ステップ
+## Steps to Execute
 
-### ステップ1: NFR要件の分析
-- `aidlc-docs/construction/{unit-name}/nfr-requirements/` からNFR要件を読み込む
-- スケーラビリティ、パフォーマンス、可用性、セキュリティのニーズを理解する
+### Step 1: Analyze NFR Requirements
+- Read NFR requirements from `aidlc-docs/construction/{unit-name}/nfr-requirements/`
+- Understand scalability, performance, availability, security needs
 
-### ステップ2: NFR設計計画の作成
-- NFR設計のためのチェックボックス `[]` 付きの計画を生成する
-- デザインパターンと論理コンポーネントに焦点を当てる
-- 各ステップにはチェックボックス `[]` を付ける
+### Step 2: Create NFR Design Plan
+- Generate plan with checkboxes [] for NFR design
+- Focus on design patterns and logical components
+- Each step should have a checkbox []
 
-### ステップ3: コンテキストに応じた質問の生成
-**指示**: NFR要件を分析し、この特定のユニットのNFR設計にのみ関連する質問を生成します。以下のカテゴリをインスピレーションとして使用し、必須のチェックリストとしては使用しないでください。適用できない場合はカテゴリ全体をスキップしてください。
+### Step 3: Generate Context-Appropriate Questions
+**DIRECTIVE**: Analyze the NFR requirements to generate ONLY questions relevant to THIS specific unit's NFR design. Use the categories below as inspiration, NOT as a mandatory checklist. Skip entire categories if not applicable.
 
-- `[Answer]:` タグ形式を使用して質問を埋め込む
-- このユニットに特有の曖昧さや欠落情報に焦点を当てる
-- パターンとコンポーネントの決定にユーザーの入力が必要な場合にのみ質問を生成する
+- EMBED questions using [Answer]: tag format
+- Focus on ambiguities and missing information specific to this unit
+- Generate questions only where user input is needed for pattern and component decisions
 
-**質問カテゴリの例**（必要に応じて適応）：
-- **レジリエンスパターン** - フォールトトレランスのアプローチに明確化が必要な場合のみ
-- **スケーラビリティパターン** - スケーリングメカニズムが不明確な場合のみ
-- **パフォーマンスパターン** - パフォーマンス最適化戦略が曖昧な場合のみ
-- **セキュリティパターン** - セキュリティ実装アプローチに入力が必要な場合のみ
-- **論理コンポーネント** - インフラコンポーネント（キュー、キャッシュなど）に明確化が必要な場合のみ
+**Example question categories** (adapt as needed):
+- **Resilience Patterns** - Only if fault tolerance approach needs clarification
+- **Scalability Patterns** - Only if scaling mechanisms are unclear
+- **Performance Patterns** - Only if performance optimization strategy is ambiguous
+- **Security Patterns** - Only if security implementation approach needs input
+- **Logical Components** - Only if infrastructure components (queues, caches, etc.) need clarification
 
-### ステップ4: 計画の保存
-- `aidlc-docs/construction/plans/{unit-name}-nfr-design-plan.md` として保存する
-- ユーザー入力のためのすべての `[Answer]:` タグを含める
+### Step 4: Store Plan
+- Save as `aidlc-docs/construction/plans/{unit-name}-nfr-design-plan.md`
+- Include all [Answer]: tags for user input
 
-### ステップ5: 回答の収集と分析
-- ユーザーがすべての `[Answer]:` タグを完了するのを待つ
-- 曖昧な応答がないかレビューする
-- 必要に応じてフォローアップの質問を追加する
+### Step 5: Collect and Analyze Answers
+- Wait for user to complete all [Answer]: tags
+- Review for vague or ambiguous responses
+- Add follow-up questions if needed
 
-### ステップ6: NFR設計成果物の生成
-- `aidlc-docs/construction/{unit-name}/nfr-design/nfr-design-patterns.md` を作成する
-- `aidlc-docs/construction/{unit-name}/nfr-design/logical-components.md` を作成する
+### Step 6: Generate NFR Design Artifacts
+- Create `aidlc-docs/construction/{unit-name}/nfr-design/nfr-design-patterns.md`
+- Create `aidlc-docs/construction/{unit-name}/nfr-design/logical-components.md`
 
-### ステップ7: 完了メッセージの提示
-- この構造で完了メッセージを提示する：
-     1. **完了のお知らせ**（必須）: 常にこれで始める：
+### Step 7: Present Completion Message
+- Present completion message in this structure:
+     1. **Completion Announcement** (mandatory): Always start with this:
 
 ```markdown
-# 🎨 NFR設計完了 - [unit-name]
+# 🎨 NFR Design Complete - [unit-name]
 ```
 
-     2. **AIサマリー**（任意）: NFR設計の構造化された箇条書きサマリーを提供する
-        - フォーマット: 「NFR設計には[説明]が組み込まれました：」
-        - 実装された主要なデザインパターンをリストアップ（箇条書き）
-        - 論理コンポーネントとインフラストラクチャ要素をリストアップ
-        - 適用されたレジリエンス、スケーラビリティ、パフォーマンスのパターンについて言及する
-        - ワークフローの指示（「レビューしてください」、「お知らせください」、「次のフェーズに進みます」、「進む前に」）を含めない
-        - 事実に基づき、コンテンツに焦点を当てる
-     3. **フォーマットされたワークフローメッセージ**（必須）: 常にこの正確なフォーマットで終える：
+     2. **AI Summary** (optional): Provide structured bullet-point summary of NFR design
+        - Format: "NFR design has incorporated [description]:"
+        - List key design patterns implemented (bullet points)
+        - List logical components and infrastructure elements
+        - Mention resilience, scalability, and performance patterns applied
+        - DO NOT include workflow instructions ("please review", "let me know", "proceed to next phase", "before we proceed")
+        - Keep factual and content-focused
+     3. **Formatted Workflow Message** (mandatory): Always end with this exact format:
 
 ```markdown
-> **📋 <u>**レビューが必要です:**</u>**  
-> `aidlc-docs/construction/[unit-name]/nfr-design/` でNFR設計を確認してください。
+> **📋 <u>**REVIEW REQUIRED:**</u>**  
+> Please examine the NFR design at: `aidlc-docs/construction/[unit-name]/nfr-design/`
 
 
 
-> **🚀 <u>**次のステップ:**</u>**
+> **🚀 <u>**WHAT'S NEXT?**</u>**
 >
-> **以下のアクションが可能です：**
+> **You may:**
 >
-> 🔧 **変更をリクエスト** - レビューに基づいてNFR設計の修正を依頼します  
-> ✅ **次のステージへ進む** - NFR設計を承認し、**[next-stage-name]**に進みます
+> 🔧 **Request Changes** - Ask for modifications to the NFR design based on your review  
+> ✅ **Continue to Next Stage** - Approve NFR design and proceed to **[next-stage-name]**
 
 ---
 ```
 
-### ステップ8: 明示的な承認を待つ
-- ユーザーがNFR設計を明示的に承認するまで進行しない
-- 承認は明確で曖昧さがないものでなければならない
-- ユーザーが変更を要求した場合、設計を更新し、承認プロセスを繰り返す
+### Step 8: Wait for Explicit Approval
+- Do not proceed until the user explicitly approves the NFR design
+- Approval must be clear and unambiguous
+- If user requests changes, update the design and repeat the approval process
 
-### ステップ9: 承認の記録と進捗の更新
-- `audit.md` にタイムスタンプ付きで承認を記録する
-- ユーザーの承認応答をタイムスタンプ付きで記録する
-- `aidlc-state.md` でNFR設計ステージを完了とマークする
-```
+### Step 9: Record Approval and Update Progress
+- Log approval in audit.md with timestamp
+- Record the user's approval response with timestamp
+- Mark NFR Design stage complete in aidlc-state.md
