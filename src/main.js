@@ -1,5 +1,9 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const Store = require('electron-store');
+
+// Initialize electron-store
+const store = new Store();
 
 // Keep a global reference of the window object
 let mainWindow;
@@ -7,14 +11,16 @@ let mainWindow;
 function createWindow() {
   // Create the browser window
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
     },
-    titleBarStyle: 'default',
-    show: false
+    titleBarStyle: 'hiddenInset',
+    show: false,
+    backgroundColor: '#161821'
   });
 
   // Load the index.html file
@@ -30,6 +36,21 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+// IPC handlers for dictionary persistence
+ipcMain.handle('store-get-dictionary', () => {
+  return store.get('maskingDictionary', {});
+});
+
+ipcMain.handle('store-set-dictionary', (event, dictionary) => {
+  store.set('maskingDictionary', dictionary);
+  return true;
+});
+
+ipcMain.handle('store-clear-dictionary', () => {
+  store.delete('maskingDictionary');
+  return true;
+});
 
 // This method will be called when Electron has finished initialization
 app.whenReady().then(createWindow);

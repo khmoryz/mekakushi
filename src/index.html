@@ -644,6 +644,58 @@
         // メモリ内辞書（マスキング履歴）
         let maskingDictionary = new Map();
 
+        // 辞書の永続化機能
+        async function loadDictionaryFromStore() {
+            try {
+                if (window.electronAPI) {
+                    const storedDict = await window.electronAPI.getDictionary();
+                    maskingDictionary.clear();
+
+                    // オブジェクトからMapに変換
+                    for (const [key, value] of Object.entries(storedDict)) {
+                        // lastUsedを日付オブジェクトに変換
+                        if (value.lastUsed) {
+                            value.lastUsed = new Date(value.lastUsed);
+                        }
+                        maskingDictionary.set(key, value);
+                    }
+
+                    console.log('辞書をロードしました:', maskingDictionary.size, '件');
+                    updateDictionaryDisplay();
+                    syncInputToOutput();
+                }
+            } catch (error) {
+                console.error('辞書のロードに失敗しました:', error);
+            }
+        }
+
+        async function saveDictionaryToStore() {
+            try {
+                if (window.electronAPI) {
+                    // Mapをオブジェクトに変換
+                    const dictObj = Object.fromEntries(maskingDictionary);
+                    await window.electronAPI.setDictionary(dictObj);
+                    console.log('辞書を保存しました:', maskingDictionary.size, '件');
+                }
+            } catch (error) {
+                console.error('辞書の保存に失敗しました:', error);
+            }
+        }
+
+        async function clearDictionaryFromStore() {
+            try {
+                if (window.electronAPI) {
+                    await window.electronAPI.clearDictionary();
+                    maskingDictionary.clear();
+                    updateDictionaryDisplay();
+                    syncInputToOutput();
+                    console.log('辞書をクリアしました');
+                }
+            } catch (error) {
+                console.error('辞書のクリアに失敗しました:', error);
+            }
+        }
+
         // HTMLエスケープ関数
         function escapeHtml(text) {
             return text
@@ -807,6 +859,9 @@
                 entry.lastUsed = new Date();
             }
             updateDictionaryDisplay();
+
+            // 自動保存
+            saveDictionaryToStore();
         }
 
         // 辞書表示を更新する関数
@@ -814,7 +869,9 @@
             const dictionaryList = document.getElementById('dictionaryList');
 
             if (maskingDictionary.size === 0) {
-                dictionaryList.innerHTML = '<div class="dictionary-empty">まだマスキングした単語がありません</div>';
+                dictionaryList.innerHTML = `
+                    <div class="dictionary-empty">まだマスキングした単語がありません</div>
+                `;
                 return;
             }
 
@@ -822,7 +879,20 @@
             const entries = Array.from(maskingDictionary.entries())
                 .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
 
-            dictionaryList.innerHTML = entries.map(([key, entry]) => `
+            const clearButton = `
+                <div style="margin-bottom: var(--spacing-sm); text-align: center;">
+                    <button onclick="clearAllDictionary()" 
+                            style="background: var(--accent-red); color: var(--bg-primary); border: none; 
+                                   border-radius: var(--radius-sm); padding: var(--spacing-xs) var(--spacing-sm); 
+                                   font-size: 11px; cursor: pointer; transition: all 0.2s ease;"
+                            onmouseover="this.style.background='#c66'"
+                            onmouseout="this.style.background='var(--accent-red)'">
+                        🗑️ 辞書をクリア
+                    </button>
+                </div>
+            `;
+
+            dictionaryList.innerHTML = clearButton + entries.map(([key, entry]) => `
                 <div class="dictionary-item">
                     <div class="dictionary-content">
                         <span class="dictionary-original">${entry.original}</span>
@@ -838,6 +908,13 @@
             updateHighlights();
         }
 
+        // 辞書全体をクリアする関数
+        function clearAllDictionary() {
+            if (confirm('辞書の全ての内容を削除しますか？この操作は元に戻せません。')) {
+                clearDictionaryFromStore();
+            }
+        }
+
         // 辞書エントリを削除する関数
         function deleteDictionaryEntry(key) {
             if (maskingDictionary.has(key)) {
@@ -846,6 +923,9 @@
 
                 // リアルタイム同期（削除されたエントリの影響を反映）
                 syncInputToOutput();
+
+                // 自動保存
+                saveDictionaryToStore();
             }
         }
 
@@ -878,7 +958,10 @@
         }
 
         // イベントリスナーの設定
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', async function () {
+            // アプリ起動時に辞書をロード
+            await loadDictionaryFromStore();
+
             // 入力テキストの変更をリアルタイムで同期
             inputTextArea.addEventListener('input', syncInputToOutput);
 
