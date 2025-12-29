@@ -251,14 +251,66 @@
             justify-content: center;
             gap: var(--spacing-sm);
             padding: var(--spacing-md);
-            min-width: 48px;
+            min-width: 32px;
+            max-width: 32px;
         }
 
         .conversion-arrow {
-            color: var(--text-tertiary);
-            font-size: 18px;
+            width: 20px;
+            height: 20px;
+            position: relative;
             opacity: 0.6;
             transition: all 0.3s ease;
+        }
+
+        /* 右向き矢印 */
+        .conversion-arrow.right::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 12px;
+            height: 2px;
+            background: var(--text-tertiary);
+            transform: translateY(-50%);
+        }
+
+        .conversion-arrow.right::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-left: 6px solid var(--text-tertiary);
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            transform: translateY(-50%);
+        }
+
+        /* 左向き矢印 */
+        .conversion-arrow.left::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 12px;
+            height: 2px;
+            background: var(--text-tertiary);
+            transform: translateY(-50%);
+        }
+
+        .conversion-arrow.left::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-right: 6px solid var(--text-tertiary);
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            transform: translateY(-50%);
         }
 
         /* Highlight Styles */
@@ -540,6 +592,8 @@
                 flex-direction: row;
                 padding: var(--spacing-sm) 0;
                 min-width: auto;
+                max-width: none;
+                gap: var(--spacing-md);
             }
 
             .textarea-container {
@@ -584,8 +638,8 @@
 
                     <!-- 変換コントロール -->
                     <div class="conversion-controls">
-                        <div class="conversion-arrow">➡️</div>
-                        <div class="conversion-arrow">⬅️</div>
+                        <div class="conversion-arrow right"></div>
+                        <div class="conversion-arrow left"></div>
                     </div>
 
                     <!-- マスキング済みテキストパネル -->
