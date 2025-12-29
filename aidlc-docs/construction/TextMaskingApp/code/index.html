@@ -635,17 +635,14 @@
                 return;
             }
 
-            // 選択されたテキストをマスキング
-            const inputText = inputTextArea.value;
-            const maskedText = inputText.substring(0, selectionStart) + candidate + inputText.substring(selectionEnd);
-
-            // 入力テキストを更新
-            inputTextArea.value = maskedText;
+            // 入力テキストは変更せず、辞書にのみ追加
+            // これにより出力テキストのみがマスキングされ、
+            // 入力テキストは元の文字列を保持してハイライト表示される
 
             // 辞書に追加
             addToDictionary(selectedText, candidate);
 
-            // リアルタイム同期
+            // リアルタイム同期（出力テキストのマスキングを更新）
             syncInputToOutput();
 
             // ポップアップを非表示
