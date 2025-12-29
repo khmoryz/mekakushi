@@ -86,6 +86,79 @@
             margin-bottom: 10px;
         }
 
+        .mask-settings {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .mask-settings h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .mask-input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .mask-input-group label {
+            font-size: 13px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .mask-input {
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 13px;
+            width: 120px;
+            text-align: center;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .mask-input:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .preset-btn {
+            background-color: #e9ecef;
+            color: #495057;
+            border: 1px solid #ced4da;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background-color: #dee2e6;
+            border-color: #adb5bd;
+        }
+
+        .preset-btn.active {
+            background-color: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+
         .button {
             background-color: #007AFF;
             color: white;
@@ -159,6 +232,22 @@
         </div>
 
         <div class="controls">
+            <div class="mask-settings">
+                <h3>🎭 マスク設定</h3>
+                <div class="mask-input-group">
+                    <label for="maskChar">マスク文字:</label>
+                    <input type="text" id="maskChar" class="mask-input" value="*" maxlength="10"
+                        placeholder="例: *, X, [MASK]">
+                    <div class="preset-buttons">
+                        <button class="preset-btn active" onclick="setMaskChar('*')">*</button>
+                        <button class="preset-btn" onclick="setMaskChar('X')">X</button>
+                        <button class="preset-btn" onclick="setMaskChar('#')">#</button>
+                        <button class="preset-btn" onclick="setMaskChar('[MASK]')">[MASK]</button>
+                        <button class="preset-btn" onclick="setMaskChar('●')">●</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="button-row">
                 <button class="button" onclick="maskText()">🔒 自動マスキング</button>
                 <button class="button warning" id="maskSelectedBtn" onclick="maskSelectedText()" disabled>✂️
@@ -166,7 +255,7 @@
                 <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
             </div>
             <div class="status" id="status">準備完了</div>
-            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング</div>
+            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング | マスク文字をカスタマイズ可能</div>
         </div>
     </div>
 
@@ -176,33 +265,70 @@
         const outputTextArea = document.getElementById('outputText');
         const statusDiv = document.getElementById('status');
         const maskSelectedBtn = document.getElementById('maskSelectedBtn');
+        const maskCharInput = document.getElementById('maskChar');
 
         // 選択されたテキストの情報を保存
         let selectedText = '';
         let selectionStart = 0;
         let selectionEnd = 0;
 
-        // 最も単純なマスキング関数
-        function simpleMask(text) {
-            // 固定文字列を固定マスクに置換
-            const maskingRules = {
-                'password': '****',
-                'secret': '***',
-                'confidential': '****',
-                'private': '***',
-                'admin': '***',
-                'root': '***'
-            };
+        // マスク設定（メモリ内保持）
+        let maskSettings = {
+            customChar: '*',
+            autoMaskRules: {
+                'password': null, // nullの場合はcustomCharを使用
+                'secret': null,
+                'confidential': null,
+                'private': null,
+                'admin': null,
+                'root': null
+            }
+        };
 
+        // カスタムマスク文字を設定する関数
+        function setMaskChar(char) {
+            maskSettings.customChar = char;
+            maskCharInput.value = char;
+
+            // プリセットボタンのアクティブ状態を更新
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === char) {
+                    btn.classList.add('active');
+                }
+            });
+
+            updateStatus(`マスク文字を「${char}」に変更しました`, 'success');
+        }
+
+        // マスク文字を生成する関数
+        function generateMask(originalText, customMask = null) {
+            const maskChar = customMask || maskSettings.customChar;
+
+            // カスタムマスクが[MASK]のような固定文字列の場合はそのまま使用
+            if (maskChar.includes('[') && maskChar.includes(']')) {
+                return maskChar;
+            }
+
+            // 単一文字の場合は長さに応じて繰り返し
+            const length = Math.max(3, Math.min(originalText.length, 10));
+            return maskChar.repeat(length);
+        }
+
+        // 最も単純なマスキング関数（カスタムマスク文字対応）
+        function simpleMask(text) {
+            // 固定文字列を動的マスクに置換
             let maskedText = text;
             let maskCount = 0;
 
             // 各マスキングルールを適用（大文字小文字を区別しない）
-            for (const [original, mask] of Object.entries(maskingRules)) {
+            for (const [original, customMask] of Object.entries(maskSettings.autoMaskRules)) {
                 const regex = new RegExp(original, 'gi');
                 const matches = maskedText.match(regex);
                 if (matches) {
                     maskCount += matches.length;
+                    // カスタムマスクまたはデフォルトマスクを使用
+                    const mask = generateMask(original, customMask);
                     maskedText = maskedText.replace(regex, mask);
                 }
             }
@@ -210,17 +336,15 @@
             return { maskedText, maskCount };
         }
 
-        // 選択されたテキストをマスクに置換する関数
+        // 選択されたテキストをマスクに置換する関数（カスタムマスク文字対応）
         function maskSelectedPortion(text, start, end) {
             const selectedPortion = text.substring(start, end);
             if (selectedPortion.trim() === '') {
                 return { maskedText: text, maskCount: 0 };
             }
 
-            // 選択された部分を***に置換（長さに応じて調整）
-            const maskLength = Math.max(3, Math.min(selectedPortion.length, 10));
-            const mask = '*'.repeat(maskLength);
-
+            // カスタムマスク文字を使用
+            const mask = generateMask(selectedPortion);
             const maskedText = text.substring(0, start) + mask + text.substring(end);
             return { maskedText, maskCount: 1 };
         }
@@ -315,12 +439,33 @@
         inputTextArea.addEventListener('keyup', updateSelection);
         inputTextArea.addEventListener('select', updateSelection);
 
+        // マスク文字入力フィールドのイベントリスナー
+        maskCharInput.addEventListener('input', function () {
+            const newChar = this.value || '*';
+            maskSettings.customChar = newChar;
+
+            // プリセットボタンのアクティブ状態をリセット
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 入力された文字がプリセットと一致する場合はアクティブにする
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                if (btn.textContent === newChar) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+
         // アプリケーション初期化
         document.addEventListener('DOMContentLoaded', function () {
             inputTextArea.focus();
 
             // サンプルテキストを設定（デモ用）
             inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
+
+            // 初期マスク文字設定
+            setMaskChar('*');
         });
 
         // キーボードショートカット
