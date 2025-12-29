@@ -100,6 +100,35 @@
             color: #495057;
         }
 
+        .mask-mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn:hover {
+            border-color: #007AFF;
+            color: #007AFF;
+        }
+
+        .mode-btn.active {
+            border-color: #007AFF;
+            background-color: #007AFF;
+            color: white;
+        }
+
         .mask-input-group {
             display: flex;
             align-items: center;
@@ -157,6 +186,81 @@
             background-color: #007AFF;
             color: white;
             border-color: #007AFF;
+        }
+
+        .candidate-selector {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .candidate-selector.active {
+            display: block;
+        }
+
+        .candidate-categories {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 4px 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            color: #495057;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-btn:hover {
+            background-color: #e9ecef;
+        }
+
+        .category-btn.active {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .candidate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 4px;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px;
+            background-color: white;
+        }
+
+        .candidate-item {
+            padding: 4px 6px;
+            border: 1px solid #e9ecef;
+            border-radius: 3px;
+            background-color: #f8f9fa;
+            color: #495057;
+            font-size: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .candidate-item:hover {
+            background-color: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+
+        .candidate-item.selected {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+            font-weight: bold;
         }
 
         .dictionary-section {
@@ -303,7 +407,12 @@
         <div class="controls">
             <div class="mask-settings">
                 <h3>🎭 マスク設定</h3>
-                <div class="mask-input-group">
+                <div class="mask-mode-selector">
+                    <button class="mode-btn active" id="symbolModeBtn" onclick="setMaskMode('symbol')">記号・文字</button>
+                    <button class="mode-btn" id="candidateModeBtn" onclick="setMaskMode('candidate')">候補選択</button>
+                </div>
+
+                <div class="mask-input-group" id="symbolMaskGroup">
                     <label for="maskChar">マスク文字:</label>
                     <input type="text" id="maskChar" class="mask-input" value="*" maxlength="10"
                         placeholder="例: *, X, [MASK]">
@@ -313,6 +422,19 @@
                         <button class="preset-btn" onclick="setMaskChar('#')">#</button>
                         <button class="preset-btn" onclick="setMaskChar('[MASK]')">[MASK]</button>
                         <button class="preset-btn" onclick="setMaskChar('●')">●</button>
+                    </div>
+                </div>
+
+                <div class="candidate-selector" id="candidateSelector">
+                    <div class="candidate-categories">
+                        <button class="category-btn active" onclick="setCategory('fruits')">🍎 果物</button>
+                        <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
+                        <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
+                        <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
+                        <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
+                    </div>
+                    <div class="candidate-grid" id="candidateGrid">
+                        <!-- 候補がここに動的に表示される -->
                     </div>
                 </div>
 
@@ -334,7 +456,8 @@
                 <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
             </div>
             <div class="status" id="status">準備完了</div>
-            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング | マスク文字をカスタマイズ可能 | 一度マスキングした単語は自動記憶
+            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング | 記号・文字モード: カスタマイズ可能 | 候補選択モード:
+                果物・動物・星などから選択 | 一度マスキングした単語は自動記憶
             </div>
         </div>
     </div>
@@ -354,7 +477,10 @@
 
         // マスク設定（メモリ内保持）
         let maskSettings = {
+            mode: 'symbol', // 'symbol' または 'candidate'
             customChar: '*',
+            selectedCandidate: null,
+            currentCategory: 'fruits',
             autoMaskRules: {
                 'password': null, // nullの場合はcustomCharを使用
                 'secret': null,
@@ -363,6 +489,30 @@
                 'admin': null,
                 'root': null
             }
+        };
+
+        // 候補データ（約50個のアイテム）
+        const candidateData = {
+            fruits: [
+                'りんご', 'みかん', 'バナナ', 'いちご', 'ぶどう', 'もも', 'なし', 'すいか', 'メロン', 'パイナップル',
+                'キウイ', 'マンゴー', 'さくらんぼ', 'あんず', 'プラム', 'レモン', 'オレンジ', 'グレープフルーツ'
+            ],
+            animals: [
+                'ねこ', 'いぬ', 'うさぎ', 'ハムスター', 'とり', 'さかな', 'ぞう', 'きりん', 'らいおん', 'とら',
+                'くま', 'さる', 'ぱんだ', 'こあら', 'かんがるー', 'しまうま', 'きつね', 'おおかみ', 'ひつじ', 'やぎ'
+            ],
+            stars: [
+                'シリウス', 'カノープス', 'アルクトゥルス', 'ベガ', 'カペラ', 'リゲル', 'プロキオン', 'アケルナル', 'ベテルギウス', 'ハダル',
+                'アルタイル', 'アルデバラン', 'スピカ', 'アンタレス', 'ポルックス', 'フォーマルハウト', 'デネブ', 'レグルス', 'アドハラ', 'カストル'
+            ],
+            colors: [
+                'あか', 'あお', 'きいろ', 'みどり', 'むらさき', 'オレンジ', 'ピンク', 'ちゃいろ', 'くろ', 'しろ',
+                'はいいろ', 'きんいろ', 'ぎんいろ', 'みずいろ', 'クリーム', 'ベージュ', 'ネイビー', 'ワイン'
+            ],
+            countries: [
+                'にほん', 'アメリカ', 'イギリス', 'フランス', 'ドイツ', 'イタリア', 'スペイン', 'カナダ', 'オーストラリア', 'ブラジル',
+                'インド', 'ちゅうごく', 'かんこく', 'ロシア', 'メキシコ', 'アルゼンチン', 'エジプト', 'タイ'
+            ]
         };
 
         // メモリ内辞書（マスキング履歴）
@@ -424,7 +574,71 @@
             updateStatus(`${count}個のエントリを削除しました`, 'success');
         }
 
-        // カスタムマスク文字を設定する関数
+        // マスクモードを設定する関数
+        function setMaskMode(mode) {
+            maskSettings.mode = mode;
+
+            // ボタンのアクティブ状態を更新
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            if (mode === 'symbol') {
+                document.getElementById('symbolModeBtn').classList.add('active');
+                document.getElementById('symbolMaskGroup').style.display = 'flex';
+                document.getElementById('candidateSelector').classList.remove('active');
+            } else {
+                document.getElementById('candidateModeBtn').classList.add('active');
+                document.getElementById('symbolMaskGroup').style.display = 'none';
+                document.getElementById('candidateSelector').classList.add('active');
+                updateCandidateGrid();
+            }
+
+            updateStatus(`マスクモードを「${mode === 'symbol' ? '記号・文字' : '候補選択'}」に変更しました`, 'success');
+        }
+
+        // カテゴリを設定する関数
+        function setCategory(category) {
+            maskSettings.currentCategory = category;
+
+            // カテゴリボタンのアクティブ状態を更新
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="setCategory('${category}')"]`).classList.add('active');
+
+            // 候補グリッドを更新
+            updateCandidateGrid();
+
+            const categoryNames = {
+                fruits: '果物',
+                animals: '動物',
+                stars: '星',
+                colors: '色',
+                countries: '国'
+            };
+            updateStatus(`カテゴリを「${categoryNames[category]}」に変更しました`, 'success');
+        }
+
+        // 候補グリッドを更新する関数
+        function updateCandidateGrid() {
+            const grid = document.getElementById('candidateGrid');
+            const candidates = candidateData[maskSettings.currentCategory] || [];
+
+            grid.innerHTML = candidates.map(candidate =>
+                `<div class="candidate-item" onclick="selectCandidate('${candidate}')">${candidate}</div>`
+            ).join('');
+        }
+
+        // 候補を選択する関数
+        function selectCandidate(candidate) {
+            maskSettings.selectedCandidate = candidate;
+
+            // 選択状態を視覚的に表示
+            document.querySelectorAll('.candidate-item').forEach(item => {
+                item.classList.remove('selected');
+                if (item.textContent === candidate) {
+                    item.classList.add('selected');
+                }
+            });
+
+            updateStatus(`「${candidate}」を選択しました`, 'success');
+        }
         function setMaskChar(char) {
             maskSettings.customChar = char;
             maskCharInput.value = char;
@@ -440,8 +654,14 @@
             updateStatus(`マスク文字を「${char}」に変更しました`, 'success');
         }
 
-        // マスク文字を生成する関数
+        // マスク文字を生成する関数（候補選択モード対応）
         function generateMask(originalText, customMask = null) {
+            // 候補選択モードの場合
+            if (maskSettings.mode === 'candidate' && maskSettings.selectedCandidate) {
+                return maskSettings.selectedCandidate;
+            }
+
+            // 記号・文字モードの場合（従来の処理）
             const maskChar = customMask || maskSettings.customChar;
 
             // カスタムマスクが[MASK]のような固定文字列の場合はそのまま使用
@@ -534,11 +754,20 @@
                 return;
             }
 
+            // 候補選択モードで候補が選択されていない場合の警告
+            if (maskSettings.mode === 'candidate' && !maskSettings.selectedCandidate) {
+                updateStatus('候補選択モードでは、まず候補を選択してください', 'error');
+                return;
+            }
+
             const result = simpleMask(inputText);
             outputTextArea.value = result.maskedText;
 
             if (result.maskCount > 0) {
-                updateStatus(`${result.maskCount}個の単語を自動マスキングしました`, 'success');
+                const maskType = maskSettings.mode === 'candidate' ?
+                    `候補「${maskSettings.selectedCandidate}」` :
+                    `マスク文字「${maskSettings.customChar}」`;
+                updateStatus(`${result.maskCount}個の単語を${maskType}で自動マスキングしました`, 'success');
                 updateDictionaryDisplay(); // 辞書表示を更新
             } else {
                 updateStatus('マスキング対象の単語が見つかりませんでした', 'info');
@@ -554,11 +783,20 @@
                 return;
             }
 
+            // 候補選択モードで候補が選択されていない場合の警告
+            if (maskSettings.mode === 'candidate' && !maskSettings.selectedCandidate) {
+                updateStatus('候補選択モードでは、まず候補を選択してください', 'error');
+                return;
+            }
+
             const result = maskSelectedPortion(inputText, selectionStart, selectionEnd);
             outputTextArea.value = result.maskedText;
 
             if (result.maskCount > 0) {
-                updateStatus(`選択された「${selectedText}」をマスキングしました`, 'success');
+                const maskType = maskSettings.mode === 'candidate' ?
+                    `候補「${maskSettings.selectedCandidate}」` :
+                    `マスク文字「${maskSettings.customChar}」`;
+                updateStatus(`選択された「${selectedText}」を${maskType}でマスキングしました`, 'success');
                 updateDictionaryDisplay(); // 辞書表示を更新
             } else {
                 updateStatus('選択されたテキストをマスキングできませんでした', 'error');
@@ -644,6 +882,12 @@
 
             // 初期マスク文字設定
             setMaskChar('*');
+
+            // 初期マスクモード設定
+            setMaskMode('symbol');
+
+            // 初期カテゴリ設定
+            setCategory('fruits');
         });
 
         // キーボードショートカット
