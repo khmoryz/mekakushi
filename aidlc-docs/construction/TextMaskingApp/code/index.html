@@ -159,6 +159,75 @@
             border-color: #007AFF;
         }
 
+        .dictionary-section {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .dictionary-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .dictionary-list {
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .dictionary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            border-bottom: 1px solid #f1f3f4;
+            font-size: 12px;
+        }
+
+        .dictionary-item:last-child {
+            border-bottom: none;
+        }
+
+        .dictionary-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dictionary-original {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .dictionary-masked {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .dictionary-empty {
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .dictionary-controls {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .dictionary-controls .button {
+            font-size: 11px;
+            padding: 6px 12px;
+        }
+
         .button {
             background-color: #007AFF;
             color: white;
@@ -246,6 +315,16 @@
                         <button class="preset-btn" onclick="setMaskChar('●')">●</button>
                     </div>
                 </div>
+
+                <div class="dictionary-section">
+                    <h3>📚 マスキング辞書</h3>
+                    <div class="dictionary-list" id="dictionaryList">
+                        <div class="dictionary-empty">まだマスキングした単語がありません</div>
+                    </div>
+                    <div class="dictionary-controls">
+                        <button class="button secondary" onclick="clearDictionary()">🗑️ 辞書をクリア</button>
+                    </div>
+                </div>
             </div>
 
             <div class="button-row">
@@ -255,7 +334,8 @@
                 <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
             </div>
             <div class="status" id="status">準備完了</div>
-            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング | マスク文字をカスタマイズ可能</div>
+            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング | マスク文字をカスタマイズ可能 | 一度マスキングした単語は自動記憶
+            </div>
         </div>
     </div>
 
@@ -284,6 +364,65 @@
                 'root': null
             }
         };
+
+        // メモリ内辞書（マスキング履歴）
+        let maskingDictionary = new Map();
+
+        // 辞書に新しいエントリを追加する関数
+        function addToDictionary(original, masked) {
+            // 大文字小文字を区別しないキーを使用
+            const key = original.toLowerCase();
+            if (!maskingDictionary.has(key)) {
+                maskingDictionary.set(key, {
+                    original: original,
+                    masked: masked,
+                    count: 1,
+                    lastUsed: new Date()
+                });
+                updateDictionaryDisplay();
+            } else {
+                // 既存エントリの使用回数を増やす
+                const entry = maskingDictionary.get(key);
+                entry.count++;
+                entry.lastUsed = new Date();
+            }
+        }
+
+        // 辞書表示を更新する関数
+        function updateDictionaryDisplay() {
+            const dictionaryList = document.getElementById('dictionaryList');
+
+            if (maskingDictionary.size === 0) {
+                dictionaryList.innerHTML = '<div class="dictionary-empty">まだマスキングした単語がありません</div>';
+                return;
+            }
+
+            // 辞書エントリを最近使用順でソート
+            const entries = Array.from(maskingDictionary.entries())
+                .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
+
+            dictionaryList.innerHTML = entries.map(([key, entry]) => `
+                <div class="dictionary-item">
+                    <span class="dictionary-original">${entry.original}</span>
+                    <span>→</span>
+                    <span class="dictionary-masked">${entry.masked}</span>
+                    <span style="font-size: 10px; color: #6c757d;">(${entry.count}回)</span>
+                </div>
+            `).join('');
+        }
+
+        // 辞書をクリアする関数
+        function clearDictionary() {
+            if (maskingDictionary.size === 0) {
+                updateStatus('辞書は既に空です', 'info');
+                return;
+            }
+
+            const count = maskingDictionary.size;
+            maskingDictionary.clear();
+            updateDictionaryDisplay();
+            updateStatus(`${count}個のエントリを削除しました`, 'success');
+        }
 
         // カスタムマスク文字を設定する関数
         function setMaskChar(char) {
@@ -315,38 +454,75 @@
             return maskChar.repeat(length);
         }
 
-        // 最も単純なマスキング関数（カスタムマスク文字対応）
+        // 最も単純なマスキング関数（カスタムマスク文字対応 + 辞書機能）
         function simpleMask(text) {
-            // 固定文字列を動的マスクに置換
             let maskedText = text;
             let maskCount = 0;
 
-            // 各マスキングルールを適用（大文字小文字を区別しない）
+            // 1. 辞書からの自動マスキング（優先）
+            for (const [key, entry] of maskingDictionary.entries()) {
+                const regex = new RegExp(escapeRegExp(entry.original), 'gi');
+                const matches = maskedText.match(regex);
+                if (matches) {
+                    maskCount += matches.length;
+                    maskedText = maskedText.replace(regex, entry.masked);
+                    // 使用回数を更新
+                    entry.count += matches.length;
+                    entry.lastUsed = new Date();
+                }
+            }
+
+            // 2. 事前定義ルールからの自動マスキング
             for (const [original, customMask] of Object.entries(maskSettings.autoMaskRules)) {
                 const regex = new RegExp(original, 'gi');
                 const matches = maskedText.match(regex);
                 if (matches) {
-                    maskCount += matches.length;
-                    // カスタムマスクまたはデフォルトマスクを使用
-                    const mask = generateMask(original, customMask);
-                    maskedText = maskedText.replace(regex, mask);
+                    for (const match of matches) {
+                        // 辞書に既に存在しない場合のみ処理
+                        if (!maskingDictionary.has(match.toLowerCase())) {
+                            maskCount++;
+                            const mask = generateMask(match, customMask);
+                            maskedText = maskedText.replace(new RegExp(escapeRegExp(match), 'gi'), mask);
+                            // 辞書に追加
+                            addToDictionary(match, mask);
+                        }
+                    }
                 }
             }
 
             return { maskedText, maskCount };
         }
 
-        // 選択されたテキストをマスクに置換する関数（カスタムマスク文字対応）
+        // 選択されたテキストをマスクに置換する関数（辞書機能付き）
         function maskSelectedPortion(text, start, end) {
             const selectedPortion = text.substring(start, end);
             if (selectedPortion.trim() === '') {
                 return { maskedText: text, maskCount: 0 };
             }
 
-            // カスタムマスク文字を使用
-            const mask = generateMask(selectedPortion);
+            // 辞書に既に存在するかチェック
+            const key = selectedPortion.toLowerCase();
+            let mask;
+
+            if (maskingDictionary.has(key)) {
+                // 既存の辞書エントリを使用
+                const entry = maskingDictionary.get(key);
+                mask = entry.masked;
+                entry.count++;
+                entry.lastUsed = new Date();
+            } else {
+                // 新しいマスクを生成して辞書に追加
+                mask = generateMask(selectedPortion);
+                addToDictionary(selectedPortion, mask);
+            }
+
             const maskedText = text.substring(0, start) + mask + text.substring(end);
             return { maskedText, maskCount: 1 };
+        }
+
+        // 正規表現エスケープ関数
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
         // 自動マスキング実行関数
@@ -363,6 +539,7 @@
 
             if (result.maskCount > 0) {
                 updateStatus(`${result.maskCount}個の単語を自動マスキングしました`, 'success');
+                updateDictionaryDisplay(); // 辞書表示を更新
             } else {
                 updateStatus('マスキング対象の単語が見つかりませんでした', 'info');
             }
@@ -382,6 +559,7 @@
 
             if (result.maskCount > 0) {
                 updateStatus(`選択された「${selectedText}」をマスキングしました`, 'success');
+                updateDictionaryDisplay(); // 辞書表示を更新
             } else {
                 updateStatus('選択されたテキストをマスキングできませんでした', 'error');
             }
