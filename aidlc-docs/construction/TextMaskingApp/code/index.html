@@ -6,85 +6,201 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Masking App</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            height: 100vh;
+        /* Iceburg Color Palette */
+        :root {
+            /* Iceburg Dark Theme Colors */
+            --bg-primary: #161821;
+            --bg-secondary: #1e2132;
+            --bg-tertiary: #242940;
+            --bg-quaternary: #2a2f4a;
+
+            /* Text Colors */
+            --text-primary: #c6c8d1;
+            --text-secondary: #9a9ca5;
+            --text-tertiary: #6b7089;
+            --text-accent: #84a0c6;
+
+            /* Accent Colors */
+            --accent-blue: #84a0c6;
+            --accent-cyan: #89b8c2;
+            --accent-green: #b4be82;
+            --accent-yellow: #e2a478;
+            --accent-red: #e27878;
+            --accent-purple: #a093c7;
+
+            /* UI Colors */
+            --border-primary: #3e445e;
+            --border-secondary: #2a2f4a;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-medium: rgba(0, 0, 0, 0.3);
+            --shadow-heavy: rgba(0, 0, 0, 0.5);
+
+            /* Highlight Colors */
+            --highlight-bg: rgba(132, 160, 198, 0.2);
+            --highlight-border: rgba(132, 160, 198, 0.4);
+            --selection-bg: rgba(132, 160, 198, 0.3);
+
+            /* macOS System Spacing (8pt grid) */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+        }
+
+        /* Base Styles */
+        * {
             box-sizing: border-box;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            height: calc(100vh - 40px);
-            display: flex;
-            gap: 20px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* メインコンテンツエリア */
+        /* macOS Window Structure */
+        .app-window {
+            height: 100vh;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 25px 50px var(--shadow-heavy);
+        }
+
+        /* macOS Title Bar */
+        .title-bar {
+            height: 52px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--spacing-md);
+            -webkit-app-region: drag;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+            -webkit-app-region: no-drag;
+        }
+
+        .window-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .window-control.close {
+            background: #ff5f57;
+        }
+
+        .window-control.minimize {
+            background: #ffbd2e;
+        }
+
+        .window-control.maximize {
+            background: #28ca42;
+        }
+
+        .app-title {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Main Container */
+        .container {
+            flex: 1;
+            display: flex;
+            padding: var(--spacing-md);
+            gap: var(--spacing-md);
+            min-height: 0;
+        }
+
+        /* Main Content Area */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: var(--spacing-md);
+            min-width: 0;
         }
 
-        /* テキストパネルエリア */
+        /* Text Panels */
         .text-panels {
             display: flex;
-            align-items: stretch;
-            /* 高さを揃える */
-            gap: 15px;
+            gap: var(--spacing-md);
             flex: 1;
-            min-height: 400px;
-            /* 最小高さを確保 */
+            min-height: 0;
         }
 
         .text-panel {
             flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
             display: flex;
             flex-direction: column;
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 16px var(--shadow-light);
         }
 
         .text-panel h2 {
-            color: #555;
-            margin-bottom: 10px;
-            font-size: 16px;
-            flex-shrink: 0;
+            color: var(--text-accent);
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
         }
 
+        /* Textarea Container */
         .textarea-container {
             position: relative;
             flex: 1;
-            display: flex;
-            min-height: 300px;
-            /* 最小高さを確保 */
+            min-height: 320px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
         }
 
-        /* テキストエリアオーバーレイパターン */
+        /* Textarea Overlay Pattern */
         .backdrop,
         .text-panel textarea {
             position: absolute;
             top: 0;
             left: 0;
             right: 40px;
-            /* コピーボタンのスペース */
             bottom: 0;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
             margin: 0;
-            background: transparent;
+            background: var(--bg-tertiary);
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow: auto;
@@ -92,147 +208,167 @@
 
         .backdrop {
             z-index: 1;
-            color: #333;
+            color: var(--text-primary);
             pointer-events: none;
+            border-color: transparent;
         }
 
         .text-panel textarea {
             z-index: 2;
             resize: none;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
             color: transparent;
-            caret-color: #333;
+            caret-color: var(--accent-blue);
+            background: transparent;
         }
 
         .text-panel textarea:focus {
-            border-color: #007AFF;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(132, 160, 198, 0.1);
         }
 
-        .text-panel textarea:read-only {
-            background-color: transparent;
-            color: transparent;
+        .text-panel textarea::placeholder {
+            color: var(--text-tertiary);
+            opacity: 1;
         }
 
-        /* テキストボックス内のコピーボタン */
+        /* Copy Button */
         .copy-button {
             position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background: #007AFF;
-            color: white;
+            bottom: var(--spacing-sm);
+            right: var(--spacing-sm);
+            background: var(--accent-blue);
+            color: var(--bg-primary);
             border: none;
-            border-radius: 4px;
-            width: 28px;
-            height: 28px;
+            border-radius: var(--radius-sm);
+            width: 32px;
+            height: 32px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            opacity: 0.8;
+            transition: all 0.2s ease;
             z-index: 3;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .copy-button:hover {
-            opacity: 1;
-            background: #0056b3;
+            background: var(--accent-cyan);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(132, 160, 198, 0.3);
         }
 
-        /* 変換アイコンエリア */
+        .copy-button:active {
+            transform: translateY(0);
+        }
+
+        /* Conversion Controls */
         .conversion-controls {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            padding: 20px 0;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            min-width: 48px;
         }
 
         .conversion-arrow {
-            color: #999;
-            font-size: 20px;
-            opacity: 0.4;
-            pointer-events: none;
+            color: var(--text-tertiary);
+            font-size: 18px;
+            opacity: 0.6;
+            transition: all 0.3s ease;
         }
 
-        /* マスクされた文字列のハイライト */
+        /* Highlight Styles */
         .masked-highlight {
-            background-color: #E3F2FD;
+            background: var(--highlight-bg);
+            border: 1px solid var(--highlight-border);
             border-radius: 3px;
-            padding: 1px 2px;
-            transition: background-color 0.2s;
+            padding: 1px 3px;
+            transition: all 0.2s ease;
         }
 
         .masked-highlight:hover {
-            background-color: #BBDEFB;
+            background: var(--selection-bg);
+            border-color: var(--accent-blue);
         }
 
-        /* 右側辞書パネル */
+        /* Dictionary Panel */
         .dictionary-panel {
-            width: 300px;
-            /* 幅を少し小さく */
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 80px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 16px var(--shadow-light);
         }
 
         .dictionary-panel h3 {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 16px;
-            flex-shrink: 0;
+            color: var(--text-accent);
+            margin: 0 0 var(--spacing-md) 0;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
         }
 
         .dictionary-list {
             flex: 1;
             overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 10px;
-            background-color: #fafafa;
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-sm);
+            background: var(--bg-tertiary);
         }
 
         .dictionary-empty {
-            color: #999;
+            color: var(--text-tertiary);
             text-align: center;
-            padding: 40px 20px;
+            padding: var(--spacing-xl) var(--spacing-md);
             font-style: italic;
+            font-size: 13px;
         }
 
         .dictionary-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px;
-            margin-bottom: 8px;
-            background-color: white;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.2s;
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+            background: var(--bg-quaternary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            transition: all 0.2s ease;
         }
 
         .dictionary-item:hover {
-            border-color: #007AFF;
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.1);
+            border-color: var(--accent-blue);
+            background: rgba(132, 160, 198, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px var(--shadow-light);
         }
 
         .dictionary-content {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--spacing-sm);
             flex: 1;
             min-width: 0;
         }
 
         .dictionary-original {
             font-weight: 600;
-            color: #495057;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -240,13 +376,13 @@
         }
 
         .dictionary-arrow {
-            color: #6c757d;
-            font-size: 12px;
+            color: var(--text-tertiary);
+            font-size: 11px;
         }
 
         .dictionary-masked {
-            color: #007AFF;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            color: var(--accent-cyan);
+            font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -255,200 +391,274 @@
 
         .dictionary-count {
             font-size: 10px;
-            color: #6c757d;
+            color: var(--text-tertiary);
             white-space: nowrap;
         }
 
         .dictionary-delete {
             background: none;
             border: none;
-            color: #dc3545;
+            color: var(--accent-red);
             cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
+            font-size: 14px;
+            padding: var(--spacing-xs);
             border-radius: 3px;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
             flex-shrink: 0;
         }
 
         .dictionary-delete:hover {
-            background-color: #f8d7da;
+            background: rgba(226, 120, 120, 0.2);
+            transform: scale(1.1);
         }
 
-        /* ポップアップ候補選択 */
+        /* Candidate Popup */
         .candidate-popup {
             position: absolute;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            padding: 15px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            box-shadow: 0 16px 32px var(--shadow-medium);
+            padding: var(--spacing-md);
             z-index: 1000;
             display: none;
-            min-width: 300px;
-            max-width: 400px;
+            min-width: 320px;
+            max-width: 420px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .candidate-popup.show {
             display: block;
+            animation: popupFadeIn 0.2s ease-out;
+        }
+
+        @keyframes popupFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .popup-title {
             font-size: 14px;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 10px;
+            color: var(--text-accent);
+            margin-bottom: var(--spacing-sm);
             text-align: center;
         }
 
         .candidate-categories {
             display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-sm);
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .category-btn {
-            padding: 4px 8px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-            color: #495057;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
             font-size: 11px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
 
         .category-btn:hover {
-            background-color: #e9ecef;
+            background: var(--bg-quaternary);
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
         }
 
         .category-btn.active {
-            background-color: #28a745;
-            color: white;
-            border-color: #28a745;
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            border-color: var(--accent-blue);
         }
 
         .candidate-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 4px;
-            max-height: 120px;
+            gap: var(--spacing-xs);
+            max-height: 140px;
             overflow-y: auto;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 8px;
-            background-color: #fafafa;
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            padding: var(--spacing-sm);
+            background: var(--bg-tertiary);
         }
 
         .candidate-item {
-            padding: 4px 6px;
-            border: 1px solid #e9ecef;
-            border-radius: 3px;
-            background-color: white;
-            color: #495057;
-            font-size: 10px;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-secondary);
+            border-radius: 4px;
+            background: var(--bg-quaternary);
+            color: var(--text-primary);
+            font-size: 11px;
             cursor: pointer;
             text-align: center;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            font-weight: 500;
         }
 
         .candidate-item:hover {
-            background-color: #007AFF;
-            color: white;
-            border-color: #007AFF;
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(132, 160, 198, 0.3);
         }
 
-        /* レスポンシブ対応 */
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-primary);
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Responsive Design */
         @media (max-width: 1200px) {
             .dictionary-panel {
-                width: 250px;
-                /* さらに小さく */
+                width: 280px;
             }
         }
 
         @media (max-width: 1000px) {
             .container {
                 flex-direction: column;
+                padding: var(--spacing-sm);
             }
 
             .dictionary-panel {
                 width: 100%;
-                height: 250px;
-                /* 高さを少し小さく */
+                height: 200px;
             }
 
             .text-panels {
                 flex-direction: column;
-                min-height: 300px;
-                /* モバイルでの最小高さ */
+                gap: var(--spacing-sm);
             }
 
             .conversion-controls {
                 flex-direction: row;
-                padding: 10px 0;
+                padding: var(--spacing-sm) 0;
+                min-width: auto;
             }
+
+            .textarea-container {
+                min-height: 240px;
+            }
+        }
+
+        /* Focus and Selection States */
+        *:focus {
+            outline: none;
+        }
+
+        ::selection {
+            background: var(--selection-bg);
+            color: var(--text-primary);
+        }
+
+        ::-moz-selection {
+            background: var(--selection-bg);
+            color: var(--text-primary);
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- メインコンテンツエリア -->
-        <div class="main-content">
-            <!-- テキストパネルと変換コントロール -->
-            <div class="text-panels">
-                <!-- 入力テキストパネル -->
-                <div class="text-panel">
-                    <h2>📝 入力テキスト</h2>
-                    <div class="textarea-container">
-                        <div class="backdrop" id="inputBackdrop"></div>
-                        <textarea id="inputText"
-                            placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
-                        <button class="copy-button" onclick="copyInputText()" title="入力テキストをコピー">📋</button>
-                    </div>
-                </div>
-
-                <!-- 変換コントロール -->
-                <div class="conversion-controls">
-                    <div class="conversion-arrow">➡️</div>
-                    <div class="conversion-arrow">⬅️</div>
-                </div>
-
-                <!-- マスキング済みテキストパネル -->
-                <div class="text-panel">
-                    <h2>🔒 マスキング済みテキスト</h2>
-                    <div class="textarea-container">
-                        <div class="backdrop" id="outputBackdrop"></div>
-                        <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
-                        <button class="copy-button" onclick="copyOutputText()" title="マスキング済みテキストをコピー">📋</button>
-                    </div>
-                </div>
+    <div class="app-window">
+        <!-- macOS Title Bar -->
+        <div class="title-bar">
+            <div class="window-controls">
+                <button class="window-control close"></button>
+                <button class="window-control minimize"></button>
+                <button class="window-control maximize"></button>
             </div>
+            <h1 class="app-title">Text Masking App</h1>
+            <div style="width: 68px;"></div> <!-- Balance for window controls -->
         </div>
 
-        <!-- 右側辞書パネル -->
-        <div class="dictionary-panel">
-            <h3>📚 マスキング辞書</h3>
-            <div class="dictionary-list" id="dictionaryList">
-                <div class="dictionary-empty">まだマスキングした単語がありません</div>
-            </div>
-        </div>
+        <div class="container">
+            <!-- メインコンテンツエリア -->
+            <div class="main-content">
+                <!-- テキストパネルと変換コントロール -->
+                <div class="text-panels">
+                    <!-- 入力テキストパネル -->
+                    <div class="text-panel">
+                        <h2>📝 入力テキスト</h2>
+                        <div class="textarea-container">
+                            <div class="backdrop" id="inputBackdrop"></div>
+                            <textarea id="inputText"
+                                placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
+                            <button class="copy-button" onclick="copyInputText()" title="入力テキストをコピー">📋</button>
+                        </div>
+                    </div>
 
-        <!-- ポップアップ候補選択 -->
-        <div class="candidate-popup" id="candidatePopup">
-            <div class="popup-title">🎭 マスク候補を選択</div>
-            <div class="candidate-categories">
-                <button class="category-btn active" onclick="setCategory('symbols')">🔤 記号・文字</button>
-                <button class="category-btn" onclick="setCategory('fruits')">🍎 果物</button>
-                <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
-                <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
-                <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
-                <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
+                    <!-- 変換コントロール -->
+                    <div class="conversion-controls">
+                        <div class="conversion-arrow">➡️</div>
+                        <div class="conversion-arrow">⬅️</div>
+                    </div>
+
+                    <!-- マスキング済みテキストパネル -->
+                    <div class="text-panel">
+                        <h2>🔒 マスキング済みテキスト</h2>
+                        <div class="textarea-container">
+                            <div class="backdrop" id="outputBackdrop"></div>
+                            <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
+                            <button class="copy-button" onclick="copyOutputText()" title="マスキング済みテキストをコピー">📋</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="candidate-grid" id="candidateGrid">
-                <!-- 候補がここに動的に表示される -->
+
+            <!-- 右側辞書パネル -->
+            <div class="dictionary-panel">
+                <h3>📚 マスキング辞書</h3>
+                <div class="dictionary-list" id="dictionaryList">
+                    <div class="dictionary-empty">まだマスキングした単語がありません</div>
+                </div>
+            </div>
+
+            <!-- ポップアップ候補選択 -->
+            <div class="candidate-popup" id="candidatePopup">
+                <div class="popup-title">🎭 マスク候補を選択</div>
+                <div class="candidate-categories">
+                    <button class="category-btn active" onclick="setCategory('symbols')">🔤 記号・文字</button>
+                    <button class="category-btn" onclick="setCategory('fruits')">🍎 果物</button>
+                    <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
+                    <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
+                    <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
+                    <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
+                </div>
+                <div class="candidate-grid" id="candidateGrid">
+                    <!-- 候補がここに動的に表示される -->
+                </div>
             </div>
         </div>
     </div>
