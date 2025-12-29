@@ -18,20 +18,10 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             height: calc(100vh - 40px);
             display: flex;
             flex-direction: column;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-            flex-shrink: 0;
+            gap: 20px;
         }
 
         .panels {
@@ -45,6 +35,10 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .panel h2 {
@@ -76,125 +70,30 @@
             color: #666;
         }
 
-        .controls {
-            margin: 20px 0;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .button-row {
-            margin-bottom: 10px;
-        }
-
-        .mask-settings {
-            margin-bottom: 15px;
+        /* ポップアップ候補選択 */
+        .candidate-popup {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
-        }
-
-        .mask-settings h3 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-            color: #495057;
-        }
-
-        .mask-mode-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            justify-content: center;
-        }
-
-        .mode-btn {
-            padding: 8px 16px;
-            border: 2px solid #dee2e6;
-            border-radius: 6px;
-            background-color: white;
-            color: #495057;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-
-        .mode-btn:hover {
-            border-color: #007AFF;
-            color: #007AFF;
-        }
-
-        .mode-btn.active {
-            border-color: #007AFF;
-            background-color: #007AFF;
-            color: white;
-        }
-
-        .mask-input-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .mask-input-group label {
-            font-size: 13px;
-            color: #6c757d;
-            font-weight: 500;
-        }
-
-        .mask-input {
-            padding: 6px 10px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 13px;
-            width: 120px;
-            text-align: center;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-        }
-
-        .mask-input:focus {
-            outline: none;
-            border-color: #007AFF;
-            box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
-        }
-
-        .preset-buttons {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .preset-btn {
-            background-color: #e9ecef;
-            color: #495057;
-            border: 1px solid #ced4da;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .preset-btn:hover {
-            background-color: #dee2e6;
-            border-color: #adb5bd;
-        }
-
-        .preset-btn.active {
-            background-color: #007AFF;
-            color: white;
-            border-color: #007AFF;
-        }
-
-        .candidate-selector {
+            z-index: 1000;
             display: none;
-            margin-top: 10px;
+            min-width: 300px;
+            max-width: 400px;
         }
 
-        .candidate-selector.active {
+        .candidate-popup.show {
             display: block;
+        }
+
+        .popup-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
         .candidate-categories {
@@ -235,14 +134,14 @@
             border: 1px solid #dee2e6;
             border-radius: 4px;
             padding: 8px;
-            background-color: white;
+            background-color: #fafafa;
         }
 
         .candidate-item {
             padding: 4px 6px;
             border: 1px solid #e9ecef;
             border-radius: 3px;
-            background-color: #f8f9fa;
+            background-color: white;
             color: #495057;
             font-size: 10px;
             cursor: pointer;
@@ -256,146 +155,131 @@
             border-color: #007AFF;
         }
 
-        .candidate-item.selected {
-            background-color: #28a745;
-            color: white;
-            border-color: #28a745;
-            font-weight: bold;
-        }
-
+        /* 辞書セクション */
         .dictionary-section {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .dictionary-section h3 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-            color: #495057;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 16px;
         }
 
         .dictionary-list {
-            max-height: 120px;
+            max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .dictionary-empty {
+            color: #999;
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
         }
 
         .dictionary-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 6px 10px;
-            border-bottom: 1px solid #f1f3f4;
-            font-size: 12px;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background-color: white;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
-        .dictionary-item:last-child {
-            border-bottom: none;
-        }
-
-        .dictionary-item:hover {
-            background-color: #f8f9fa;
+        .dictionary-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
         }
 
         .dictionary-original {
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            color: #dc3545;
-            font-weight: 500;
+            font-weight: 600;
+            color: #495057;
         }
 
         .dictionary-masked {
+            color: #007AFF;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            color: #28a745;
-            font-weight: 500;
         }
 
-        .dictionary-empty {
-            padding: 20px;
-            text-align: center;
-            color: #6c757d;
-            font-size: 12px;
-            font-style: italic;
+        .dictionary-delete {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
         }
 
-        .dictionary-controls {
-            margin-top: 10px;
-            text-align: center;
+        .dictionary-delete:hover {
+            background-color: #f8d7da;
         }
 
-        .dictionary-controls .button {
-            font-size: 11px;
-            padding: 6px 12px;
+        /* ユーティリティボタン */
+        .utility-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
 
         .button {
-            background-color: #007AFF;
-            color: white;
-            border: none;
             padding: 10px 20px;
+            border: none;
             border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            margin: 0 5px;
+            transition: all 0.2s;
+            font-weight: 500;
         }
 
-        .button:hover {
-            background-color: #0056CC;
+        .button.primary {
+            background-color: #007AFF;
+            color: white;
         }
 
-        .button:active {
-            background-color: #004499;
+        .button.primary:hover {
+            background-color: #0056b3;
         }
 
         .button.secondary {
-            background-color: #6C757D;
+            background-color: #6c757d;
+            color: white;
         }
 
         .button.secondary:hover {
-            background-color: #545B62;
-        }
-
-        .button.warning {
-            background-color: #FD7E14;
-        }
-
-        .button.warning:hover {
-            background-color: #E8590C;
-        }
-
-        .button:disabled {
-            background-color: #CCC;
-            cursor: not-allowed;
+            background-color: #545b62;
         }
 
         .status {
-            margin-top: 10px;
-            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
             color: #666;
-        }
-
-        .help-text {
-            font-size: 11px;
-            color: #999;
-            margin-top: 5px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Text Masking App</h1>
-
         <div class="panels">
             <div class="panel">
                 <h2>📝 入力テキスト</h2>
                 <textarea id="inputText"
-                    placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択して「選択部分をマスク」ボタンを押すと、選択した部分だけをマスキングできます"></textarea>
+                    placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
             </div>
 
             <div class="panel">
@@ -404,68 +288,50 @@
             </div>
         </div>
 
-        <div class="controls">
-            <div class="mask-settings">
-                <h3>🎭 マスク候補選択</h3>
-                <div class="candidate-categories">
-                    <button class="category-btn" onclick="setCategory('symbols')">🔤 記号・文字</button>
-                    <button class="category-btn active" onclick="setCategory('fruits')">🍎 果物</button>
-                    <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
-                    <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
-                    <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
-                    <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
-                </div>
-                <div class="candidate-grid" id="candidateGrid">
-                    <!-- 候補がここに動的に表示される -->
-                </div>
-
-                <div class="custom-input-section" id="customInputSection" style="display: none;">
-                    <label for="customMaskInput">カスタムマスク文字:</label>
-                    <input type="text" id="customMaskInput" class="mask-input" maxlength="10"
-                        placeholder="例: @@@, [SECRET], ■■■">
-                    <button class="button secondary" onclick="addCustomMask()">追加</button>
-                </div>
+        <!-- ポップアップ候補選択 -->
+        <div class="candidate-popup" id="candidatePopup">
+            <div class="popup-title">🎭 マスク候補を選択</div>
+            <div class="candidate-categories">
+                <button class="category-btn active" onclick="setCategory('symbols')">🔤 記号・文字</button>
+                <button class="category-btn" onclick="setCategory('fruits')">🍎 果物</button>
+                <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
+                <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
+                <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
+                <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
             </div>
-
-            <div class="dictionary-section">
-                <h3>📚 マスキング辞書</h3>
-                <div class="dictionary-list" id="dictionaryList">
-                    <div class="dictionary-empty">まだマスキングした単語がありません</div>
-                </div>
-                <div class="dictionary-controls">
-                    <button class="button secondary" onclick="clearDictionary()">🗑️ 辞書をクリア</button>
-                </div>
+            <div class="candidate-grid" id="candidateGrid">
+                <!-- 候補がここに動的に表示される -->
             </div>
         </div>
 
-        <div class="button-row">
-            <button class="button warning" id="maskSelectedBtn" onclick="maskSelectedText()" disabled>✂️
-                選択部分をマスク</button>
+        <div class="dictionary-section">
+            <h3>📚 マスキング辞書</h3>
+            <div class="dictionary-list" id="dictionaryList">
+                <div class="dictionary-empty">まだマスキングした単語がありません</div>
+            </div>
+        </div>
+
+        <div class="utility-buttons">
             <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
         </div>
+
         <div class="status" id="status">準備完了</div>
-        <div class="help-text">💡 テキストを選択してマスク候補を選んでからマスキング | 記号・文字、果物・動物・星・色・国から選択可能 | 一度マスキングした単語は自動記憶
-        </div>
-    </div>
     </div>
 
     <script>
-        // 入力テキストエリアの参照を取得
+        // DOM要素の参照
         const inputTextArea = document.getElementById('inputText');
         const outputTextArea = document.getElementById('outputText');
         const statusDiv = document.getElementById('status');
-        const maskSelectedBtn = document.getElementById('maskSelectedBtn');
+        const candidatePopup = document.getElementById('candidatePopup');
+        const candidateGrid = document.getElementById('candidateGrid');
 
-        // 選択されたテキストの情報を保存
+        // アプリケーション状態
+        let currentCategory = 'symbols';
         let selectedText = '';
         let selectionStart = 0;
         let selectionEnd = 0;
-
-        // マスク設定（メモリ内保持）
-        let maskSettings = {
-            selectedCandidate: null,
-            currentCategory: 'symbols'
-        };
+        let popupVisible = false;
 
         // 候補データ（約50個のアイテム + 記号・文字）
         const candidateData = {
@@ -500,65 +366,67 @@
         // メモリ内辞書（マスキング履歴）
         let maskingDictionary = new Map();
 
-        // 辞書に新しいエントリを追加する関数
-        function addToDictionary(original, masked) {
-            // 大文字小文字を区別しないキーを使用
-            const key = original.toLowerCase();
-            if (!maskingDictionary.has(key)) {
-                maskingDictionary.set(key, {
-                    original: original,
-                    masked: masked,
-                    count: 1,
-                    lastUsed: new Date()
-                });
-                updateDictionaryDisplay();
+        // リアルタイム同期: 入力テキストの変更を出力に反映
+        function syncInputToOutput() {
+            const inputText = inputTextArea.value;
+            let outputText = inputText;
+
+            // 辞書に基づいて自動マスキング
+            for (const [key, entry] of maskingDictionary.entries()) {
+                const regex = new RegExp(escapeRegExp(entry.original), 'gi');
+                outputText = outputText.replace(regex, entry.masked);
+            }
+
+            outputTextArea.value = outputText;
+        }
+
+        // 正規表現エスケープ関数
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // テキスト選択時のポップアップ表示
+        function handleTextSelection(event) {
+            const start = inputTextArea.selectionStart;
+            const end = inputTextArea.selectionEnd;
+            const text = inputTextArea.value.substring(start, end);
+
+            if (text.trim().length > 0) {
+                selectedText = text;
+                selectionStart = start;
+                selectionEnd = end;
+                showCandidatePopup(event);
             } else {
-                // 既存エントリの使用回数を増やす
-                const entry = maskingDictionary.get(key);
-                entry.count++;
-                entry.lastUsed = new Date();
+                hideCandidatePopup();
             }
         }
 
-        // 辞書表示を更新する関数
-        function updateDictionaryDisplay() {
-            const dictionaryList = document.getElementById('dictionaryList');
+        // ポップアップを表示（マウス位置付近）
+        function showCandidatePopup(event) {
+            updateCandidateGrid();
 
-            if (maskingDictionary.size === 0) {
-                dictionaryList.innerHTML = '<div class="dictionary-empty">まだマスキングした単語がありません</div>';
-                return;
-            }
+            // マウス位置を取得
+            const mouseX = event.clientX || event.pageX;
+            const mouseY = event.clientY || event.pageY;
 
-            // 辞書エントリを最近使用順でソート
-            const entries = Array.from(maskingDictionary.entries())
-                .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
+            // ポップアップの位置を調整（画面外に出ないように）
+            const popup = candidatePopup;
+            popup.style.left = Math.min(mouseX + 10, window.innerWidth - 420) + 'px';
+            popup.style.top = Math.min(mouseY + 10, window.innerHeight - 200) + 'px';
 
-            dictionaryList.innerHTML = entries.map(([key, entry]) => `
-                <div class="dictionary-item">
-                    <span class="dictionary-original">${entry.original}</span>
-                    <span>→</span>
-                    <span class="dictionary-masked">${entry.masked}</span>
-                    <span style="font-size: 10px; color: #6c757d;">(${entry.count}回)</span>
-                </div>
-            `).join('');
+            popup.classList.add('show');
+            popupVisible = true;
         }
 
-        // 辞書をクリアする関数
-        function clearDictionary() {
-            if (maskingDictionary.size === 0) {
-                updateStatus('辞書は既に空です', 'info');
-                return;
-            }
-
-            const count = maskingDictionary.size;
-            maskingDictionary.clear();
-            updateDictionaryDisplay();
-            updateStatus(`${count}個のエントリを削除しました`, 'success');
+        // ポップアップを非表示
+        function hideCandidatePopup() {
+            candidatePopup.classList.remove('show');
+            popupVisible = false;
         }
 
         // カテゴリを設定する関数
         function setCategory(category) {
-            maskSettings.currentCategory = category;
+            currentCategory = category;
 
             // カテゴリボタンのアクティブ状態を更新
             document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
@@ -580,95 +448,93 @@
 
         // 候補グリッドを更新する関数
         function updateCandidateGrid() {
-            const grid = document.getElementById('candidateGrid');
-            const candidates = candidateData[maskSettings.currentCategory] || [];
-
-            grid.innerHTML = candidates.map(candidate =>
-                `<div class="candidate-item" onclick="selectCandidate('${candidate}')">${candidate}</div>`
+            const candidates = candidateData[currentCategory] || [];
+            candidateGrid.innerHTML = candidates.map(candidate =>
+                `<div class="candidate-item" onclick="selectCandidate('${candidate.replace(/'/g, "\\'")}')">${candidate}</div>`
             ).join('');
         }
 
-        // 候補を選択する関数
+        // 候補を選択する関数（自動マスキング）
         function selectCandidate(candidate) {
-            maskSettings.selectedCandidate = candidate;
-
-            // 選択状態を視覚的に表示
-            document.querySelectorAll('.candidate-item').forEach(item => {
-                item.classList.remove('selected');
-                if (item.textContent === candidate) {
-                    item.classList.add('selected');
-                }
-            });
-
-            updateStatus(`「${candidate}」を選択しました`, 'success');
-        }
-
-        // マスク文字を生成する関数（候補選択のみ）
-        function generateMask(originalText) {
-            // 候補が選択されている場合はそれを使用
-            if (maskSettings.selectedCandidate) {
-                return maskSettings.selectedCandidate;
-            }
-
-            // 候補が選択されていない場合はデフォルトの記号を使用
-            return '*'.repeat(Math.max(3, Math.min(originalText.length, 10)));
-        }
-
-        // 選択されたテキストをマスクに置換する関数（辞書機能付き）
-        function maskSelectedPortion(text, start, end) {
-            const selectedPortion = text.substring(start, end);
-            if (selectedPortion.trim() === '') {
-                return { maskedText: text, maskCount: 0 };
-            }
-
-            // 辞書に既に存在するかチェック
-            const key = selectedPortion.toLowerCase();
-            let mask;
-
-            if (maskingDictionary.has(key)) {
-                // 既存の辞書エントリを使用
-                const entry = maskingDictionary.get(key);
-                mask = entry.masked;
-                entry.count++;
-                entry.lastUsed = new Date();
-            } else {
-                // 新しいマスクを生成して辞書に追加
-                mask = generateMask(selectedPortion);
-                addToDictionary(selectedPortion, mask);
-            }
-
-            const maskedText = text.substring(0, start) + mask + text.substring(end);
-            return { maskedText, maskCount: 1 };
-        }
-
-        // 正規表現エスケープ関数
-        function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-
-        // 選択部分マスキング実行関数
-        function maskSelectedText() {
-            const inputText = inputTextArea.value;
-
             if (selectedText.trim() === '') {
                 updateStatus('選択されたテキストがありません', 'error');
                 return;
             }
 
-            // 候補が選択されていない場合の警告
-            if (!maskSettings.selectedCandidate) {
-                updateStatus('まず候補を選択してください', 'error');
+            // 選択されたテキストをマスキング
+            const inputText = inputTextArea.value;
+            const maskedText = inputText.substring(0, selectionStart) + candidate + inputText.substring(selectionEnd);
+
+            // 入力テキストを更新
+            inputTextArea.value = maskedText;
+
+            // 辞書に追加
+            addToDictionary(selectedText, candidate);
+
+            // リアルタイム同期
+            syncInputToOutput();
+
+            // ポップアップを非表示
+            hideCandidatePopup();
+
+            updateStatus(`「${selectedText}」を「${candidate}」でマスキングしました`, 'success');
+        }
+
+        // 辞書に新しいエントリを追加する関数
+        function addToDictionary(original, masked) {
+            const key = original.toLowerCase();
+            if (!maskingDictionary.has(key)) {
+                maskingDictionary.set(key, {
+                    original: original,
+                    masked: masked,
+                    count: 1,
+                    lastUsed: new Date()
+                });
+            } else {
+                const entry = maskingDictionary.get(key);
+                entry.count++;
+                entry.lastUsed = new Date();
+            }
+            updateDictionaryDisplay();
+        }
+
+        // 辞書表示を更新する関数
+        function updateDictionaryDisplay() {
+            const dictionaryList = document.getElementById('dictionaryList');
+
+            if (maskingDictionary.size === 0) {
+                dictionaryList.innerHTML = '<div class="dictionary-empty">まだマスキングした単語がありません</div>';
                 return;
             }
 
-            const result = maskSelectedPortion(inputText, selectionStart, selectionEnd);
-            outputTextArea.value = result.maskedText;
+            // 辞書エントリを最近使用順でソート
+            const entries = Array.from(maskingDictionary.entries())
+                .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
 
-            if (result.maskCount > 0) {
-                updateStatus(`選択された「${selectedText}」を「${maskSettings.selectedCandidate}」でマスキングしました`, 'success');
-                updateDictionaryDisplay(); // 辞書表示を更新
-            } else {
-                updateStatus('選択されたテキストをマスキングできませんでした', 'error');
+            dictionaryList.innerHTML = entries.map(([key, entry]) => `
+                <div class="dictionary-item">
+                    <div class="dictionary-content">
+                        <span class="dictionary-original">${entry.original}</span>
+                        <span>→</span>
+                        <span class="dictionary-masked">${entry.masked}</span>
+                        <span style="font-size: 10px; color: #6c757d;">(${entry.count}回)</span>
+                    </div>
+                    <button class="dictionary-delete" onclick="deleteDictionaryEntry('${key}')" title="削除">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        // 辞書エントリを削除する関数
+        function deleteDictionaryEntry(key) {
+            if (maskingDictionary.has(key)) {
+                const entry = maskingDictionary.get(key);
+                maskingDictionary.delete(key);
+                updateDictionaryDisplay();
+
+                // リアルタイム同期（削除されたエントリの影響を反映）
+                syncInputToOutput();
+
+                updateStatus(`「${entry.original}」を辞書から削除しました`, 'success');
             }
         }
 
@@ -680,11 +546,9 @@
                 return;
             }
 
-            // クリップボードにコピー
             navigator.clipboard.writeText(text).then(() => {
                 updateStatus('クリップボードにコピーしました', 'success');
             }).catch(() => {
-                // フォールバック: テキストエリアを選択
                 outputTextArea.select();
                 updateStatus('テキストを選択しました（手動でコピーしてください）', 'info');
             });
@@ -696,50 +560,45 @@
             statusDiv.style.color = type === 'error' ? '#DC3545' :
                 type === 'success' ? '#28A745' : '#666';
 
-            // 3秒後にデフォルトに戻す
             setTimeout(() => {
                 statusDiv.textContent = '準備完了';
                 statusDiv.style.color = '#666';
             }, 3000);
         }
 
-        // テキスト選択の監視
-        function updateSelection() {
-            selectionStart = inputTextArea.selectionStart;
-            selectionEnd = inputTextArea.selectionEnd;
-            selectedText = inputTextArea.value.substring(selectionStart, selectionEnd);
-
-            // 選択部分マスクボタンの有効/無効を切り替え
-            if (selectedText.trim().length > 0) {
-                maskSelectedBtn.disabled = false;
-                maskSelectedBtn.textContent = `✂️ 「${selectedText.length > 10 ? selectedText.substring(0, 10) + '...' : selectedText}」をマスク`;
-            } else {
-                maskSelectedBtn.disabled = true;
-                maskSelectedBtn.textContent = '✂️ 選択部分をマスク';
-            }
-        }
-
         // イベントリスナーの設定
-        inputTextArea.addEventListener('mouseup', updateSelection);
-        inputTextArea.addEventListener('keyup', updateSelection);
-        inputTextArea.addEventListener('select', updateSelection);
-
-        // アプリケーション初期化
         document.addEventListener('DOMContentLoaded', function () {
+            // 入力テキストの変更をリアルタイムで同期
+            inputTextArea.addEventListener('input', syncInputToOutput);
+
+            // テキスト選択の監視
+            inputTextArea.addEventListener('mouseup', handleTextSelection);
+            inputTextArea.addEventListener('keyup', function (event) {
+                // キーボード選択の場合は少し遅延させる
+                setTimeout(() => handleTextSelection(event), 10);
+            });
+
+            // ポップアップ外クリックで非表示
+            document.addEventListener('click', function (event) {
+                if (popupVisible && !candidatePopup.contains(event.target) && event.target !== inputTextArea) {
+                    hideCandidatePopup();
+                }
+            });
+
+            // 初期設定
             inputTextArea.focus();
-
-            // サンプルテキストを設定（デモ用）
-            inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
-
-            // 初期カテゴリ設定（記号・文字をデフォルトに）
             setCategory('symbols');
+
+            // サンプルテキストを設定
+            inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
+            syncInputToOutput();
         });
 
         // キーボードショートカット
         inputTextArea.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+            if (event.key === 'Escape' && popupVisible) {
                 event.preventDefault();
-                maskSelectedText(); // 選択部分マスキングのみ
+                hideCandidatePopup();
             }
         });
     </script>
