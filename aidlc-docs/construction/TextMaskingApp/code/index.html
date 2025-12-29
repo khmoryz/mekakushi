@@ -406,60 +406,47 @@
 
         <div class="controls">
             <div class="mask-settings">
-                <h3>🎭 マスク設定</h3>
-                <div class="mask-mode-selector">
-                    <button class="mode-btn active" id="symbolModeBtn" onclick="setMaskMode('symbol')">記号・文字</button>
-                    <button class="mode-btn" id="candidateModeBtn" onclick="setMaskMode('candidate')">候補選択</button>
+                <h3>🎭 マスク候補選択</h3>
+                <div class="candidate-categories">
+                    <button class="category-btn" onclick="setCategory('symbols')">🔤 記号・文字</button>
+                    <button class="category-btn active" onclick="setCategory('fruits')">🍎 果物</button>
+                    <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
+                    <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
+                    <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
+                    <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
+                </div>
+                <div class="candidate-grid" id="candidateGrid">
+                    <!-- 候補がここに動的に表示される -->
                 </div>
 
-                <div class="mask-input-group" id="symbolMaskGroup">
-                    <label for="maskChar">マスク文字:</label>
-                    <input type="text" id="maskChar" class="mask-input" value="*" maxlength="10"
-                        placeholder="例: *, X, [MASK]">
-                    <div class="preset-buttons">
-                        <button class="preset-btn active" onclick="setMaskChar('*')">*</button>
-                        <button class="preset-btn" onclick="setMaskChar('X')">X</button>
-                        <button class="preset-btn" onclick="setMaskChar('#')">#</button>
-                        <button class="preset-btn" onclick="setMaskChar('[MASK]')">[MASK]</button>
-                        <button class="preset-btn" onclick="setMaskChar('●')">●</button>
-                    </div>
-                </div>
-
-                <div class="candidate-selector" id="candidateSelector">
-                    <div class="candidate-categories">
-                        <button class="category-btn active" onclick="setCategory('fruits')">🍎 果物</button>
-                        <button class="category-btn" onclick="setCategory('animals')">🐱 動物</button>
-                        <button class="category-btn" onclick="setCategory('stars')">⭐ 星</button>
-                        <button class="category-btn" onclick="setCategory('colors')">🎨 色</button>
-                        <button class="category-btn" onclick="setCategory('countries')">🌍 国</button>
-                    </div>
-                    <div class="candidate-grid" id="candidateGrid">
-                        <!-- 候補がここに動的に表示される -->
-                    </div>
-                </div>
-
-                <div class="dictionary-section">
-                    <h3>📚 マスキング辞書</h3>
-                    <div class="dictionary-list" id="dictionaryList">
-                        <div class="dictionary-empty">まだマスキングした単語がありません</div>
-                    </div>
-                    <div class="dictionary-controls">
-                        <button class="button secondary" onclick="clearDictionary()">🗑️ 辞書をクリア</button>
-                    </div>
+                <div class="custom-input-section" id="customInputSection" style="display: none;">
+                    <label for="customMaskInput">カスタムマスク文字:</label>
+                    <input type="text" id="customMaskInput" class="mask-input" maxlength="10"
+                        placeholder="例: @@@, [SECRET], ■■■">
+                    <button class="button secondary" onclick="addCustomMask()">追加</button>
                 </div>
             </div>
 
-            <div class="button-row">
-                <button class="button" onclick="maskText()">🔒 自動マスキング</button>
-                <button class="button warning" id="maskSelectedBtn" onclick="maskSelectedText()" disabled>✂️
-                    選択部分をマスク</button>
-                <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
-            </div>
-            <div class="status" id="status">準備完了</div>
-            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング | 記号・文字モード: カスタマイズ可能 | 候補選択モード:
-                果物・動物・星などから選択 | 一度マスキングした単語は自動記憶
+            <div class="dictionary-section">
+                <h3>📚 マスキング辞書</h3>
+                <div class="dictionary-list" id="dictionaryList">
+                    <div class="dictionary-empty">まだマスキングした単語がありません</div>
+                </div>
+                <div class="dictionary-controls">
+                    <button class="button secondary" onclick="clearDictionary()">🗑️ 辞書をクリア</button>
+                </div>
             </div>
         </div>
+
+        <div class="button-row">
+            <button class="button warning" id="maskSelectedBtn" onclick="maskSelectedText()" disabled>✂️
+                選択部分をマスク</button>
+            <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
+        </div>
+        <div class="status" id="status">準備完了</div>
+        <div class="help-text">💡 テキストを選択してマスク候補を選んでからマスキング | 記号・文字、果物・動物・星・色・国から選択可能 | 一度マスキングした単語は自動記憶
+        </div>
+    </div>
     </div>
 
     <script>
@@ -468,7 +455,6 @@
         const outputTextArea = document.getElementById('outputText');
         const statusDiv = document.getElementById('status');
         const maskSelectedBtn = document.getElementById('maskSelectedBtn');
-        const maskCharInput = document.getElementById('maskChar');
 
         // 選択されたテキストの情報を保存
         let selectedText = '';
@@ -477,22 +463,18 @@
 
         // マスク設定（メモリ内保持）
         let maskSettings = {
-            mode: 'symbol', // 'symbol' または 'candidate'
-            customChar: '*',
             selectedCandidate: null,
-            currentCategory: 'fruits',
-            autoMaskRules: {
-                'password': null, // nullの場合はcustomCharを使用
-                'secret': null,
-                'confidential': null,
-                'private': null,
-                'admin': null,
-                'root': null
-            }
+            currentCategory: 'symbols'
         };
 
-        // 候補データ（約50個のアイテム）
+        // 候補データ（約50個のアイテム + 記号・文字）
         const candidateData = {
+            symbols: [
+                '*', 'X', '#', '●', '■', '▲', '◆', '★', '※', '○',
+                '[MASK]', '[SECRET]', '[HIDDEN]', '[PRIVATE]', '[REDACTED]',
+                '***', 'XXX', '###', '■■■', '▲▲▲', '◆◆◆', '★★★',
+                '@@@', '&&&', '%%%', '+++', '===', '---', '~~~', '^^^'
+            ],
             fruits: [
                 'りんご', 'みかん', 'バナナ', 'いちご', 'ぶどう', 'もも', 'なし', 'すいか', 'メロン', 'パイナップル',
                 'キウイ', 'マンゴー', 'さくらんぼ', 'あんず', 'プラム', 'レモン', 'オレンジ', 'グレープフルーツ'
@@ -574,26 +556,6 @@
             updateStatus(`${count}個のエントリを削除しました`, 'success');
         }
 
-        // マスクモードを設定する関数
-        function setMaskMode(mode) {
-            maskSettings.mode = mode;
-
-            // ボタンのアクティブ状態を更新
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            if (mode === 'symbol') {
-                document.getElementById('symbolModeBtn').classList.add('active');
-                document.getElementById('symbolMaskGroup').style.display = 'flex';
-                document.getElementById('candidateSelector').classList.remove('active');
-            } else {
-                document.getElementById('candidateModeBtn').classList.add('active');
-                document.getElementById('symbolMaskGroup').style.display = 'none';
-                document.getElementById('candidateSelector').classList.add('active');
-                updateCandidateGrid();
-            }
-
-            updateStatus(`マスクモードを「${mode === 'symbol' ? '記号・文字' : '候補選択'}」に変更しました`, 'success');
-        }
-
         // カテゴリを設定する関数
         function setCategory(category) {
             maskSettings.currentCategory = category;
@@ -606,6 +568,7 @@
             updateCandidateGrid();
 
             const categoryNames = {
+                symbols: '記号・文字',
                 fruits: '果物',
                 animals: '動物',
                 stars: '星',
@@ -639,78 +602,16 @@
 
             updateStatus(`「${candidate}」を選択しました`, 'success');
         }
-        function setMaskChar(char) {
-            maskSettings.customChar = char;
-            maskCharInput.value = char;
 
-            // プリセットボタンのアクティブ状態を更新
-            document.querySelectorAll('.preset-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.textContent === char) {
-                    btn.classList.add('active');
-                }
-            });
-
-            updateStatus(`マスク文字を「${char}」に変更しました`, 'success');
-        }
-
-        // マスク文字を生成する関数（候補選択モード対応）
-        function generateMask(originalText, customMask = null) {
-            // 候補選択モードの場合
-            if (maskSettings.mode === 'candidate' && maskSettings.selectedCandidate) {
+        // マスク文字を生成する関数（候補選択のみ）
+        function generateMask(originalText) {
+            // 候補が選択されている場合はそれを使用
+            if (maskSettings.selectedCandidate) {
                 return maskSettings.selectedCandidate;
             }
 
-            // 記号・文字モードの場合（従来の処理）
-            const maskChar = customMask || maskSettings.customChar;
-
-            // カスタムマスクが[MASK]のような固定文字列の場合はそのまま使用
-            if (maskChar.includes('[') && maskChar.includes(']')) {
-                return maskChar;
-            }
-
-            // 単一文字の場合は長さに応じて繰り返し
-            const length = Math.max(3, Math.min(originalText.length, 10));
-            return maskChar.repeat(length);
-        }
-
-        // 最も単純なマスキング関数（カスタムマスク文字対応 + 辞書機能）
-        function simpleMask(text) {
-            let maskedText = text;
-            let maskCount = 0;
-
-            // 1. 辞書からの自動マスキング（優先）
-            for (const [key, entry] of maskingDictionary.entries()) {
-                const regex = new RegExp(escapeRegExp(entry.original), 'gi');
-                const matches = maskedText.match(regex);
-                if (matches) {
-                    maskCount += matches.length;
-                    maskedText = maskedText.replace(regex, entry.masked);
-                    // 使用回数を更新
-                    entry.count += matches.length;
-                    entry.lastUsed = new Date();
-                }
-            }
-
-            // 2. 事前定義ルールからの自動マスキング
-            for (const [original, customMask] of Object.entries(maskSettings.autoMaskRules)) {
-                const regex = new RegExp(original, 'gi');
-                const matches = maskedText.match(regex);
-                if (matches) {
-                    for (const match of matches) {
-                        // 辞書に既に存在しない場合のみ処理
-                        if (!maskingDictionary.has(match.toLowerCase())) {
-                            maskCount++;
-                            const mask = generateMask(match, customMask);
-                            maskedText = maskedText.replace(new RegExp(escapeRegExp(match), 'gi'), mask);
-                            // 辞書に追加
-                            addToDictionary(match, mask);
-                        }
-                    }
-                }
-            }
-
-            return { maskedText, maskCount };
+            // 候補が選択されていない場合はデフォルトの記号を使用
+            return '*'.repeat(Math.max(3, Math.min(originalText.length, 10)));
         }
 
         // 選択されたテキストをマスクに置換する関数（辞書機能付き）
@@ -745,35 +646,6 @@
             return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         }
 
-        // 自動マスキング実行関数
-        function maskText() {
-            const inputText = inputTextArea.value;
-
-            if (inputText.trim() === '') {
-                updateStatus('マスキングするテキストがありません', 'error');
-                return;
-            }
-
-            // 候補選択モードで候補が選択されていない場合の警告
-            if (maskSettings.mode === 'candidate' && !maskSettings.selectedCandidate) {
-                updateStatus('候補選択モードでは、まず候補を選択してください', 'error');
-                return;
-            }
-
-            const result = simpleMask(inputText);
-            outputTextArea.value = result.maskedText;
-
-            if (result.maskCount > 0) {
-                const maskType = maskSettings.mode === 'candidate' ?
-                    `候補「${maskSettings.selectedCandidate}」` :
-                    `マスク文字「${maskSettings.customChar}」`;
-                updateStatus(`${result.maskCount}個の単語を${maskType}で自動マスキングしました`, 'success');
-                updateDictionaryDisplay(); // 辞書表示を更新
-            } else {
-                updateStatus('マスキング対象の単語が見つかりませんでした', 'info');
-            }
-        }
-
         // 選択部分マスキング実行関数
         function maskSelectedText() {
             const inputText = inputTextArea.value;
@@ -783,9 +655,9 @@
                 return;
             }
 
-            // 候補選択モードで候補が選択されていない場合の警告
-            if (maskSettings.mode === 'candidate' && !maskSettings.selectedCandidate) {
-                updateStatus('候補選択モードでは、まず候補を選択してください', 'error');
+            // 候補が選択されていない場合の警告
+            if (!maskSettings.selectedCandidate) {
+                updateStatus('まず候補を選択してください', 'error');
                 return;
             }
 
@@ -793,10 +665,7 @@
             outputTextArea.value = result.maskedText;
 
             if (result.maskCount > 0) {
-                const maskType = maskSettings.mode === 'candidate' ?
-                    `候補「${maskSettings.selectedCandidate}」` :
-                    `マスク文字「${maskSettings.customChar}」`;
-                updateStatus(`選択された「${selectedText}」を${maskType}でマスキングしました`, 'success');
+                updateStatus(`選択された「${selectedText}」を「${maskSettings.selectedCandidate}」でマスキングしました`, 'success');
                 updateDictionaryDisplay(); // 辞書表示を更新
             } else {
                 updateStatus('選択されたテキストをマスキングできませんでした', 'error');
@@ -855,24 +724,6 @@
         inputTextArea.addEventListener('keyup', updateSelection);
         inputTextArea.addEventListener('select', updateSelection);
 
-        // マスク文字入力フィールドのイベントリスナー
-        maskCharInput.addEventListener('input', function () {
-            const newChar = this.value || '*';
-            maskSettings.customChar = newChar;
-
-            // プリセットボタンのアクティブ状態をリセット
-            document.querySelectorAll('.preset-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // 入力された文字がプリセットと一致する場合はアクティブにする
-            document.querySelectorAll('.preset-btn').forEach(btn => {
-                if (btn.textContent === newChar) {
-                    btn.classList.add('active');
-                }
-            });
-        });
-
         // アプリケーション初期化
         document.addEventListener('DOMContentLoaded', function () {
             inputTextArea.focus();
@@ -880,21 +731,15 @@
             // サンプルテキストを設定（デモ用）
             inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
 
-            // 初期マスク文字設定
-            setMaskChar('*');
-
-            // 初期マスクモード設定
-            setMaskMode('symbol');
-
-            // 初期カテゴリ設定
-            setCategory('fruits');
+            // 初期カテゴリ設定（記号・文字をデフォルトに）
+            setCategory('symbols');
         });
 
         // キーボードショートカット
         inputTextArea.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
                 event.preventDefault();
-                maskText();
+                maskSelectedText(); // 選択部分マスキングのみ
             }
         });
     </script>
