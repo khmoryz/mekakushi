@@ -121,31 +121,11 @@
             padding: 20px 0;
         }
 
-        .conversion-button {
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .conversion-button:hover {
-            background: #218838;
-            transform: scale(1.05);
-        }
-
-        .conversion-button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
+        .conversion-arrow {
+            color: #999;
+            font-size: 20px;
+            opacity: 0.4;
+            pointer-events: none;
         }
 
         /* 右側辞書パネル */
@@ -341,17 +321,6 @@
             border-color: #007AFF;
         }
 
-        /* ステータス表示 */
-        .status {
-            text-align: center;
-            padding: 10px;
-            font-size: 14px;
-            color: #666;
-            background-color: white;
-            border-radius: 6px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
         /* レスポンシブ対応 */
         @media (max-width: 1200px) {
             .dictionary-panel {
@@ -399,8 +368,8 @@
 
                 <!-- 変換コントロール -->
                 <div class="conversion-controls">
-                    <button class="conversion-button" onclick="convertToMasked()" title="マスキング実行">➡️</button>
-                    <button class="conversion-button" onclick="convertToOriginal()" title="逆変換（マスクを元に戻す）">⬅️</button>
+                    <div class="conversion-arrow">➡️</div>
+                    <div class="conversion-arrow">⬅️</div>
                 </div>
 
                 <!-- マスキング済みテキストパネル -->
@@ -412,9 +381,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- ステータス表示 -->
-            <div class="status" id="status">準備完了</div>
         </div>
 
         <!-- 右側辞書パネル -->
@@ -446,7 +412,6 @@
         // DOM要素の参照
         const inputTextArea = document.getElementById('inputText');
         const outputTextArea = document.getElementById('outputText');
-        const statusDiv = document.getElementById('status');
         const candidatePopup = document.getElementById('candidatePopup');
         const candidateGrid = document.getElementById('candidateGrid');
 
@@ -567,7 +532,6 @@
                 colors: '色',
                 countries: '国'
             };
-            updateStatus(`カテゴリを「${categoryNames[category]}」に変更しました`, 'success');
         }
 
         // 候補グリッドを更新する関数
@@ -581,7 +545,6 @@
         // 候補を選択する関数（自動マスキング）
         function selectCandidate(candidate) {
             if (selectedText.trim() === '') {
-                updateStatus('選択されたテキストがありません', 'error');
                 return;
             }
 
@@ -600,8 +563,6 @@
 
             // ポップアップを非表示
             hideCandidatePopup();
-
-            updateStatus(`「${selectedText}」を「${candidate}」でマスキングしました`, 'success');
         }
 
         // 辞書に新しいエントリを追加する関数
@@ -651,14 +612,11 @@
         // 辞書エントリを削除する関数
         function deleteDictionaryEntry(key) {
             if (maskingDictionary.has(key)) {
-                const entry = maskingDictionary.get(key);
                 maskingDictionary.delete(key);
                 updateDictionaryDisplay();
 
                 // リアルタイム同期（削除されたエントリの影響を反映）
                 syncInputToOutput();
-
-                updateStatus(`「${entry.original}」を辞書から削除しました`, 'success');
             }
         }
 
@@ -666,15 +624,13 @@
         function copyInputText() {
             const text = inputTextArea.value;
             if (text.trim() === '') {
-                updateStatus('コピーする入力テキストがありません', 'error');
                 return;
             }
 
             navigator.clipboard.writeText(text).then(() => {
-                updateStatus('入力テキストをクリップボードにコピーしました', 'success');
+                // コピー成功時の処理（必要に応じて）
             }).catch(() => {
                 inputTextArea.select();
-                updateStatus('入力テキストを選択しました（手動でコピーしてください）', 'info');
             });
         }
 
@@ -682,50 +638,14 @@
         function copyOutputText() {
             const text = outputTextArea.value;
             if (text.trim() === '') {
-                updateStatus('コピーするマスキング済みテキストがありません', 'error');
                 return;
             }
 
             navigator.clipboard.writeText(text).then(() => {
-                updateStatus('マスキング済みテキストをクリップボードにコピーしました', 'success');
+                // コピー成功時の処理（必要に応じて）
             }).catch(() => {
                 outputTextArea.select();
-                updateStatus('マスキング済みテキストを選択しました（手動でコピーしてください）', 'info');
             });
-        }
-
-        // マスキング変換を実行する関数
-        function convertToMasked() {
-            syncInputToOutput();
-            updateStatus('マスキング変換を実行しました', 'success');
-        }
-
-        // 逆変換（マスクを元に戻す）を実行する関数
-        function convertToOriginal() {
-            const outputText = outputTextArea.value;
-            let originalText = outputText;
-
-            // 辞書に基づいて逆変換
-            for (const [key, entry] of maskingDictionary.entries()) {
-                const regex = new RegExp(escapeRegExp(entry.masked), 'gi');
-                originalText = originalText.replace(regex, entry.original);
-            }
-
-            inputTextArea.value = originalText;
-            syncInputToOutput();
-            updateStatus('逆変換を実行しました', 'success');
-        }
-
-        // ステータス更新関数
-        function updateStatus(message, type = 'info') {
-            statusDiv.textContent = message;
-            statusDiv.style.color = type === 'error' ? '#DC3545' :
-                type === 'success' ? '#28A745' : '#666';
-
-            setTimeout(() => {
-                statusDiv.textContent = '準備完了';
-                statusDiv.style.color = '#666';
-            }, 3000);
         }
 
         // イベントリスナーの設定
