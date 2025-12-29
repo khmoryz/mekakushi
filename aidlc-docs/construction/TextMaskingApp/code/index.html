@@ -64,41 +64,41 @@
             display: flex;
         }
 
+        /* テキストエリアオーバーレイパターン */
+        .backdrop,
         .text-panel textarea {
-            flex: 1;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            padding: 15px 40px 15px 15px;
-            /* 右側にコピーボタンのスペース */
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            resize: none;
-            outline: none;
-            transition: border-color 0.2s;
-            background: transparent;
-            z-index: 2;
-            position: relative;
-        }
-
-        /* ハイライト表示用のオーバーレイ */
-        .highlight-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 40px;
-            /* コピーボタンのスペースを除く */
+            /* コピーボタンのスペース */
             bottom: 0;
-            padding: 15px;
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 14px;
             line-height: 1.5;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            margin: 0;
+            background: transparent;
             white-space: pre-wrap;
             word-wrap: break-word;
-            overflow: hidden;
-            pointer-events: none;
+            overflow: auto;
+        }
+
+        .backdrop {
             z-index: 1;
-            border-radius: 6px;
+            color: #333;
+            pointer-events: none;
+        }
+
+        .text-panel textarea {
+            z-index: 2;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+            color: transparent;
+            caret-color: #333;
         }
 
         .text-panel textarea:focus {
@@ -107,7 +107,7 @@
 
         .text-panel textarea:read-only {
             background-color: transparent;
-            color: #666;
+            color: transparent;
         }
 
         /* テキストボックス内のコピーボタン */
@@ -128,6 +128,7 @@
             justify-content: center;
             transition: all 0.2s;
             opacity: 0.8;
+            z-index: 3;
         }
 
         .copy-button:hover {
@@ -154,7 +155,6 @@
         /* マスクされた文字列のハイライト */
         .masked-highlight {
             background-color: #E3F2FD;
-            /* 薄い青色 */
             border-radius: 3px;
             padding: 1px 2px;
             transition: background-color 0.2s;
@@ -162,7 +162,6 @@
 
         .masked-highlight:hover {
             background-color: #BBDEFB;
-            /* ホバー時に少し濃い青色 */
         }
 
         /* 右側辞書パネル */
@@ -175,7 +174,6 @@
             display: flex;
             flex-direction: column;
             height: calc(100vh - 80px);
-            /* 縦幅MAX */
         }
 
         .dictionary-panel h3 {
@@ -225,7 +223,6 @@
             gap: 10px;
             flex: 1;
             min-width: 0;
-            /* テキストの省略を可能にする */
         }
 
         .dictionary-original {
@@ -397,7 +394,7 @@
                 <div class="text-panel">
                     <h2>📝 入力テキスト</h2>
                     <div class="textarea-container">
-                        <div class="highlight-overlay" id="inputHighlight"></div>
+                        <div class="backdrop" id="inputBackdrop"></div>
                         <textarea id="inputText"
                             placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
                         <button class="copy-button" onclick="copyInputText()" title="入力テキストをコピー">📋</button>
@@ -414,7 +411,7 @@
                 <div class="text-panel">
                     <h2>🔒 マスキング済みテキスト</h2>
                     <div class="textarea-container">
-                        <div class="highlight-overlay" id="outputHighlight"></div>
+                        <div class="backdrop" id="outputBackdrop"></div>
                         <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
                         <button class="copy-button" onclick="copyOutputText()" title="マスキング済みテキストをコピー">📋</button>
                     </div>
@@ -451,6 +448,8 @@
         // DOM要素の参照
         const inputTextArea = document.getElementById('inputText');
         const outputTextArea = document.getElementById('outputText');
+        const inputBackdrop = document.getElementById('inputBackdrop');
+        const outputBackdrop = document.getElementById('outputBackdrop');
         const candidatePopup = document.getElementById('candidatePopup');
         const candidateGrid = document.getElementById('candidateGrid');
 
@@ -461,7 +460,7 @@
         let selectionEnd = 0;
         let popupVisible = false;
 
-        // 候補データ（約50個のアイテム + 記号・文字）
+        // 候補データ
         const candidateData = {
             symbols: [
                 '*', 'X', '#', '●', '■', '▲', '◆', '★', '※', '○',
@@ -494,6 +493,40 @@
         // メモリ内辞書（マスキング履歴）
         let maskingDictionary = new Map();
 
+        // HTMLエスケープ関数
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // 正規表現エスケープ関数
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // ハイライト表示関数（提供されたパターンを使用）
+        function highlight(text, targets) {
+            if (!targets || targets.length === 0) {
+                return escapeHtml(text);
+            }
+
+            // 長い順にソート（部分文字列の問題を避けるため）
+            const sortedTargets = [...targets].sort((a, b) => b.length - a.length);
+
+            let result = escapeHtml(text);
+
+            for (const target of sortedTargets) {
+                if (!target) continue;
+                const escapedTarget = escapeRegExp(target);
+                const regex = new RegExp(escapedTarget, 'gi');
+                result = result.replace(regex, '<span class="masked-highlight">' + escapeHtml(target) + '</span>');
+            }
+
+            return result;
+        }
+
         // リアルタイム同期: 入力テキストの変更を出力に反映
         function syncInputToOutput() {
             const inputText = inputTextArea.value;
@@ -511,63 +544,21 @@
             updateHighlights();
         }
 
-        // マスクされた文字列をハイライト表示する関数
+        // ハイライト表示を更新
         function updateHighlights() {
-            // 入力テキストのハイライト更新
-            updateTextHighlight('inputText', 'inputHighlight');
-            // 出力テキストのハイライト更新
-            updateTextHighlight('outputText', 'outputHighlight');
+            // 入力テキストのハイライト更新（元の文字列をハイライト）
+            const inputTargets = Array.from(maskingDictionary.values()).map(entry => entry.original);
+            inputBackdrop.innerHTML = highlight(inputTextArea.value, inputTargets);
+
+            // 出力テキストのハイライト更新（マスクされた文字列をハイライト）
+            const outputTargets = Array.from(maskingDictionary.values()).map(entry => entry.masked);
+            outputBackdrop.innerHTML = highlight(outputTextArea.value, outputTargets);
         }
 
-        // 指定されたテキストエリアのハイライトを更新
-        function updateTextHighlight(textareaId, highlightId) {
-            const textarea = document.getElementById(textareaId);
-            const highlightDiv = document.getElementById(highlightId);
-
-            if (!textarea || !highlightDiv) return;
-
-            let text = textarea.value;
-
-            // まずHTMLエスケープを行う
-            let highlightedText = text
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-
-            // 辞書の各エントリに対してハイライトを適用
-            for (const [key, entry] of maskingDictionary.entries()) {
-                // 元の文字列をハイライト（入力テキストの場合）
-                if (textareaId === 'inputText') {
-                    const escapedOriginal = entry.original
-                        .replace(/&/g, '&amp;')
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;');
-                    const originalRegex = new RegExp(escapeRegExp(escapedOriginal), 'gi');
-                    highlightedText = highlightedText.replace(originalRegex,
-                        `<span class="masked-highlight">${escapedOriginal}</span>`);
-                }
-
-                // マスクされた文字列をハイライト（出力テキストの場合）
-                if (textareaId === 'outputText') {
-                    const escapedMasked = entry.masked
-                        .replace(/&/g, '&amp;')
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;');
-                    const maskedRegex = new RegExp(escapeRegExp(escapedMasked), 'gi');
-                    highlightedText = highlightedText.replace(maskedRegex,
-                        `<span class="masked-highlight">${escapedMasked}</span>`);
-                }
-            }
-
-            // 改行を<br>に変換
-            highlightedText = highlightedText.replace(/\n/g, '<br>');
-
-            highlightDiv.innerHTML = highlightedText;
-        }
-
-        // 正規表現エスケープ関数
-        function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // スクロール同期
+        function syncScroll(source, target) {
+            target.scrollTop = source.scrollTop;
+            target.scrollLeft = source.scrollLeft;
         }
 
         // テキスト選択時のポップアップ表示
@@ -619,15 +610,6 @@
 
             // 候補グリッドを更新
             updateCandidateGrid();
-
-            const categoryNames = {
-                symbols: '記号・文字',
-                fruits: '果物',
-                animals: '動物',
-                stars: '星',
-                colors: '色',
-                countries: '国'
-            };
         }
 
         // 候補グリッドを更新する関数
@@ -751,6 +733,14 @@
         document.addEventListener('DOMContentLoaded', function () {
             // 入力テキストの変更をリアルタイムで同期
             inputTextArea.addEventListener('input', syncInputToOutput);
+
+            // スクロール同期を追加
+            inputTextArea.addEventListener('scroll', function () {
+                syncScroll(this, inputBackdrop);
+            });
+            outputTextArea.addEventListener('scroll', function () {
+                syncScroll(this, outputBackdrop);
+            });
 
             // テキスト選択の監視
             inputTextArea.addEventListener('mouseup', handleTextSelection);
