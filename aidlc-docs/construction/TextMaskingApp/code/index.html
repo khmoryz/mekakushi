@@ -16,22 +16,31 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             height: calc(100vh - 40px);
+            display: flex;
+            gap: 20px;
+        }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .panels {
+        /* テキストパネルエリア */
+        .text-panels {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 15px;
             flex: 1;
             min-height: 0;
         }
 
-        .panel {
+        .text-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -39,20 +48,28 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
-        .panel h2 {
+        .text-panel h2 {
             color: #555;
             margin-bottom: 10px;
             font-size: 16px;
             flex-shrink: 0;
         }
 
-        .panel textarea {
+        .textarea-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+        }
+
+        .text-panel textarea {
             flex: 1;
             border: 2px solid #ddd;
             border-radius: 6px;
-            padding: 15px;
+            padding: 15px 40px 15px 15px;
+            /* 右側にコピーボタンのスペース */
             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
             font-size: 14px;
             line-height: 1.5;
@@ -61,13 +78,182 @@
             transition: border-color 0.2s;
         }
 
-        .panel textarea:focus {
+        .text-panel textarea:focus {
             border-color: #007AFF;
         }
 
-        .panel textarea:read-only {
+        .text-panel textarea:read-only {
             background-color: #f8f8f8;
             color: #666;
+        }
+
+        /* テキストボックス内のコピーボタン */
+        .copy-button {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            opacity: 0.8;
+        }
+
+        .copy-button:hover {
+            opacity: 1;
+            background: #0056b3;
+        }
+
+        /* 変換アイコンエリア */
+        .conversion-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 0;
+        }
+
+        .conversion-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .conversion-button:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .conversion-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 右側辞書パネル */
+        .dictionary-panel {
+            width: 350px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 80px);
+            /* 縦幅MAX */
+        }
+
+        .dictionary-panel h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .dictionary-list {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        .dictionary-empty {
+            color: #999;
+            text-align: center;
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        .dictionary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            margin-bottom: 8px;
+            background-color: white;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .dictionary-item:hover {
+            border-color: #007AFF;
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.1);
+        }
+
+        .dictionary-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+            /* テキストの省略を可能にする */
+        }
+
+        .dictionary-original {
+            font-weight: 600;
+            color: #495057;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
+        .dictionary-arrow {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .dictionary-masked {
+            color: #007AFF;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        .dictionary-count {
+            font-size: 10px;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+
+        .dictionary-delete {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .dictionary-delete:hover {
+            background-color: #f8d7da;
         }
 
         /* ポップアップ候補選択 */
@@ -155,136 +341,87 @@
             border-color: #007AFF;
         }
 
-        /* 辞書セクション */
-        .dictionary-section {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .dictionary-section h3 {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .dictionary-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 10px;
-            background-color: #fafafa;
-        }
-
-        .dictionary-empty {
-            color: #999;
-            text-align: center;
-            padding: 20px;
-            font-style: italic;
-        }
-
-        .dictionary-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            background-color: white;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .dictionary-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-        }
-
-        .dictionary-original {
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .dictionary-masked {
-            color: #007AFF;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-        }
-
-        .dictionary-delete {
-            background: none;
-            border: none;
-            color: #dc3545;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
-            border-radius: 3px;
-            transition: background-color 0.2s;
-        }
-
-        .dictionary-delete:hover {
-            background-color: #f8d7da;
-        }
-
-        /* ユーティリティボタン */
-        .utility-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-
-        .button.primary {
-            background-color: #007AFF;
-            color: white;
-        }
-
-        .button.primary:hover {
-            background-color: #0056b3;
-        }
-
-        .button.secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .button.secondary:hover {
-            background-color: #545b62;
-        }
-
+        /* ステータス表示 */
         .status {
             text-align: center;
             padding: 10px;
             font-size: 14px;
             color: #666;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 1200px) {
+            .dictionary-panel {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .dictionary-panel {
+                width: 100%;
+                height: 300px;
+            }
+
+            .text-panels {
+                flex-direction: column;
+            }
+
+            .conversion-controls {
+                flex-direction: row;
+                padding: 10px 0;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="panels">
-            <div class="panel">
-                <h2>📝 入力テキスト</h2>
-                <textarea id="inputText"
-                    placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
+        <!-- メインコンテンツエリア -->
+        <div class="main-content">
+            <!-- テキストパネルと変換コントロール -->
+            <div class="text-panels">
+                <!-- 入力テキストパネル -->
+                <div class="text-panel">
+                    <h2>📝 入力テキスト</h2>
+                    <div class="textarea-container">
+                        <textarea id="inputText"
+                            placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択するとマスク候補が表示されます"></textarea>
+                        <button class="copy-button" onclick="copyInputText()" title="入力テキストをコピー">📋</button>
+                    </div>
+                </div>
+
+                <!-- 変換コントロール -->
+                <div class="conversion-controls">
+                    <button class="conversion-button" onclick="convertToMasked()" title="マスキング実行">➡️</button>
+                    <button class="conversion-button" onclick="convertToOriginal()" title="逆変換（マスクを元に戻す）">⬅️</button>
+                </div>
+
+                <!-- マスキング済みテキストパネル -->
+                <div class="text-panel">
+                    <h2>🔒 マスキング済みテキスト</h2>
+                    <div class="textarea-container">
+                        <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
+                        <button class="copy-button" onclick="copyOutputText()" title="マスキング済みテキストをコピー">📋</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="panel">
-                <h2>🔒 マスキング済みテキスト</h2>
-                <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
+            <!-- ステータス表示 -->
+            <div class="status" id="status">準備完了</div>
+        </div>
+
+        <!-- 右側辞書パネル -->
+        <div class="dictionary-panel">
+            <h3>📚 マスキング辞書</h3>
+            <div class="dictionary-list" id="dictionaryList">
+                <div class="dictionary-empty">まだマスキングした単語がありません</div>
             </div>
         </div>
 
@@ -303,19 +440,6 @@
                 <!-- 候補がここに動的に表示される -->
             </div>
         </div>
-
-        <div class="dictionary-section">
-            <h3>📚 マスキング辞書</h3>
-            <div class="dictionary-list" id="dictionaryList">
-                <div class="dictionary-empty">まだマスキングした単語がありません</div>
-            </div>
-        </div>
-
-        <div class="utility-buttons">
-            <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
-        </div>
-
-        <div class="status" id="status">準備完了</div>
     </div>
 
     <script>
@@ -515,9 +639,9 @@
                 <div class="dictionary-item">
                     <div class="dictionary-content">
                         <span class="dictionary-original">${entry.original}</span>
-                        <span>→</span>
+                        <span class="dictionary-arrow">→</span>
                         <span class="dictionary-masked">${entry.masked}</span>
-                        <span style="font-size: 10px; color: #6c757d;">(${entry.count}回)</span>
+                        <span class="dictionary-count">(${entry.count}回)</span>
                     </div>
                     <button class="dictionary-delete" onclick="deleteDictionaryEntry('${key}')" title="削除">🗑️</button>
                 </div>
@@ -538,20 +662,58 @@
             }
         }
 
-        // テキストをコピーする関数
-        function copyText() {
-            const text = outputTextArea.value;
+        // 入力テキストをコピーする関数
+        function copyInputText() {
+            const text = inputTextArea.value;
             if (text.trim() === '') {
-                updateStatus('コピーするテキストがありません', 'error');
+                updateStatus('コピーする入力テキストがありません', 'error');
                 return;
             }
 
             navigator.clipboard.writeText(text).then(() => {
-                updateStatus('クリップボードにコピーしました', 'success');
+                updateStatus('入力テキストをクリップボードにコピーしました', 'success');
+            }).catch(() => {
+                inputTextArea.select();
+                updateStatus('入力テキストを選択しました（手動でコピーしてください）', 'info');
+            });
+        }
+
+        // マスキング済みテキストをコピーする関数
+        function copyOutputText() {
+            const text = outputTextArea.value;
+            if (text.trim() === '') {
+                updateStatus('コピーするマスキング済みテキストがありません', 'error');
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                updateStatus('マスキング済みテキストをクリップボードにコピーしました', 'success');
             }).catch(() => {
                 outputTextArea.select();
-                updateStatus('テキストを選択しました（手動でコピーしてください）', 'info');
+                updateStatus('マスキング済みテキストを選択しました（手動でコピーしてください）', 'info');
             });
+        }
+
+        // マスキング変換を実行する関数
+        function convertToMasked() {
+            syncInputToOutput();
+            updateStatus('マスキング変換を実行しました', 'success');
+        }
+
+        // 逆変換（マスクを元に戻す）を実行する関数
+        function convertToOriginal() {
+            const outputText = outputTextArea.value;
+            let originalText = outputText;
+
+            // 辞書に基づいて逆変換
+            for (const [key, entry] of maskingDictionary.entries()) {
+                const regex = new RegExp(escapeRegExp(entry.masked), 'gi');
+                originalText = originalText.replace(regex, entry.original);
+            }
+
+            inputTextArea.value = originalText;
+            syncInputToOutput();
+            updateStatus('逆変換を実行しました', 'success');
         }
 
         // ステータス更新関数
