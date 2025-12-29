@@ -82,6 +82,10 @@
             flex-shrink: 0;
         }
 
+        .button-row {
+            margin-bottom: 10px;
+        }
+
         .button {
             background-color: #007AFF;
             color: white;
@@ -91,7 +95,7 @@
             font-size: 14px;
             cursor: pointer;
             transition: background-color 0.2s;
-            margin: 0 10px;
+            margin: 0 5px;
         }
 
         .button:hover {
@@ -110,10 +114,29 @@
             background-color: #545B62;
         }
 
+        .button.warning {
+            background-color: #FD7E14;
+        }
+
+        .button.warning:hover {
+            background-color: #E8590C;
+        }
+
+        .button:disabled {
+            background-color: #CCC;
+            cursor: not-allowed;
+        }
+
         .status {
             margin-top: 10px;
             font-size: 12px;
             color: #666;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -125,7 +148,8 @@
         <div class="panels">
             <div class="panel">
                 <h2>📝 入力テキスト</h2>
-                <textarea id="inputText" placeholder="ここにテキストを入力してください...&#10;例: My password is secret123"></textarea>
+                <textarea id="inputText"
+                    placeholder="ここにテキストを入力してください...&#10;例: My password is secret123&#10;&#10;💡 テキストを選択して「選択部分をマスク」ボタンを押すと、選択した部分だけをマスキングできます"></textarea>
             </div>
 
             <div class="panel">
@@ -135,9 +159,14 @@
         </div>
 
         <div class="controls">
-            <button class="button" onclick="maskText()">🔒 テキストをマスキング</button>
-            <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
+            <div class="button-row">
+                <button class="button" onclick="maskText()">🔒 自動マスキング</button>
+                <button class="button warning" id="maskSelectedBtn" onclick="maskSelectedText()" disabled>✂️
+                    選択部分をマスク</button>
+                <button class="button secondary" onclick="copyText()">📋 テキストをコピー</button>
+            </div>
             <div class="status" id="status">準備完了</div>
+            <div class="help-text">💡 Ctrl/Cmd + Enter: 自動マスキング | テキスト選択後: 選択部分マスキング</div>
         </div>
     </div>
 
@@ -146,6 +175,12 @@
         const inputTextArea = document.getElementById('inputText');
         const outputTextArea = document.getElementById('outputText');
         const statusDiv = document.getElementById('status');
+        const maskSelectedBtn = document.getElementById('maskSelectedBtn');
+
+        // 選択されたテキストの情報を保存
+        let selectedText = '';
+        let selectionStart = 0;
+        let selectionEnd = 0;
 
         // 最も単純なマスキング関数
         function simpleMask(text) {
@@ -175,7 +210,22 @@
             return { maskedText, maskCount };
         }
 
-        // マスキング実行関数
+        // 選択されたテキストをマスクに置換する関数
+        function maskSelectedPortion(text, start, end) {
+            const selectedPortion = text.substring(start, end);
+            if (selectedPortion.trim() === '') {
+                return { maskedText: text, maskCount: 0 };
+            }
+
+            // 選択された部分を***に置換（長さに応じて調整）
+            const maskLength = Math.max(3, Math.min(selectedPortion.length, 10));
+            const mask = '*'.repeat(maskLength);
+
+            const maskedText = text.substring(0, start) + mask + text.substring(end);
+            return { maskedText, maskCount: 1 };
+        }
+
+        // 自動マスキング実行関数
         function maskText() {
             const inputText = inputTextArea.value;
 
@@ -188,9 +238,28 @@
             outputTextArea.value = result.maskedText;
 
             if (result.maskCount > 0) {
-                updateStatus(`${result.maskCount}個の単語をマスキングしました`, 'success');
+                updateStatus(`${result.maskCount}個の単語を自動マスキングしました`, 'success');
             } else {
                 updateStatus('マスキング対象の単語が見つかりませんでした', 'info');
+            }
+        }
+
+        // 選択部分マスキング実行関数
+        function maskSelectedText() {
+            const inputText = inputTextArea.value;
+
+            if (selectedText.trim() === '') {
+                updateStatus('選択されたテキストがありません', 'error');
+                return;
+            }
+
+            const result = maskSelectedPortion(inputText, selectionStart, selectionEnd);
+            outputTextArea.value = result.maskedText;
+
+            if (result.maskCount > 0) {
+                updateStatus(`選択された「${selectedText}」をマスキングしました`, 'success');
+            } else {
+                updateStatus('選択されたテキストをマスキングできませんでした', 'error');
             }
         }
 
@@ -225,15 +294,36 @@
             }, 3000);
         }
 
+        // テキスト選択の監視
+        function updateSelection() {
+            selectionStart = inputTextArea.selectionStart;
+            selectionEnd = inputTextArea.selectionEnd;
+            selectedText = inputTextArea.value.substring(selectionStart, selectionEnd);
+
+            // 選択部分マスクボタンの有効/無効を切り替え
+            if (selectedText.trim().length > 0) {
+                maskSelectedBtn.disabled = false;
+                maskSelectedBtn.textContent = `✂️ 「${selectedText.length > 10 ? selectedText.substring(0, 10) + '...' : selectedText}」をマスク`;
+            } else {
+                maskSelectedBtn.disabled = true;
+                maskSelectedBtn.textContent = '✂️ 選択部分をマスク';
+            }
+        }
+
+        // イベントリスナーの設定
+        inputTextArea.addEventListener('mouseup', updateSelection);
+        inputTextArea.addEventListener('keyup', updateSelection);
+        inputTextArea.addEventListener('select', updateSelection);
+
         // アプリケーション初期化
         document.addEventListener('DOMContentLoaded', function () {
             inputTextArea.focus();
 
             // サンプルテキストを設定（デモ用）
-            inputTextArea.value = 'My password is secret123 and the admin account is confidential.';
+            inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
         });
 
-        // エンターキーでマスキング実行
+        // キーボードショートカット
         inputTextArea.addEventListener('keydown', function (event) {
             if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
                 event.preventDefault();
