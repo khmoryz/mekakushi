@@ -13,13 +13,13 @@
 - ブラウンフィールドプロジェクト検出
 - 既存のAI-DLC成果物が存在（inception/application-design/）
 - 詳細な要件とアプリケーション設計が完了済み
-- TextMaskingAppの単一ユニット構成
+- Mekakushiの単一ユニット構成
 **次のステップ**: CONSTRUCTIONフェーズのコード生成に進行
 
 ---
 ## コード生成計画 - 作成
 **タイムスタンプ**: 2024-12-29T10:10:00Z
-**AIプロンプト**: "TextMaskingAppのコード生成計画を作成しました。16ステップの詳細な実装計画で、基本機能から段階的に実装します。承認して生成を開始しますか？"
+**AIプロンプト**: "Mekakushiのコード生成計画を作成しました。16ステップの詳細な実装計画で、基本機能から段階的に実装します。承認して生成を開始しますか？"
 **コンテキスト**: Electronアプリの段階的実装計画、最小限の動作実装を優先
 
 ---
@@ -33,11 +33,11 @@
 - README.md作成（セットアップ手順）
 - .gitignore作成（プロジェクト管理）
 **成果物**: 
-- aidlc-docs/construction/TextMaskingApp/code/package.json
-- aidlc-docs/construction/TextMaskingApp/code/main.js
-- aidlc-docs/construction/TextMaskingApp/code/index.html
-- aidlc-docs/construction/TextMaskingApp/code/README.md
-- aidlc-docs/construction/TextMaskingApp/code/.gitignore
+- aidlc-docs/construction/Mekakushi/code/package.json
+- aidlc-docs/construction/Mekakushi/code/main.js
+- aidlc-docs/construction/Mekakushi/code/index.html
+- aidlc-docs/construction/Mekakushi/code/README.md
+- aidlc-docs/construction/Mekakushi/code/.gitignore
 **完成状態**: Electronウィンドウが起動し、基本的なUIが表示される動作するアプリ
 
 ---

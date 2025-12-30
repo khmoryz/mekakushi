@@ -1,4 +1,6 @@
-# Text Masking App
+# Mekakushi
+
+A simple text masking application for macOS.
 
 ## 最終版: UI改善完了 - シンプルで直感的なインターフェース
 
@@ -8,7 +10,7 @@
 
 1. **依存関係のインストール**
    ```bash
-   cd aidlc-docs/construction/TextMaskingApp/code
+   cd aidlc-docs/construction/Mekakushi/code
    npm install
    ```
 
@@ -41,7 +43,7 @@
   - 使用回数と最終使用日時の記録
   - 最近使用順でのソート表示
 - ✅ **シンプルなデザイン**
-  - タイトル「Text Masking App」を削除
+  - タイトル「Mekakushi」を削除
   - 四角い外枠を削除してクリーンな見た目に
   - ステータス表示を削除してスッキリとしたUI 🆕
   - 装飾的な変換矢印で視覚的な流れを表現 🆕
@@ -76,7 +78,7 @@
 - **精密な管理**: 必要な項目だけを残して不要な項目を削除
 
 #### ミニマルデザイン
-- **タイトル削除**: 「Text Masking App」タイトルを削除してスペース効率化
+- **タイトル削除**: 「Mekakushi」タイトルを削除してスペース効率化
 - **外枠削除**: 四角い外枠を削除してモダンでクリーンな見た目
 - **ステータス削除**: 不要なステータス表示を削除してスッキリ
 - **装飾的矢印**: 機能的なボタンから視覚的な流れを示す装飾に変更

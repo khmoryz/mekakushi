@@ -3,7 +3,7 @@
 ## 依存関係概要
 
 ### ユニット構成
-**TextMaskingApp** - 単一の統合Electronアプリケーション
+**Mekakushi** - 単一の統合Electronアプリケーション
 
 ### 内部コンポーネント依存関係
 
@@ -255,4 +255,4 @@ class Dictionary implements IDictionary {
 - **戦略**: 非同期処理、バッファリング
 - **実装**: Promise ベース API、ストリーミング
 
-この依存関係分析により、TextMaskingAppの内部構造と外部依存関係が明確になり、開発時の設計決定とリスク管理に役立ちます。
+この依存関係分析により、Mekakushiの内部構造と外部依存関係が明確になり、開発時の設計決定とリスク管理に役立ちます。

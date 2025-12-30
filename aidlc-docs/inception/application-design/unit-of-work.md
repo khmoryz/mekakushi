@@ -3,7 +3,7 @@
 ## ユニット概要
 
 ### ユニット名
-**TextMaskingApp**
+**Mekakushi**
 
 ### ユニットタイプ
 **統合デスクトップアプリケーション** - 単一のElectronアプリケーションとして実装
@@ -103,7 +103,7 @@
 
 ### プロセス構成
 ```
-TextMaskingApp
+Mekakushi
 ├── メインプロセス (Node.js + TypeScript)
 │   ├── MaskingEngine - 統合マスキング処理
 │   ├── Dictionary - 辞書データ管理

@@ -3,7 +3,7 @@
 ## ユニットコンテキスト
 
 ### ユニット情報
-- **ユニット名**: TextMaskingApp
+- **ユニット名**: Mekakushi
 - **ユニットタイプ**: 統合デスクトップアプリケーション（Electron）
 - **技術スタック**: Electron + React + TypeScript + Node.js
 

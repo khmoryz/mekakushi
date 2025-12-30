@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Masking App</title>
+    <title>Mekakushi</title>
     <style>
         /* Iceburg Color Palette */
         :root {
@@ -82,6 +82,8 @@
         .container {
             flex: 1;
             display: flex;
+            flex-direction: row;
+            /* 横並びに修正 */
             padding: var(--spacing-md);
             gap: var(--spacing-md);
             min-height: 0;
@@ -138,7 +140,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 40px;
+            right: 0;
             bottom: 0;
             font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
             font-size: 13px;
@@ -184,7 +186,7 @@
         .copy-button {
             position: absolute;
             bottom: 12px;
-            right: 48px;
+            right: 12px;
             background: var(--accent-blue);
             color: var(--bg-primary);
             border: none;
@@ -250,20 +252,20 @@
             align-items: center;
             justify-content: center;
             gap: var(--spacing-sm);
-            padding: var(--spacing-md);
-            min-width: 32px;
-            max-width: 32px;
+            padding: var(--spacing-sm);
+            min-width: 20px;
+            max-width: 20px;
         }
 
         .conversion-arrow {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             position: relative;
             opacity: 0.6;
             transition: all 0.3s ease;
         }
 
-        /* 右向き矢印 */
+        /* 右向き矢印 - 一体化したデザイン */
         .conversion-arrow.right::before {
             content: '';
             position: absolute;
@@ -279,16 +281,16 @@
             content: '';
             position: absolute;
             top: 50%;
-            right: 0;
+            left: 10px;
             width: 0;
             height: 0;
             border-left: 6px solid var(--text-tertiary);
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
             transform: translateY(-50%);
         }
 
-        /* 左向き矢印 */
+        /* 左向き矢印 - 一体化したデザイン */
         .conversion-arrow.left::before {
             content: '';
             position: absolute;
@@ -304,12 +306,12 @@
             content: '';
             position: absolute;
             top: 50%;
-            left: 0;
+            right: 10px;
             width: 0;
             height: 0;
             border-right: 6px solid var(--text-tertiary);
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
             transform: translateY(-50%);
         }
 
@@ -335,11 +337,13 @@
             flex-direction: column;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            align-self: stretch;
+            /* 親コンテナの高さに合わせる */
         }
 
-        .dictionary-panel h3 {
+        .dictionary-panel h2 {
             color: var(--text-accent);
-            margin: 0 0 var(--spacing-md) 0;
+            margin: 0 0 var(--spacing-sm) 0;
             font-size: 14px;
             font-weight: 600;
             display: flex;
@@ -354,6 +358,8 @@
             border-radius: var(--radius-sm);
             padding: var(--spacing-sm);
             background: var(--bg-tertiary);
+            min-height: 0;
+            /* Flexboxの縮小を許可 */
         }
 
         .dictionary-empty {
@@ -572,7 +578,7 @@
             }
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 800px) {
             .container {
                 flex-direction: column;
                 padding: var(--spacing-sm);
@@ -656,7 +662,7 @@
 
             <!-- 右側辞書パネル -->
             <div class="dictionary-panel">
-                <h3>📚 マスキング辞書</h3>
+                <h2>📚 マスキング辞書</h2>
                 <div class="dictionary-list" id="dictionaryList">
                     <div class="dictionary-empty">まだマスキングした単語がありません</div>
                 </div>
@@ -964,20 +970,7 @@
             const entries = Array.from(maskingDictionary.entries())
                 .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
 
-            const clearButton = `
-                <div style="margin-bottom: var(--spacing-sm); text-align: center;">
-                    <button onclick="clearAllDictionary()" 
-                            style="background: var(--accent-red); color: var(--bg-primary); border: none; 
-                                   border-radius: var(--radius-sm); padding: var(--spacing-xs) var(--spacing-sm); 
-                                   font-size: 11px; cursor: pointer; transition: all 0.2s ease;"
-                            onmouseover="this.style.background='#c66'"
-                            onmouseout="this.style.background='var(--accent-red)'">
-                        🗑️ 辞書をクリア
-                    </button>
-                </div>
-            `;
-
-            dictionaryList.innerHTML = clearButton + entries.map(([key, entry]) => `
+            dictionaryList.innerHTML = entries.map(([key, entry]) => `
                 <div class="dictionary-item">
                     <div class="dictionary-content">
                         <span class="dictionary-original">${entry.original}</span>
@@ -991,13 +984,6 @@
 
             // ハイライト表示を更新
             updateHighlights();
-        }
-
-        // 辞書全体をクリアする関数
-        function clearAllDictionary() {
-            if (confirm('辞書の全ての内容を削除しますか？この操作は元に戻せません。')) {
-                clearDictionaryFromStore();
-            }
         }
 
         // 辞書エントリを削除する関数
