@@ -1,12 +1,39 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const Store = require('electron-store');
-
-// Initialize electron-store
-const store = new Store();
+const fs = require('fs');
+const os = require('os');
 
 // Keep a global reference of the window object
 let mainWindow;
+
+// Get user data directory
+const userDataPath = app.getPath('userData');
+const dictionaryPath = path.join(userDataPath, 'maskingDictionary.json');
+
+// Helper functions for dictionary persistence
+function loadDictionary() {
+  try {
+    if (fs.existsSync(dictionaryPath)) {
+      const data = fs.readFileSync(dictionaryPath, 'utf8');
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    console.error('Error loading dictionary:', error);
+  }
+  return {};
+}
+
+function saveDictionary(dictionary) {
+  try {
+    // Ensure directory exists
+    fs.mkdirSync(userDataPath, { recursive: true });
+    fs.writeFileSync(dictionaryPath, JSON.stringify(dictionary, null, 2));
+    return true;
+  } catch (error) {
+    console.error('Error saving dictionary:', error);
+    return false;
+  }
+}
 
 function createWindow() {
   // Create the browser window
@@ -39,17 +66,23 @@ function createWindow() {
 
 // IPC handlers for dictionary persistence
 ipcMain.handle('store-get-dictionary', () => {
-  return store.get('maskingDictionary', {});
+  return loadDictionary();
 });
 
 ipcMain.handle('store-set-dictionary', (event, dictionary) => {
-  store.set('maskingDictionary', dictionary);
-  return true;
+  return saveDictionary(dictionary);
 });
 
 ipcMain.handle('store-clear-dictionary', () => {
-  store.delete('maskingDictionary');
-  return true;
+  try {
+    if (fs.existsSync(dictionaryPath)) {
+      fs.unlinkSync(dictionaryPath);
+    }
+    return true;
+  } catch (error) {
+    console.error('Error clearing dictionary:', error);
+    return false;
+  }
 });
 
 // This method will be called when Electron has finished initialization

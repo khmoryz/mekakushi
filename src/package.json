@@ -18,8 +18,7 @@
     },
     "files": [
       "**/*",
-      "!node_modules/**/*",
-      "node_modules/electron-store/**/*"
+      "!node_modules/**/*"
     ],
     "mac": {
       "category": "public.app-category.utilities",
@@ -62,9 +61,6 @@
   ],
   "author": "AI-DLC",
   "license": "MIT",
-  "dependencies": {
-    "electron-store": "^8.1.0"
-  },
   "devDependencies": {
     "electron": "^39.2.7",
     "electron-builder": "^26.0.12"
