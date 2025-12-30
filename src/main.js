@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -314,6 +314,29 @@ ipcMain.handle('project-update-project-metadata', (event, projectId, metadata) =
   } catch (error) {
     console.error('Error updating project metadata:', error);
     return false;
+  }
+});
+
+// ダイアログ用のIPCハンドラー
+ipcMain.handle('show-message-box', async (event, options) => {
+  try {
+    const result = await dialog.showMessageBox(mainWindow, options);
+    return result;
+  } catch (error) {
+    console.error('Error showing message box:', error);
+    return { response: 1, checkboxChecked: false }; // キャンセル相当
+  }
+});
+
+ipcMain.handle('show-input-box', async (event, options) => {
+  try {
+    // Electronには標準的な入力ダイアログがないため、カスタム実装
+    // 今回は簡単にするため、メッセージボックスで代用し、
+    // レンダラープロセス側でHTMLダイアログを使用する
+    return { success: true, value: '' };
+  } catch (error) {
+    console.error('Error showing input box:', error);
+    return { success: false, value: null };
   }
 });
 

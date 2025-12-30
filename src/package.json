@@ -9,8 +9,8 @@
     "build": "electron-builder",
     "build:mac": "electron-builder --mac",
     "dist": "electron-builder --publish=never",
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
+    "test": "playwright test --reporter=list",
+    "test:headed": "playwright test --headed --reporter=list",
     "test:ui": "playwright test --ui"
   },
   "build": {

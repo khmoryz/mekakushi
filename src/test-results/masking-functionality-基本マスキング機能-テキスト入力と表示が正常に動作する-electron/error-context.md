@@ -7,7 +7,7 @@
       - generic [ref=e5]: "📁 プロジェクト:"
       - combobox "📁 プロジェクト:" [ref=e6]:
         - option "プロジェクトを選択..." [selected]
-      - button "➕" [active] [ref=e7] [cursor=pointer]
+      - button "➕" [ref=e7] [cursor=pointer]
       - button "⚙️" [ref=e8] [cursor=pointer]
     - generic [ref=e9]: プロジェクトが選択されていません
   - generic [ref=e10]:
@@ -15,8 +15,9 @@
       - generic [ref=e13]:
         - heading "📝 入力テキスト" [level=2] [ref=e14]
         - generic [ref=e15]:
-          - 'textbox "ここにテキストを入力してください... 例: My password is secret123 💡 テキストを選択するとマスク候補が表示されます" [ref=e16]':
+          - 'textbox "ここにテキストを入力してください... 例: My password is secret123 💡 テキストを選択するとマスク候補が表示されます" [active] [ref=e16]':
             - /placeholder: "ここにテキストを入力してください...\n例: My password is secret123\n\n💡 テキストを選択するとマスク候補が表示されます"
+            - text: Hello World
           - button "入力テキストをコピー" [ref=e17] [cursor=pointer]
       - generic [ref=e21]:
         - heading "🔒 マスキング済みテキスト" [level=2] [ref=e22]

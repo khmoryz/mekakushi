@@ -7,8 +7,8 @@
       - generic [ref=e5]: "📁 プロジェクト:"
       - combobox "📁 プロジェクト:" [ref=e6]:
         - option "プロジェクトを選択..." [selected]
-      - button "➕" [active] [ref=e7] [cursor=pointer]
-      - button "⚙️" [ref=e8] [cursor=pointer]
+      - button "➕" [ref=e7] [cursor=pointer]
+      - button "⚙️" [active] [ref=e8] [cursor=pointer]
     - generic [ref=e9]: プロジェクトが選択されていません
   - generic [ref=e10]:
     - generic [ref=e12]:

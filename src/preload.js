@@ -18,5 +18,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setCurrentProject: (projectId) => ipcRenderer.invoke('project-set-current-project', projectId),
   loadProjectDictionary: (projectId) => ipcRenderer.invoke('project-load-project-dictionary', projectId),
   saveProjectDictionary: (projectId, dictionary) => ipcRenderer.invoke('project-save-project-dictionary', projectId, dictionary),
-  updateProjectMetadata: (projectId, metadata) => ipcRenderer.invoke('project-update-project-metadata', projectId, metadata)
+  updateProjectMetadata: (projectId, metadata) => ipcRenderer.invoke('project-update-project-metadata', projectId, metadata),
+
+  // Dialog methods
+  showMessageBox: (options) => ipcRenderer.invoke('show-message-box', options),
+  showInputBox: (options) => ipcRenderer.invoke('show-input-box', options)
 });

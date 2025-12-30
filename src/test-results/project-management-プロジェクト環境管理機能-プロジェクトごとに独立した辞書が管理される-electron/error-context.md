@@ -17,6 +17,7 @@
         - generic [ref=e15]:
           - 'textbox "ここにテキストを入力してください... 例: My password is secret123 💡 テキストを選択するとマスク候補が表示されます" [ref=e16]':
             - /placeholder: "ここにテキストを入力してください...\n例: My password is secret123\n\n💡 テキストを選択するとマスク候補が表示されます"
+            - text: secret password
           - button "入力テキストをコピー" [ref=e17] [cursor=pointer]
       - generic [ref=e21]:
         - heading "🔒 マスキング済みテキスト" [level=2] [ref=e22]
