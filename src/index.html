@@ -970,6 +970,10 @@
                         return;
                     }
 
+                    console.log('Checking for ProjectModels...');
+                    console.log('window.ProjectModels:', window.ProjectModels);
+                    console.log('window.ProjectManager:', window.ProjectManager);
+
                     if (!window.ProjectManager) {
                         console.error('ProjectManager class not available');
                         return;
@@ -1233,8 +1237,19 @@
             // リアルタイム同期: 入力テキストの変更を出力に反映
             function syncInputToOutput() {
                 try {
+                    console.log('syncInputToOutput called');
+                    console.log('inputTextArea:', inputTextArea);
+                    console.log('outputTextArea:', outputTextArea);
+
+                    if (!inputTextArea || !outputTextArea) {
+                        console.error('DOM elements not found');
+                        return;
+                    }
+
                     const inputText = inputTextArea.value;
                     let outputText = inputText;
+
+                    console.log('Input text:', inputText);
 
                     // 辞書に基づいて自動マスキング
                     for (const [key, entry] of maskingDictionary.entries()) {
@@ -1243,6 +1258,7 @@
                     }
 
                     outputTextArea.value = outputText;
+                    console.log('Output text set to:', outputText);
 
                     // ハイライト表示を更新
                     updateHighlights();
@@ -1446,10 +1462,15 @@
             // イベントリスナーの設定
             document.addEventListener('DOMContentLoaded', async function () {
                 console.log('DOM loaded, initializing application...');
+                console.log('DOM elements check:');
+                console.log('inputTextArea:', document.getElementById('inputText'));
+                console.log('outputTextArea:', document.getElementById('outputText'));
+                console.log('projectSelect:', document.getElementById('projectSelect'));
 
                 // 基本的なイベントリスナーを先に設定
                 // 入力テキストの変更をリアルタイムで同期
                 inputTextArea.addEventListener('input', syncInputToOutput);
+                console.log('Input event listener added');
 
                 // スクロール同期を追加
                 inputTextArea.addEventListener('scroll', function () {
@@ -1479,8 +1500,10 @@
 
                 // サンプルテキストを設定
                 inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
+                console.log('Sample text set:', inputTextArea.value);
 
                 // 初期同期を実行
+                console.log('Calling initial syncInputToOutput...');
                 syncInputToOutput();
 
                 // 初期ハイライト表示
