@@ -956,7 +956,7 @@
                         <h2>🔒 マスキング済みテキスト</h2>
                         <div class="textarea-container">
                             <div class="backdrop" id="outputBackdrop"></div>
-                            <textarea id="outputText" readonly placeholder="マスキング結果がここに表示されます..."></textarea>
+                            <textarea id="outputText" placeholder="マスキング結果がここに表示されます..."></textarea>
                             <button class="copy-button" onclick="copyOutputText()" title="マスキング済みテキストをコピー"></button>
                         </div>
                     </div>
@@ -1073,6 +1073,7 @@
         // アプリケーション状態
         let currentCategory = 'symbols';
         let selectedText = '';
+        let selectedTextArea = null; // 選択されたテキストエリアを記録
         let selectionStart = 0;
         let selectionEnd = 0;
         let popupVisible = false;
@@ -1575,6 +1576,44 @@
         // グローバルスコープに追加
         window.syncInputToOutput = syncInputToOutput;
 
+        // 逆方向同期: 出力テキストの変更を入力に反映
+        function syncOutputToInput() {
+            try {
+                console.log('syncOutputToInput called');
+                console.log('outputTextArea:', outputTextArea);
+                console.log('inputTextArea:', inputTextArea);
+
+                if (!inputTextArea || !outputTextArea) {
+                    console.error('DOM elements not found');
+                    return;
+                }
+
+                const outputText = outputTextArea.value;
+                let inputText = outputText;
+
+                console.log('Output text:', outputText);
+
+                // 辞書に基づいて逆マスキング（マスクされた文字列を元に戻す）
+                for (const [key, entry] of maskingDictionary.entries()) {
+                    const regex = new RegExp(escapeRegExp(entry.masked), 'gi');
+                    inputText = inputText.replace(regex, entry.original);
+                }
+
+                inputTextArea.value = inputText;
+                console.log('Input text set to:', inputText);
+
+                // ハイライト表示を更新
+                updateHighlights();
+
+                console.log('Reverse sync completed:', { outputLength: outputText.length, inputLength: inputText.length });
+            } catch (error) {
+                console.error('Error in syncOutputToInput:', error);
+            }
+        }
+
+        // グローバルスコープに追加
+        window.syncOutputToInput = syncOutputToInput;
+
         // ハイライト表示を更新
         function updateHighlights() {
             // 入力テキストのハイライト更新（元の文字列をハイライト）
@@ -1597,12 +1636,14 @@
 
         // テキスト選択時のポップアップ表示
         function handleTextSelection(event) {
-            const start = inputTextArea.selectionStart;
-            const end = inputTextArea.selectionEnd;
-            const text = inputTextArea.value.substring(start, end);
+            const targetTextArea = event.target;
+            const start = targetTextArea.selectionStart;
+            const end = targetTextArea.selectionEnd;
+            const text = targetTextArea.value.substring(start, end);
 
             if (text.trim().length > 0) {
                 selectedText = text;
+                selectedTextArea = targetTextArea; // 選択されたテキストエリアを記録
                 selectionStart = start;
                 selectionEnd = end;
                 showCandidatePopup(event);
@@ -1632,6 +1673,7 @@
         function hideCandidatePopup() {
             candidatePopup.classList.remove('show');
             popupVisible = false;
+            selectedTextArea = null; // 選択されたテキストエリアをリセット
         }
 
         // カテゴリを設定する関数
@@ -1656,19 +1698,21 @@
 
         // 候補を選択する関数（自動マスキング）
         function selectCandidate(candidate) {
-            if (selectedText.trim() === '') {
+            if (selectedText.trim() === '' || !selectedTextArea) {
                 return;
             }
-
-            // 入力テキストは変更せず、辞書にのみ追加
-            // これにより出力テキストのみがマスキングされ、
-            // 入力テキストは元の文字列を保持してハイライト表示される
 
             // 辞書に追加
             addToDictionary(selectedText, candidate);
 
-            // リアルタイム同期（出力テキストのマスキングを更新）
-            syncInputToOutput();
+            // 選択されたテキストエリアに応じて同期処理を実行
+            if (selectedTextArea === inputTextArea) {
+                // 入力テキストエリアで選択された場合：入力→出力の同期
+                syncInputToOutput();
+            } else if (selectedTextArea === outputTextArea) {
+                // 出力テキストエリアで選択された場合：出力→入力の同期
+                syncOutputToInput();
+            }
 
             // ポップアップを非表示
             hideCandidatePopup();
@@ -1954,6 +1998,10 @@
             inputTextArea.addEventListener('input', syncInputToOutput);
             console.log('Input event listener added');
 
+            // 出力テキストの変更を入力テキストに逆同期
+            outputTextArea.addEventListener('input', syncOutputToInput);
+            console.log('Output event listener added');
+
             // スクロール同期を追加
             inputTextArea.addEventListener('scroll', function () {
                 syncScroll(this, inputBackdrop);
@@ -1965,6 +2013,13 @@
             // テキスト選択の監視
             inputTextArea.addEventListener('mouseup', handleTextSelection);
             inputTextArea.addEventListener('keyup', function (event) {
+                // キーボード選択の場合は少し遅延させる
+                setTimeout(() => handleTextSelection(event), 10);
+            });
+
+            // 出力テキストエリアでもテキスト選択を監視
+            outputTextArea.addEventListener('mouseup', handleTextSelection);
+            outputTextArea.addEventListener('keyup', function (event) {
                 // キーボード選択の場合は少し遅延させる
                 setTimeout(() => handleTextSelection(event), 10);
             });
