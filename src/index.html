@@ -78,6 +78,84 @@
             flex-direction: column;
         }
 
+        /* Project Header */
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-secondary);
+            min-height: 48px;
+        }
+
+        .project-selector {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .project-selector label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-accent);
+            white-space: nowrap;
+        }
+
+        .project-dropdown {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 13px;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            min-width: 200px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .project-dropdown:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(132, 160, 198, 0.1);
+        }
+
+        .project-dropdown option {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .project-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .project-btn:hover {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .project-status {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        .project-status.active {
+            color: var(--accent-green);
+        }
+
         /* Main Container */
         .container {
             flex: 1;
@@ -579,6 +657,20 @@
         }
 
         @media (max-width: 800px) {
+            .project-header {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+                align-items: stretch;
+            }
+
+            .project-selector {
+                justify-content: center;
+            }
+
+            .project-dropdown {
+                min-width: 150px;
+            }
+
             .container {
                 flex-direction: column;
                 padding: var(--spacing-sm);
@@ -626,6 +718,21 @@
 
 <body>
     <div class="app-window">
+        <!-- プロジェクト選択ヘッダー -->
+        <div class="project-header">
+            <div class="project-selector">
+                <label for="projectSelect">📁 プロジェクト:</label>
+                <select id="projectSelect" class="project-dropdown">
+                    <option value="">プロジェクトを選択...</option>
+                </select>
+                <button id="newProjectBtn" class="project-btn" title="新しいプロジェクトを作成">➕</button>
+                <button id="manageProjectsBtn" class="project-btn" title="プロジェクトを管理">⚙️</button>
+            </div>
+            <div class="project-status">
+                <span id="projectStatus">プロジェクトが選択されていません</span>
+            </div>
+        </div>
+
         <div class="container">
             <!-- メインコンテンツエリア -->
             <div class="main-content">
@@ -686,6 +793,9 @@
         </div>
     </div>
 
+    <script src="js/models/ProjectModel.js"></script>
+    <script src="js/utils/FileSystemStructure.js"></script>
+    <script src="js/managers/ProjectManager.js"></script>
     <script>
         // DOM要素の参照
         const inputTextArea = document.getElementById('inputText');
@@ -694,6 +804,15 @@
         const outputBackdrop = document.getElementById('outputBackdrop');
         const candidatePopup = document.getElementById('candidatePopup');
         const candidateGrid = document.getElementById('candidateGrid');
+
+        // プロジェクト管理DOM要素
+        const projectSelect = document.getElementById('projectSelect');
+        const newProjectBtn = document.getElementById('newProjectBtn');
+        const manageProjectsBtn = document.getElementById('manageProjectsBtn');
+        const projectStatus = document.getElementById('projectStatus');
+
+        // プロジェクト管理インスタンス
+        let projectManager = null;
 
         // アプリケーション状態
         let currentCategory = 'symbols';
@@ -738,7 +857,27 @@
         // 辞書の永続化機能
         async function loadDictionaryFromStore() {
             try {
-                if (window.electronAPI) {
+                if (window.electronAPI && projectManager && projectManager.getCurrentProject()) {
+                    const currentProject = projectManager.getCurrentProject();
+                    const storedDict = await window.electronAPI.loadProjectDictionary(currentProject.id);
+                    maskingDictionary.clear();
+
+                    // オブジェクトからMapに変換
+                    if (storedDict && storedDict.entries) {
+                        for (const [key, value] of Object.entries(storedDict.entries)) {
+                            // lastUsedを日付オブジェクトに変換
+                            if (value.lastUsed) {
+                                value.lastUsed = new Date(value.lastUsed);
+                            }
+                            maskingDictionary.set(key, value);
+                        }
+                    }
+
+                    console.log('プロジェクト辞書をロードしました:', maskingDictionary.size, '件');
+                    updateDictionaryDisplay();
+                    syncInputToOutput();
+                } else if (window.electronAPI) {
+                    // 従来の辞書ロード（プロジェクト未選択時）
                     const storedDict = await window.electronAPI.getDictionary();
                     maskingDictionary.clear();
 
@@ -762,8 +901,26 @@
 
         async function saveDictionaryToStore() {
             try {
-                if (window.electronAPI) {
+                if (window.electronAPI && projectManager && projectManager.getCurrentProject()) {
+                    const currentProject = projectManager.getCurrentProject();
+
                     // Mapをオブジェクトに変換
+                    const entriesObj = {};
+                    for (const [key, entry] of maskingDictionary) {
+                        entriesObj[key] = entry;
+                    }
+
+                    const dictionaryData = {
+                        projectId: currentProject.id,
+                        entries: entriesObj,
+                        version: '1.0',
+                        lastModified: new Date().toISOString()
+                    };
+
+                    await window.electronAPI.saveProjectDictionary(currentProject.id, dictionaryData);
+                    console.log('プロジェクト辞書を保存しました:', maskingDictionary.size, '件');
+                } else if (window.electronAPI) {
+                    // 従来の辞書保存（プロジェクト未選択時）
                     const dictObj = Object.fromEntries(maskingDictionary);
                     await window.electronAPI.setDictionary(dictObj);
                     console.log('辞書を保存しました:', maskingDictionary.size, '件');
@@ -784,6 +941,195 @@
                 }
             } catch (error) {
                 console.error('辞書のクリアに失敗しました:', error);
+            }
+        }
+
+        // プロジェクト管理機能
+        async function initializeProjectManager() {
+            try {
+                if (!window.electronAPI) {
+                    console.warn('Electron API not available');
+                    return;
+                }
+
+                projectManager = new window.ProjectManager(window.electronAPI);
+                await projectManager.initialize();
+
+                // プロジェクト一覧を更新
+                await updateProjectList();
+
+                // 現在のプロジェクトがある場合は選択状態にする
+                const currentProject = projectManager.getCurrentProject();
+                if (currentProject) {
+                    projectSelect.value = currentProject.id;
+                    updateProjectStatus(currentProject);
+                    await loadDictionaryFromStore();
+                } else {
+                    // デフォルトプロジェクトを作成
+                    await createDefaultProject();
+                }
+
+                console.log('ProjectManager initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize ProjectManager:', error);
+                updateProjectStatus(null, 'プロジェクト管理の初期化に失敗しました');
+            }
+        }
+
+        async function updateProjectList() {
+            try {
+                const projects = projectManager.listProjects();
+
+                // プロジェクト選択ドロップダウンを更新
+                projectSelect.innerHTML = '<option value="">プロジェクトを選択...</option>';
+
+                projects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = project.name;
+                    if (project.isCurrent) {
+                        option.selected = true;
+                    }
+                    projectSelect.appendChild(option);
+                });
+
+                console.log('Project list updated:', projects.length, 'projects');
+            } catch (error) {
+                console.error('Failed to update project list:', error);
+            }
+        }
+
+        function updateProjectStatus(project, errorMessage = null) {
+            if (errorMessage) {
+                projectStatus.textContent = errorMessage;
+                projectStatus.className = 'project-status';
+                return;
+            }
+
+            if (project) {
+                projectStatus.textContent = `現在のプロジェクト: ${project.name}`;
+                projectStatus.className = 'project-status active';
+            } else {
+                projectStatus.textContent = 'プロジェクトが選択されていません';
+                projectStatus.className = 'project-status';
+            }
+        }
+
+        async function createDefaultProject() {
+            try {
+                const defaultProject = await projectManager.createDefaultProject();
+                await updateProjectList();
+                projectSelect.value = defaultProject.id;
+                updateProjectStatus(defaultProject);
+                await loadDictionaryFromStore();
+                console.log('Default project created:', defaultProject.name);
+            } catch (error) {
+                console.error('Failed to create default project:', error);
+                updateProjectStatus(null, 'デフォルトプロジェクトの作成に失敗しました');
+            }
+        }
+
+        async function handleProjectChange() {
+            const selectedProjectId = projectSelect.value;
+
+            if (!selectedProjectId) {
+                updateProjectStatus(null);
+                maskingDictionary.clear();
+                updateDictionaryDisplay();
+                syncInputToOutput();
+                return;
+            }
+
+            try {
+                const result = await projectManager.switchProject(selectedProjectId);
+                updateProjectStatus(result.project);
+
+                // 新しいプロジェクトの辞書を読み込み
+                await loadDictionaryFromStore();
+
+                console.log('Project switched to:', result.project.name);
+            } catch (error) {
+                console.error('Failed to switch project:', error);
+                updateProjectStatus(null, 'プロジェクトの切り替えに失敗しました');
+
+                // エラー時は選択をリセット
+                const currentProject = projectManager.getCurrentProject();
+                projectSelect.value = currentProject ? currentProject.id : '';
+            }
+        }
+
+        async function handleNewProject() {
+            const projectName = prompt('新しいプロジェクト名を入力してください:');
+
+            if (!projectName || projectName.trim() === '') {
+                return;
+            }
+
+            try {
+                const newProject = await projectManager.createProject(projectName.trim());
+                await updateProjectList();
+
+                // 新しいプロジェクトに切り替え
+                projectSelect.value = newProject.id;
+                await handleProjectChange();
+
+                console.log('New project created:', newProject.name);
+            } catch (error) {
+                console.error('Failed to create project:', error);
+                alert('プロジェクトの作成に失敗しました: ' + error.message);
+            }
+        }
+
+        async function handleManageProjects() {
+            // 簡単なプロジェクト管理ダイアログ
+            const projects = projectManager.listProjects();
+
+            if (projects.length === 0) {
+                alert('管理するプロジェクトがありません。');
+                return;
+            }
+
+            let message = 'プロジェクト一覧:\n\n';
+            projects.forEach((project, index) => {
+                const status = project.isCurrent ? ' (現在選択中)' : '';
+                message += `${index + 1}. ${project.name}${status}\n`;
+                message += `   作成日: ${new Date(project.createdAt).toLocaleDateString()}\n`;
+                message += `   更新日: ${new Date(project.updatedAt).toLocaleDateString()}\n\n`;
+            });
+
+            message += '削除したいプロジェクトの番号を入力してください（キャンセルする場合は空白）:';
+
+            const input = prompt(message);
+
+            if (!input || input.trim() === '') {
+                return;
+            }
+
+            const projectIndex = parseInt(input.trim()) - 1;
+
+            if (isNaN(projectIndex) || projectIndex < 0 || projectIndex >= projects.length) {
+                alert('無効な番号です。');
+                return;
+            }
+
+            const projectToDelete = projects[projectIndex];
+
+            if (projectToDelete.isCurrent) {
+                alert('現在選択中のプロジェクトは削除できません。');
+                return;
+            }
+
+            const confirmDelete = confirm(`プロジェクト "${projectToDelete.name}" を削除しますか？\nこの操作は取り消せません。`);
+
+            if (confirmDelete) {
+                try {
+                    await projectManager.deleteProject(projectToDelete.id);
+                    await updateProjectList();
+                    console.log('Project deleted:', projectToDelete.name);
+                } catch (error) {
+                    console.error('Failed to delete project:', error);
+                    alert('プロジェクトの削除に失敗しました: ' + error.message);
+                }
             }
         }
 
@@ -1030,8 +1376,13 @@
 
         // イベントリスナーの設定
         document.addEventListener('DOMContentLoaded', async function () {
-            // アプリ起動時に辞書をロード
-            await loadDictionaryFromStore();
+            // プロジェクト管理を初期化
+            await initializeProjectManager();
+
+            // プロジェクト選択イベント
+            projectSelect.addEventListener('change', handleProjectChange);
+            newProjectBtn.addEventListener('click', handleNewProject);
+            manageProjectsBtn.addEventListener('click', handleManageProjects);
 
             // 入力テキストの変更をリアルタイムで同期
             inputTextArea.addEventListener('input', syncInputToOutput);
