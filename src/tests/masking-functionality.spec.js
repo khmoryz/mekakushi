@@ -125,8 +125,23 @@ test.describe('基本マスキング機能', () => {
     // テキストを入力
     await inputText.fill('secret password');
 
-    // テキストを選択
-    await inputText.selectText();
+    // テキストを選択（JavaScriptで直接選択）
+    await inputText.evaluate((element) => {
+      element.focus();
+      element.setSelectionRange(0, 6); // "secret"を選択
+
+      // mouseupイベントを発火してポップアップを表示
+      const event = new MouseEvent('mouseup', {
+        bubbles: true,
+        cancelable: true,
+        clientX: 100,
+        clientY: 100
+      });
+      element.dispatchEvent(event);
+    });
+
+    // 少し待機してポップアップが表示されるのを待つ
+    await page.waitForTimeout(500);
 
     // ポップアップが表示されることを確認
     const candidatePopup = page.locator('#candidatePopup');
