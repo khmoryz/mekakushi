@@ -961,466 +961,466 @@
             } catch (error) {
                 console.error('辞書のクリアに失敗しました:', error);
             }
+        }
 
+        // プロジェクト管理機能
+        async function initializeProjectManager() {
+            try {
+                console.log('Starting ProjectManager initialization...');
 
-            // プロジェクト管理機能
-            async function initializeProjectManager() {
-                try {
-                    console.log('Starting ProjectManager initialization...');
-
-                    if (!window.electronAPI) {
-                        console.warn('Electron API not available');
-                        return;
-                    }
-
-                    console.log('Checking for ProjectModels...');
-                    console.log('window.ProjectModels:', window.ProjectModels);
-                    console.log('window.ProjectManager:', window.ProjectManager);
-
-                    if (!window.ProjectManager) {
-                        console.error('ProjectManager class not available');
-                        return;
-                    }
-
-                    projectManager = new window.ProjectManager(window.electronAPI);
-                    console.log('ProjectManager instance created');
-
-                    await projectManager.initialize();
-                    console.log('ProjectManager initialized successfully');
-
-                    // プロジェクト一覧を更新
-                    await updateProjectList();
-                    console.log('Project list updated');
-
-                    // 現在のプロジェクトがある場合は選択状態にする
-                    const currentProject = projectManager.getCurrentProject();
-                    console.log('Current project:', currentProject);
-
-                    if (currentProject) {
-                        projectSelect.value = currentProject.id;
-                        updateProjectStatus(currentProject);
-                        await loadDictionaryFromStore();
-                        console.log('Current project loaded:', currentProject.name);
-                    } else {
-                        // デフォルトプロジェクトを作成
-                        console.log('No current project found, creating default project...');
-                        await createDefaultProject();
-                    }
-
-                    console.log('ProjectManager initialization complete');
-                } catch (error) {
-                    console.error('Failed to initialize ProjectManager:', error);
-                    updateProjectStatus(null, 'プロジェクト管理の初期化に失敗しました');
-                }
-            }
-
-            async function updateProjectList() {
-                try {
-                    console.log('Updating project list...');
-                    const projects = projectManager.listProjects();
-                    console.log('Projects found:', projects);
-
-                    // プロジェクト選択ドロップダウンを更新
-                    projectSelect.innerHTML = '<option value="">プロジェクトを選択...</option>';
-
-                    projects.forEach(project => {
-                        const option = document.createElement('option');
-                        option.value = project.id;
-                        option.textContent = project.name;
-                        if (project.isCurrent) {
-                            option.selected = true;
-                        }
-                        projectSelect.appendChild(option);
-                    });
-
-                    console.log('Project list updated:', projects.length, 'projects');
-                } catch (error) {
-                    console.error('Failed to update project list:', error);
-                }
-            }
-
-            function updateProjectStatus(project, errorMessage = null) {
-                if (errorMessage) {
-                    projectStatus.textContent = errorMessage;
-                    projectStatus.className = 'project-status';
+                if (!window.electronAPI) {
+                    console.warn('Electron API not available');
                     return;
                 }
 
-                if (project) {
-                    projectStatus.textContent = `現在のプロジェクト: ${project.name}`;
-                    projectStatus.className = 'project-status active';
+                console.log('Checking for ProjectModels...');
+                console.log('window.ProjectModels:', window.ProjectModels);
+                console.log('window.ProjectManager:', window.ProjectManager);
+
+                if (!window.ProjectManager) {
+                    console.error('ProjectManager class not available');
+                    return;
+                }
+
+                projectManager = new window.ProjectManager(window.electronAPI);
+                console.log('ProjectManager instance created');
+
+                await projectManager.initialize();
+                console.log('ProjectManager initialized successfully');
+
+                // プロジェクト一覧を更新
+                await updateProjectList();
+                console.log('Project list updated');
+
+                // 現在のプロジェクトがある場合は選択状態にする
+                const currentProject = projectManager.getCurrentProject();
+                console.log('Current project:', currentProject);
+
+                if (currentProject) {
+                    projectSelect.value = currentProject.id;
+                    updateProjectStatus(currentProject);
+                    await loadDictionaryFromStore();
+                    console.log('Current project loaded:', currentProject.name);
                 } else {
-                    projectStatus.textContent = 'プロジェクトが選択されていません';
-                    projectStatus.className = 'project-status';
+                    // デフォルトプロジェクトを作成
+                    console.log('No current project found, creating default project...');
+                    await createDefaultProject();
                 }
+
+                console.log('ProjectManager initialization complete');
+            } catch (error) {
+                console.error('Failed to initialize ProjectManager:', error);
+                updateProjectStatus(null, 'プロジェクト管理の初期化に失敗しました');
             }
+        }
 
-            async function createDefaultProject() {
-                try {
-                    console.log('Creating default project...');
-                    const defaultProject = await projectManager.createDefaultProject();
-                    await updateProjectList();
-                    projectSelect.value = defaultProject.id;
-                    updateProjectStatus(defaultProject);
-                    await loadDictionaryFromStore();
-                    console.log('Default project created successfully:', defaultProject.name);
-                } catch (error) {
-                    console.error('Failed to create default project:', error);
-                    updateProjectStatus(null, 'デフォルトプロジェクトの作成に失敗しました');
-
-                    // フォールバック: 手動でデフォルトプロジェクトを作成
-                    try {
-                        console.log('Attempting manual default project creation...');
-                        const fallbackProject = await projectManager.createProject('デフォルトプロジェクト');
-                        await projectManager.switchProject(fallbackProject.id);
-                        await updateProjectList();
-                        projectSelect.value = fallbackProject.id;
-                        updateProjectStatus(fallbackProject);
-                        await loadDictionaryFromStore();
-                        console.log('Fallback default project created:', fallbackProject.name);
-                    } catch (fallbackError) {
-                        console.error('Fallback default project creation also failed:', fallbackError);
-                    }
-                }
-            }
-
-            async function handleProjectChange() {
-                const selectedProjectId = projectSelect.value;
-
-                if (!selectedProjectId) {
-                    updateProjectStatus(null);
-                    maskingDictionary.clear();
-                    updateDictionaryDisplay();
-                    syncInputToOutput();
-                    return;
-                }
-
-                try {
-                    // 現在のプロジェクトの辞書を保存
-                    if (projectManager.getCurrentProject()) {
-                        await saveDictionaryToStore();
-                    }
-
-                    // プロジェクトを切り替え
-                    const result = await projectManager.switchProject(selectedProjectId);
-                    updateProjectStatus(result.project);
-
-                    // 辞書をクリアしてから新しいプロジェクトの辞書を読み込み
-                    maskingDictionary.clear();
-                    updateDictionaryDisplay();
-                    syncInputToOutput();
-
-                    // 新しいプロジェクトの辞書を読み込み
-                    await loadDictionaryFromStore();
-
-                    console.log('Project switched to:', result.project.name);
-                } catch (error) {
-                    console.error('Failed to switch project:', error);
-                    updateProjectStatus(null, 'プロジェクトの切り替えに失敗しました');
-
-                    // エラー時は選択をリセット
-                    const currentProject = projectManager.getCurrentProject();
-                    projectSelect.value = currentProject ? currentProject.id : '';
-                }
-            }
-
-            async function handleNewProject() {
-                // カスタムダイアログでプロジェクト名を入力
-                const projectName = await showInputDialog('新しいプロジェクト名を入力してください:', '');
-
-                if (!projectName || projectName.trim() === '') {
-                    return;
-                }
-
-                try {
-                    const newProject = await projectManager.createProject(projectName.trim());
-                    await updateProjectList();
-
-                    // 新しいプロジェクトに切り替え
-                    projectSelect.value = newProject.id;
-                    await handleProjectChange();
-
-                    console.log('New project created:', newProject.name);
-                } catch (error) {
-                    console.error('Failed to create project:', error);
-                    await showMessageDialog('エラー', 'プロジェクトの作成に失敗しました: ' + error.message, 'error');
-                }
-            }
-
-            async function handleManageProjects() {
-                // 簡単なプロジェクト管理ダイアログ
+        async function updateProjectList() {
+            try {
+                console.log('Updating project list...');
                 const projects = projectManager.listProjects();
+                console.log('Projects found:', projects);
 
-                if (projects.length === 0) {
-                    await showMessageDialog('情報', '管理するプロジェクトがありません。', 'info');
-                    return;
-                }
+                // プロジェクト選択ドロップダウンを更新
+                projectSelect.innerHTML = '<option value="">プロジェクトを選択...</option>';
 
-                let message = 'プロジェクト一覧:\n\n';
-                projects.forEach((project, index) => {
-                    const status = project.isCurrent ? ' (現在選択中)' : '';
-                    message += `${index + 1}. ${project.name}${status}\n`;
-                    message += `   作成日: ${new Date(project.createdAt).toLocaleDateString()}\n`;
-                    message += `   更新日: ${new Date(project.updatedAt).toLocaleDateString()}\n\n`;
+                projects.forEach(project => {
+                    const option = document.createElement('option');
+                    option.value = project.id;
+                    option.textContent = project.name;
+                    if (project.isCurrent) {
+                        option.selected = true;
+                    }
+                    projectSelect.appendChild(option);
                 });
 
-                message += '削除したいプロジェクトの番号を入力してください（キャンセルする場合は空白）:';
+                console.log('Project list updated:', projects.length, 'projects');
+            } catch (error) {
+                console.error('Failed to update project list:', error);
+            }
+        }
 
-                const input = await showInputDialog('プロジェクト管理', message);
-
-                if (!input || input.trim() === '') {
-                    return;
-                }
-
-                const projectIndex = parseInt(input.trim()) - 1;
-
-                if (isNaN(projectIndex) || projectIndex < 0 || projectIndex >= projects.length) {
-                    await showMessageDialog('エラー', '無効な番号です。', 'error');
-                    return;
-                }
-
-                const projectToDelete = projects[projectIndex];
-
-                if (projectToDelete.isCurrent) {
-                    await showMessageDialog('エラー', '現在選択中のプロジェクトは削除できません。', 'error');
-                    return;
-                }
-
-                const confirmDelete = await showConfirmDialog(
-                    'プロジェクト削除の確認',
-                    `プロジェクト "${projectToDelete.name}" を削除しますか？\nこの操作は取り消せません。`
-                );
-
-                if (confirmDelete) {
-                    try {
-                        await projectManager.deleteProject(projectToDelete.id);
-                        await updateProjectList();
-                        console.log('Project deleted:', projectToDelete.name);
-                    } catch (error) {
-                        console.error('Failed to delete project:', error);
-                        await showMessageDialog('エラー', 'プロジェクトの削除に失敗しました: ' + error.message, 'error');
-                    }
-                }
+        function updateProjectStatus(project, errorMessage = null) {
+            if (errorMessage) {
+                projectStatus.textContent = errorMessage;
+                projectStatus.className = 'project-status';
+                return;
             }
 
-            // HTMLエスケープ関数
-            function escapeHtml(text) {
-                return text
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
+            if (project) {
+                projectStatus.textContent = `現在のプロジェクト: ${project.name}`;
+                projectStatus.className = 'project-status active';
+            } else {
+                projectStatus.textContent = 'プロジェクトが選択されていません';
+                projectStatus.className = 'project-status';
             }
+        }
 
-            // グローバルスコープに追加
-            window.escapeHtml = escapeHtml;
+        async function createDefaultProject() {
+            try {
+                console.log('Creating default project...');
+                const defaultProject = await projectManager.createDefaultProject();
+                await updateProjectList();
+                projectSelect.value = defaultProject.id;
+                updateProjectStatus(defaultProject);
+                await loadDictionaryFromStore();
+                console.log('Default project created successfully:', defaultProject.name);
+            } catch (error) {
+                console.error('Failed to create default project:', error);
+                updateProjectStatus(null, 'デフォルトプロジェクトの作成に失敗しました');
 
-            // 正規表現エスケープ関数
-            function escapeRegExp(string) {
-                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            }
-
-            // グローバルスコープに追加
-            window.escapeRegExp = escapeRegExp;
-
-            // ハイライト表示関数（提供されたパターンを使用）
-            function highlight(text, targets) {
-                if (!targets || targets.length === 0) {
-                    return escapeHtml(text);
-                }
-
-                // 長い順にソート（部分文字列の問題を避けるため）
-                const sortedTargets = [...targets].sort((a, b) => b.length - a.length);
-
-                let result = escapeHtml(text);
-
-                for (const target of sortedTargets) {
-                    if (!target) continue;
-                    const escapedTarget = escapeRegExp(target);
-                    const regex = new RegExp(escapedTarget, 'gi');
-                    result = result.replace(regex, '<span class="masked-highlight">' + escapeHtml(target) + '</span>');
-                }
-
-                return result;
-            }
-
-            // グローバルスコープに追加
-            window.highlight = highlight;
-
-            // グローバル関数として定義
-            // リアルタイム同期: 入力テキストの変更を出力に反映
-            function syncInputToOutput() {
+                // フォールバック: 手動でデフォルトプロジェクトを作成
                 try {
-                    console.log('syncInputToOutput called');
-                    console.log('inputTextArea:', inputTextArea);
-                    console.log('outputTextArea:', outputTextArea);
-
-                    if (!inputTextArea || !outputTextArea) {
-                        console.error('DOM elements not found');
-                        return;
-                    }
-
-                    const inputText = inputTextArea.value;
-                    let outputText = inputText;
-
-                    console.log('Input text:', inputText);
-
-                    // 辞書に基づいて自動マスキング
-                    for (const [key, entry] of maskingDictionary.entries()) {
-                        const regex = new RegExp(escapeRegExp(entry.original), 'gi');
-                        outputText = outputText.replace(regex, entry.masked);
-                    }
-
-                    outputTextArea.value = outputText;
-                    console.log('Output text set to:', outputText);
-
-                    // ハイライト表示を更新
-                    updateHighlights();
-
-                    console.log('Text sync completed:', { inputLength: inputText.length, outputLength: outputText.length });
-                } catch (error) {
-                    console.error('Error in syncInputToOutput:', error);
+                    console.log('Attempting manual default project creation...');
+                    const fallbackProject = await projectManager.createProject('デフォルトプロジェクト');
+                    await projectManager.switchProject(fallbackProject.id);
+                    await updateProjectList();
+                    projectSelect.value = fallbackProject.id;
+                    updateProjectStatus(fallbackProject);
+                    await loadDictionaryFromStore();
+                    console.log('Fallback default project created:', fallbackProject.name);
+                } catch (fallbackError) {
+                    console.error('Fallback default project creation also failed:', fallbackError);
                 }
             }
+        }
 
-            // グローバルスコープに追加
-            window.syncInputToOutput = syncInputToOutput;
+        async function handleProjectChange() {
+            const selectedProjectId = projectSelect.value;
 
-            // ハイライト表示を更新
-            function updateHighlights() {
-                // 入力テキストのハイライト更新（元の文字列をハイライト）
-                const inputTargets = Array.from(maskingDictionary.values()).map(entry => entry.original);
-                inputBackdrop.innerHTML = highlight(inputTextArea.value, inputTargets);
-
-                // 出力テキストのハイライト更新（マスクされた文字列をハイライト）
-                const outputTargets = Array.from(maskingDictionary.values()).map(entry => entry.masked);
-                outputBackdrop.innerHTML = highlight(outputTextArea.value, outputTargets);
+            if (!selectedProjectId) {
+                updateProjectStatus(null);
+                maskingDictionary.clear();
+                updateDictionaryDisplay();
+                syncInputToOutput();
+                return;
             }
 
-            // グローバルスコープに追加
-            window.updateHighlights = updateHighlights;
-
-            // スクロール同期
-            function syncScroll(source, target) {
-                target.scrollTop = source.scrollTop;
-                target.scrollLeft = source.scrollLeft;
-            }
-
-            // テキスト選択時のポップアップ表示
-            function handleTextSelection(event) {
-                const start = inputTextArea.selectionStart;
-                const end = inputTextArea.selectionEnd;
-                const text = inputTextArea.value.substring(start, end);
-
-                if (text.trim().length > 0) {
-                    selectedText = text;
-                    selectionStart = start;
-                    selectionEnd = end;
-                    showCandidatePopup(event);
-                } else {
-                    hideCandidatePopup();
-                }
-            }
-
-            // ポップアップを表示（マウス位置付近）
-            function showCandidatePopup(event) {
-                updateCandidateGrid();
-
-                // マウス位置を取得
-                const mouseX = event.clientX || event.pageX;
-                const mouseY = event.clientY || event.pageY;
-
-                // ポップアップの位置を調整（画面外に出ないように）
-                const popup = candidatePopup;
-                popup.style.left = Math.min(mouseX + 10, window.innerWidth - 420) + 'px';
-                popup.style.top = Math.min(mouseY + 10, window.innerHeight - 200) + 'px';
-
-                popup.classList.add('show');
-                popupVisible = true;
-            }
-
-            // ポップアップを非表示
-            function hideCandidatePopup() {
-                candidatePopup.classList.remove('show');
-                popupVisible = false;
-            }
-
-            // カテゴリを設定する関数
-            function setCategory(category) {
-                currentCategory = category;
-
-                // カテゴリボタンのアクティブ状態を更新
-                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-                document.querySelector(`[onclick="setCategory('${category}')"]`).classList.add('active');
-
-                // 候補グリッドを更新
-                updateCandidateGrid();
-            }
-
-            // 候補グリッドを更新する関数
-            function updateCandidateGrid() {
-                const candidates = candidateData[currentCategory] || [];
-                candidateGrid.innerHTML = candidates.map(candidate =>
-                    `<div class="candidate-item" onclick="selectCandidate('${candidate.replace(/'/g, "\\'")}')">${candidate}</div>`
-                ).join('');
-            }
-
-            // 候補を選択する関数（自動マスキング）
-            function selectCandidate(candidate) {
-                if (selectedText.trim() === '') {
-                    return;
+            try {
+                // 現在のプロジェクトの辞書を保存
+                if (projectManager.getCurrentProject()) {
+                    await saveDictionaryToStore();
                 }
 
-                // 入力テキストは変更せず、辞書にのみ追加
-                // これにより出力テキストのみがマスキングされ、
-                // 入力テキストは元の文字列を保持してハイライト表示される
+                // プロジェクトを切り替え
+                const result = await projectManager.switchProject(selectedProjectId);
+                updateProjectStatus(result.project);
 
-                // 辞書に追加
-                addToDictionary(selectedText, candidate);
-
-                // リアルタイム同期（出力テキストのマスキングを更新）
+                // 辞書をクリアしてから新しいプロジェクトの辞書を読み込み
+                maskingDictionary.clear();
+                updateDictionaryDisplay();
                 syncInputToOutput();
 
-                // ポップアップを非表示
-                hideCandidatePopup();
+                // 新しいプロジェクトの辞書を読み込み
+                await loadDictionaryFromStore();
+
+                console.log('Project switched to:', result.project.name);
+            } catch (error) {
+                console.error('Failed to switch project:', error);
+                updateProjectStatus(null, 'プロジェクトの切り替えに失敗しました');
+
+                // エラー時は選択をリセット
+                const currentProject = projectManager.getCurrentProject();
+                projectSelect.value = currentProject ? currentProject.id : '';
+            }
+        }
+
+        async function handleNewProject() {
+            // カスタムダイアログでプロジェクト名を入力
+            const projectName = await showInputDialog('新しいプロジェクト名を入力してください:', '');
+
+            if (!projectName || projectName.trim() === '') {
+                return;
             }
 
-            // 辞書に新しいエントリを追加する関数
-            function addToDictionary(original, masked) {
-                const key = original.toLowerCase();
-                if (!maskingDictionary.has(key)) {
-                    maskingDictionary.set(key, {
-                        original: original,
-                        masked: masked,
-                        count: 1,
-                        lastUsed: new Date()
-                    });
-                } else {
-                    const entry = maskingDictionary.get(key);
-                    entry.count++;
-                    entry.lastUsed = new Date();
+            try {
+                const newProject = await projectManager.createProject(projectName.trim());
+                await updateProjectList();
+
+                // 新しいプロジェクトに切り替え
+                projectSelect.value = newProject.id;
+                await handleProjectChange();
+
+                console.log('New project created:', newProject.name);
+            } catch (error) {
+                console.error('Failed to create project:', error);
+                await showMessageDialog('エラー', 'プロジェクトの作成に失敗しました: ' + error.message, 'error');
+            }
+        }
+
+        async function handleManageProjects() {
+            // 簡単なプロジェクト管理ダイアログ
+            const projects = projectManager.listProjects();
+
+            if (projects.length === 0) {
+                await showMessageDialog('情報', '管理するプロジェクトがありません。', 'info');
+                return;
+            }
+
+            let message = 'プロジェクト一覧:\n\n';
+            projects.forEach((project, index) => {
+                const status = project.isCurrent ? ' (現在選択中)' : '';
+                message += `${index + 1}. ${project.name}${status}\n`;
+                message += `   作成日: ${new Date(project.createdAt).toLocaleDateString()}\n`;
+                message += `   更新日: ${new Date(project.updatedAt).toLocaleDateString()}\n\n`;
+            });
+
+            message += '削除したいプロジェクトの番号を入力してください（キャンセルする場合は空白）:';
+
+            const input = await showInputDialog('プロジェクト管理', message);
+
+            if (!input || input.trim() === '') {
+                return;
+            }
+
+            const projectIndex = parseInt(input.trim()) - 1;
+
+            if (isNaN(projectIndex) || projectIndex < 0 || projectIndex >= projects.length) {
+                await showMessageDialog('エラー', '無効な番号です。', 'error');
+                return;
+            }
+
+            const projectToDelete = projects[projectIndex];
+
+            if (projectToDelete.isCurrent) {
+                await showMessageDialog('エラー', '現在選択中のプロジェクトは削除できません。', 'error');
+                return;
+            }
+
+            const confirmDelete = await showConfirmDialog(
+                'プロジェクト削除の確認',
+                `プロジェクト "${projectToDelete.name}" を削除しますか？\nこの操作は取り消せません。`
+            );
+
+            if (confirmDelete) {
+                try {
+                    await projectManager.deleteProject(projectToDelete.id);
+                    await updateProjectList();
+                    console.log('Project deleted:', projectToDelete.name);
+                } catch (error) {
+                    console.error('Failed to delete project:', error);
+                    await showMessageDialog('エラー', 'プロジェクトの削除に失敗しました: ' + error.message, 'error');
                 }
-                updateDictionaryDisplay();
+            }
+        }
 
-                // 自動保存
-                saveDictionaryToStore();
+        // HTMLエスケープ関数
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // グローバルスコープに追加
+        window.escapeHtml = escapeHtml;
+
+        // 正規表現エスケープ関数
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // グローバルスコープに追加
+        window.escapeRegExp = escapeRegExp;
+
+        // ハイライト表示関数（提供されたパターンを使用）
+        function highlight(text, targets) {
+            if (!targets || targets.length === 0) {
+                return escapeHtml(text);
             }
 
-            // 辞書表示を更新する関数
-            function updateDictionaryDisplay() {
-                const dictionaryList = document.getElementById('dictionaryList');
+            // 長い順にソート（部分文字列の問題を避けるため）
+            const sortedTargets = [...targets].sort((a, b) => b.length - a.length);
 
-                if (maskingDictionary.size === 0) {
-                    dictionaryList.innerHTML = `
-                    <div class="dictionary-empty">まだマスキングした単語がありません</div>
-                `;
+            let result = escapeHtml(text);
+
+            for (const target of sortedTargets) {
+                if (!target) continue;
+                const escapedTarget = escapeRegExp(target);
+                const regex = new RegExp(escapedTarget, 'gi');
+                result = result.replace(regex, '<span class="masked-highlight">' + escapeHtml(target) + '</span>');
+            }
+
+            return result;
+        }
+
+        // グローバルスコープに追加
+        window.highlight = highlight;
+
+        // グローバル関数として定義
+        // リアルタイム同期: 入力テキストの変更を出力に反映
+        function syncInputToOutput() {
+            try {
+                console.log('syncInputToOutput called');
+                console.log('inputTextArea:', inputTextArea);
+                console.log('outputTextArea:', outputTextArea);
+
+                if (!inputTextArea || !outputTextArea) {
+                    console.error('DOM elements not found');
                     return;
                 }
 
-                // 辞書エントリを最近使用順でソート
-                const entries = Array.from(maskingDictionary.entries())
-                    .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
+                const inputText = inputTextArea.value;
+                let outputText = inputText;
 
-                dictionaryList.innerHTML = entries.map(([key, entry]) => `
+                console.log('Input text:', inputText);
+
+                // 辞書に基づいて自動マスキング
+                for (const [key, entry] of maskingDictionary.entries()) {
+                    const regex = new RegExp(escapeRegExp(entry.original), 'gi');
+                    outputText = outputText.replace(regex, entry.masked);
+                }
+
+                outputTextArea.value = outputText;
+                console.log('Output text set to:', outputText);
+
+                // ハイライト表示を更新
+                updateHighlights();
+
+                console.log('Text sync completed:', { inputLength: inputText.length, outputLength: outputText.length });
+            } catch (error) {
+                console.error('Error in syncInputToOutput:', error);
+            }
+        }
+
+        // グローバルスコープに追加
+        window.syncInputToOutput = syncInputToOutput;
+
+        // ハイライト表示を更新
+        function updateHighlights() {
+            // 入力テキストのハイライト更新（元の文字列をハイライト）
+            const inputTargets = Array.from(maskingDictionary.values()).map(entry => entry.original);
+            inputBackdrop.innerHTML = highlight(inputTextArea.value, inputTargets);
+
+            // 出力テキストのハイライト更新（マスクされた文字列をハイライト）
+            const outputTargets = Array.from(maskingDictionary.values()).map(entry => entry.masked);
+            outputBackdrop.innerHTML = highlight(outputTextArea.value, outputTargets);
+        }
+
+        // グローバルスコープに追加
+        window.updateHighlights = updateHighlights;
+
+        // スクロール同期
+        function syncScroll(source, target) {
+            target.scrollTop = source.scrollTop;
+            target.scrollLeft = source.scrollLeft;
+        }
+
+        // テキスト選択時のポップアップ表示
+        function handleTextSelection(event) {
+            const start = inputTextArea.selectionStart;
+            const end = inputTextArea.selectionEnd;
+            const text = inputTextArea.value.substring(start, end);
+
+            if (text.trim().length > 0) {
+                selectedText = text;
+                selectionStart = start;
+                selectionEnd = end;
+                showCandidatePopup(event);
+            } else {
+                hideCandidatePopup();
+            }
+        }
+
+        // ポップアップを表示（マウス位置付近）
+        function showCandidatePopup(event) {
+            updateCandidateGrid();
+
+            // マウス位置を取得
+            const mouseX = event.clientX || event.pageX;
+            const mouseY = event.clientY || event.pageY;
+
+            // ポップアップの位置を調整（画面外に出ないように）
+            const popup = candidatePopup;
+            popup.style.left = Math.min(mouseX + 10, window.innerWidth - 420) + 'px';
+            popup.style.top = Math.min(mouseY + 10, window.innerHeight - 200) + 'px';
+
+            popup.classList.add('show');
+            popupVisible = true;
+        }
+
+        // ポップアップを非表示
+        function hideCandidatePopup() {
+            candidatePopup.classList.remove('show');
+            popupVisible = false;
+        }
+
+        // カテゴリを設定する関数
+        function setCategory(category) {
+            currentCategory = category;
+
+            // カテゴリボタンのアクティブ状態を更新
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="setCategory('${category}')"]`).classList.add('active');
+
+            // 候補グリッドを更新
+            updateCandidateGrid();
+        }
+
+        // 候補グリッドを更新する関数
+        function updateCandidateGrid() {
+            const candidates = candidateData[currentCategory] || [];
+            candidateGrid.innerHTML = candidates.map(candidate =>
+                `<div class="candidate-item" onclick="selectCandidate('${candidate.replace(/'/g, "\\'")}')">${candidate}</div>`
+            ).join('');
+        }
+
+        // 候補を選択する関数（自動マスキング）
+        function selectCandidate(candidate) {
+            if (selectedText.trim() === '') {
+                return;
+            }
+
+            // 入力テキストは変更せず、辞書にのみ追加
+            // これにより出力テキストのみがマスキングされ、
+            // 入力テキストは元の文字列を保持してハイライト表示される
+
+            // 辞書に追加
+            addToDictionary(selectedText, candidate);
+
+            // リアルタイム同期（出力テキストのマスキングを更新）
+            syncInputToOutput();
+
+            // ポップアップを非表示
+            hideCandidatePopup();
+        }
+
+        // 辞書に新しいエントリを追加する関数
+        function addToDictionary(original, masked) {
+            const key = original.toLowerCase();
+            if (!maskingDictionary.has(key)) {
+                maskingDictionary.set(key, {
+                    original: original,
+                    masked: masked,
+                    count: 1,
+                    lastUsed: new Date()
+                });
+            } else {
+                const entry = maskingDictionary.get(key);
+                entry.count++;
+                entry.lastUsed = new Date();
+            }
+            updateDictionaryDisplay();
+
+            // 自動保存
+            saveDictionaryToStore();
+        }
+
+        // 辞書表示を更新する関数
+        function updateDictionaryDisplay() {
+            const dictionaryList = document.getElementById('dictionaryList');
+
+            if (maskingDictionary.size === 0) {
+                dictionaryList.innerHTML = `
+                    <div class="dictionary-empty">まだマスキングした単語がありません</div>
+                `;
+                return;
+            }
+
+            // 辞書エントリを最近使用順でソート
+            const entries = Array.from(maskingDictionary.entries())
+                .sort((a, b) => b[1].lastUsed - a[1].lastUsed);
+
+            dictionaryList.innerHTML = entries.map(([key, entry]) => `
                 <div class="dictionary-item">
                     <div class="dictionary-content">
                         <span class="dictionary-original">${entry.original}</span>
@@ -1432,157 +1432,157 @@
                 </div>
             `).join('');
 
-                // ハイライト表示を更新
-                updateHighlights();
-            }
+            // ハイライト表示を更新
+            updateHighlights();
+        }
 
-            // 辞書エントリを削除する関数
-            function deleteDictionaryEntry(key) {
-                if (maskingDictionary.has(key)) {
-                    maskingDictionary.delete(key);
-                    updateDictionaryDisplay();
+        // 辞書エントリを削除する関数
+        function deleteDictionaryEntry(key) {
+            if (maskingDictionary.has(key)) {
+                maskingDictionary.delete(key);
+                updateDictionaryDisplay();
 
-                    // リアルタイム同期（削除されたエントリの影響を反映）
-                    syncInputToOutput();
-
-                    // 自動保存
-                    saveDictionaryToStore();
-                }
-            }
-
-            // 入力テキストをコピーする関数
-            function copyInputText() {
-                const text = inputTextArea.value;
-                if (text.trim() === '') {
-                    return;
-                }
-
-                navigator.clipboard.writeText(text).then(() => {
-                    // コピー成功時の処理（必要に応じて）
-                }).catch(() => {
-                    inputTextArea.select();
-                });
-            }
-
-            // マスキング済みテキストをコピーする関数
-            function copyOutputText() {
-                const text = outputTextArea.value;
-                if (text.trim() === '') {
-                    return;
-                }
-
-                navigator.clipboard.writeText(text).then(() => {
-                    // コピー成功時の処理（必要に応じて）
-                }).catch(() => {
-                    outputTextArea.select();
-                });
-            }
-
-            // イベントリスナーの設定
-            document.addEventListener('DOMContentLoaded', async function () {
-                console.log('DOM loaded, initializing application...');
-                console.log('DOM elements check:');
-                console.log('inputTextArea:', document.getElementById('inputText'));
-                console.log('outputTextArea:', document.getElementById('outputText'));
-                console.log('projectSelect:', document.getElementById('projectSelect'));
-
-                // 基本的なイベントリスナーを先に設定
-                // 入力テキストの変更をリアルタイムで同期
-                inputTextArea.addEventListener('input', syncInputToOutput);
-                console.log('Input event listener added');
-
-                // スクロール同期を追加
-                inputTextArea.addEventListener('scroll', function () {
-                    syncScroll(this, inputBackdrop);
-                });
-                outputTextArea.addEventListener('scroll', function () {
-                    syncScroll(this, outputBackdrop);
-                });
-
-                // テキスト選択の監視
-                inputTextArea.addEventListener('mouseup', handleTextSelection);
-                inputTextArea.addEventListener('keyup', function (event) {
-                    // キーボード選択の場合は少し遅延させる
-                    setTimeout(() => handleTextSelection(event), 10);
-                });
-
-                // ポップアップ外クリックで非表示
-                document.addEventListener('click', function (event) {
-                    if (popupVisible && !candidatePopup.contains(event.target) && event.target !== inputTextArea) {
-                        hideCandidatePopup();
-                    }
-                });
-
-                // 初期設定
-                inputTextArea.focus();
-                setCategory('symbols');
-
-                // サンプルテキストを設定
-                inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
-                console.log('Sample text set:', inputTextArea.value);
-
-                // 初期同期を実行
-                console.log('Calling initial syncInputToOutput...');
+                // リアルタイム同期（削除されたエントリの影響を反映）
                 syncInputToOutput();
 
-                // 初期ハイライト表示
-                updateHighlights();
+                // 自動保存
+                saveDictionaryToStore();
+            }
+        }
 
-                // プロジェクト管理を初期化（基本機能とは独立）
-                try {
-                    await initializeProjectManager();
+        // 入力テキストをコピーする関数
+        function copyInputText() {
+            const text = inputTextArea.value;
+            if (text.trim() === '') {
+                return;
+            }
 
-                    // プロジェクト選択イベント
-                    projectSelect.addEventListener('change', handleProjectChange);
-                    newProjectBtn.addEventListener('click', handleNewProject);
-                    manageProjectsBtn.addEventListener('click', handleManageProjects);
-                } catch (error) {
-                    console.error('Project management initialization failed, but basic functionality is available:', error);
-                }
+            navigator.clipboard.writeText(text).then(() => {
+                // コピー成功時の処理（必要に応じて）
+            }).catch(() => {
+                inputTextArea.select();
+            });
+        }
 
-                console.log('Application initialization complete');
+        // マスキング済みテキストをコピーする関数
+        function copyOutputText() {
+            const text = outputTextArea.value;
+            if (text.trim() === '') {
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                // コピー成功時の処理（必要に応じて）
+            }).catch(() => {
+                outputTextArea.select();
+            });
+        }
+
+        // イベントリスナーの設定
+        document.addEventListener('DOMContentLoaded', async function () {
+            console.log('DOM loaded, initializing application...');
+            console.log('DOM elements check:');
+            console.log('inputTextArea:', document.getElementById('inputText'));
+            console.log('outputTextArea:', document.getElementById('outputText'));
+            console.log('projectSelect:', document.getElementById('projectSelect'));
+
+            // 基本的なイベントリスナーを先に設定
+            // 入力テキストの変更をリアルタイムで同期
+            inputTextArea.addEventListener('input', syncInputToOutput);
+            console.log('Input event listener added');
+
+            // スクロール同期を追加
+            inputTextArea.addEventListener('scroll', function () {
+                syncScroll(this, inputBackdrop);
+            });
+            outputTextArea.addEventListener('scroll', function () {
+                syncScroll(this, outputBackdrop);
             });
 
-            // カスタムダイアログ関数
-            async function showMessageDialog(title, message, type = 'info') {
-                if (window.electronAPI && window.electronAPI.showMessageBox) {
-                    const options = {
-                        type: type,
-                        title: title,
-                        message: message,
-                        buttons: ['OK']
-                    };
-                    await window.electronAPI.showMessageBox(options);
-                } else {
-                    // フォールバック
-                    alert(`${title}: ${message}`);
+            // テキスト選択の監視
+            inputTextArea.addEventListener('mouseup', handleTextSelection);
+            inputTextArea.addEventListener('keyup', function (event) {
+                // キーボード選択の場合は少し遅延させる
+                setTimeout(() => handleTextSelection(event), 10);
+            });
+
+            // ポップアップ外クリックで非表示
+            document.addEventListener('click', function (event) {
+                if (popupVisible && !candidatePopup.contains(event.target) && event.target !== inputTextArea) {
+                    hideCandidatePopup();
                 }
+            });
+
+            // 初期設定
+            inputTextArea.focus();
+            setCategory('symbols');
+
+            // サンプルテキストを設定
+            inputTextArea.value = 'My password is secret123 and the admin account is confidential. Please keep this information private.';
+            console.log('Sample text set:', inputTextArea.value);
+
+            // 初期同期を実行
+            console.log('Calling initial syncInputToOutput...');
+            syncInputToOutput();
+
+            // 初期ハイライト表示
+            updateHighlights();
+
+            // プロジェクト管理を初期化（基本機能とは独立）
+            try {
+                await initializeProjectManager();
+
+                // プロジェクト選択イベント
+                projectSelect.addEventListener('change', handleProjectChange);
+                newProjectBtn.addEventListener('click', handleNewProject);
+                manageProjectsBtn.addEventListener('click', handleManageProjects);
+            } catch (error) {
+                console.error('Project management initialization failed, but basic functionality is available:', error);
             }
 
-            async function showConfirmDialog(title, message) {
-                if (window.electronAPI && window.electronAPI.showMessageBox) {
-                    const options = {
-                        type: 'question',
-                        title: title,
-                        message: message,
-                        buttons: ['キャンセル', 'OK'],
-                        defaultId: 1,
-                        cancelId: 0
-                    };
-                    const result = await window.electronAPI.showMessageBox(options);
-                    return result.response === 1; // OKボタンが押された場合
-                } else {
-                    // フォールバック
-                    return confirm(`${title}: ${message}`);
-                }
-            }
+            console.log('Application initialization complete');
+        });
 
-            async function showInputDialog(title, message, defaultValue = '') {
-                // HTMLベースのカスタム入力ダイアログを作成
-                return new Promise((resolve) => {
-                    // ダイアログ要素を作成
-                    const dialog = document.createElement('div');
-                    dialog.style.cssText = `
+        // カスタムダイアログ関数
+        async function showMessageDialog(title, message, type = 'info') {
+            if (window.electronAPI && window.electronAPI.showMessageBox) {
+                const options = {
+                    type: type,
+                    title: title,
+                    message: message,
+                    buttons: ['OK']
+                };
+                await window.electronAPI.showMessageBox(options);
+            } else {
+                // フォールバック
+                alert(`${title}: ${message}`);
+            }
+        }
+
+        async function showConfirmDialog(title, message) {
+            if (window.electronAPI && window.electronAPI.showMessageBox) {
+                const options = {
+                    type: 'question',
+                    title: title,
+                    message: message,
+                    buttons: ['キャンセル', 'OK'],
+                    defaultId: 1,
+                    cancelId: 0
+                };
+                const result = await window.electronAPI.showMessageBox(options);
+                return result.response === 1; // OKボタンが押された場合
+            } else {
+                // フォールバック
+                return confirm(`${title}: ${message}`);
+            }
+        }
+
+        async function showInputDialog(title, message, defaultValue = '') {
+            // HTMLベースのカスタム入力ダイアログを作成
+            return new Promise((resolve) => {
+                // ダイアログ要素を作成
+                const dialog = document.createElement('div');
+                dialog.style.cssText = `
                     position: fixed;
                     top: 0;
                     left: 0;
@@ -1595,8 +1595,8 @@
                     z-index: 10000;
                 `;
 
-                    const dialogBox = document.createElement('div');
-                    dialogBox.style.cssText = `
+                const dialogBox = document.createElement('div');
+                dialogBox.style.cssText = `
                     background: var(--bg-secondary);
                     border: 1px solid var(--border-primary);
                     border-radius: var(--radius-md);
@@ -1606,17 +1606,17 @@
                     box-shadow: 0 16px 32px var(--shadow-medium);
                 `;
 
-                    const titleElement = document.createElement('h3');
-                    titleElement.textContent = title;
-                    titleElement.style.cssText = `
+                const titleElement = document.createElement('h3');
+                titleElement.textContent = title;
+                titleElement.style.cssText = `
                     color: var(--text-accent);
                     margin: 0 0 var(--spacing-md) 0;
                     font-size: 16px;
                 `;
 
-                    const messageElement = document.createElement('p');
-                    messageElement.textContent = message;
-                    messageElement.style.cssText = `
+                const messageElement = document.createElement('p');
+                messageElement.textContent = message;
+                messageElement.style.cssText = `
                     color: var(--text-primary);
                     margin: 0 0 var(--spacing-md) 0;
                     white-space: pre-line;
@@ -1624,10 +1624,10 @@
                     line-height: 1.5;
                 `;
 
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.value = defaultValue;
-                    input.style.cssText = `
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = defaultValue;
+                input.style.cssText = `
                     width: 100%;
                     padding: var(--spacing-sm);
                     border: 1px solid var(--border-secondary);
@@ -1639,16 +1639,16 @@
                     outline: none;
                 `;
 
-                    const buttonContainer = document.createElement('div');
-                    buttonContainer.style.cssText = `
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.cssText = `
                     display: flex;
                     gap: var(--spacing-sm);
                     justify-content: flex-end;
                 `;
 
-                    const cancelButton = document.createElement('button');
-                    cancelButton.textContent = 'キャンセル';
-                    cancelButton.style.cssText = `
+                const cancelButton = document.createElement('button');
+                cancelButton.textContent = 'キャンセル';
+                cancelButton.style.cssText = `
                     padding: var(--spacing-sm) var(--spacing-md);
                     border: 1px solid var(--border-secondary);
                     border-radius: var(--radius-sm);
@@ -1658,9 +1658,9 @@
                     font-size: 14px;
                 `;
 
-                    const okButton = document.createElement('button');
-                    okButton.textContent = 'OK';
-                    okButton.style.cssText = `
+                const okButton = document.createElement('button');
+                okButton.textContent = 'OK';
+                okButton.style.cssText = `
                     padding: var(--spacing-sm) var(--spacing-md);
                     border: 1px solid var(--accent-blue);
                     border-radius: var(--radius-sm);
@@ -1670,52 +1670,52 @@
                     font-size: 14px;
                 `;
 
-                    // イベントリスナー
-                    cancelButton.addEventListener('click', () => {
-                        document.body.removeChild(dialog);
-                        resolve('');
-                    });
+                // イベントリスナー
+                cancelButton.addEventListener('click', () => {
+                    document.body.removeChild(dialog);
+                    resolve('');
+                });
 
-                    okButton.addEventListener('click', () => {
+                okButton.addEventListener('click', () => {
+                    const value = input.value;
+                    document.body.removeChild(dialog);
+                    resolve(value);
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
                         const value = input.value;
                         document.body.removeChild(dialog);
                         resolve(value);
-                    });
-
-                    input.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter') {
-                            const value = input.value;
-                            document.body.removeChild(dialog);
-                            resolve(value);
-                        } else if (e.key === 'Escape') {
-                            document.body.removeChild(dialog);
-                            resolve('');
-                        }
-                    });
-
-                    // DOM構築
-                    buttonContainer.appendChild(cancelButton);
-                    buttonContainer.appendChild(okButton);
-                    dialogBox.appendChild(titleElement);
-                    dialogBox.appendChild(messageElement);
-                    dialogBox.appendChild(input);
-                    dialogBox.appendChild(buttonContainer);
-                    dialog.appendChild(dialogBox);
-                    document.body.appendChild(dialog);
-
-                    // フォーカス
-                    input.focus();
-                    input.select();
+                    } else if (e.key === 'Escape') {
+                        document.body.removeChild(dialog);
+                        resolve('');
+                    }
                 });
-            }
 
-            // キーボードショートカット
-            inputTextArea.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape' && popupVisible) {
-                    event.preventDefault();
-                    hideCandidatePopup();
-                }
+                // DOM構築
+                buttonContainer.appendChild(cancelButton);
+                buttonContainer.appendChild(okButton);
+                dialogBox.appendChild(titleElement);
+                dialogBox.appendChild(messageElement);
+                dialogBox.appendChild(input);
+                dialogBox.appendChild(buttonContainer);
+                dialog.appendChild(dialogBox);
+                document.body.appendChild(dialog);
+
+                // フォーカス
+                input.focus();
+                input.select();
             });
+        }
+
+        // キーボードショートカット
+        inputTextArea.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && popupVisible) {
+                event.preventDefault();
+                hideCandidatePopup();
+            }
+        });
     </script>
 </body>
 
