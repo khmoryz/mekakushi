@@ -854,6 +854,9 @@
         // メモリ内辞書（マスキング履歴）
         let maskingDictionary = new Map();
 
+        // グローバルスコープに追加
+        window.maskingDictionary = maskingDictionary;
+
         // 辞書の永続化機能
         async function loadDictionaryFromStore() {
             try {
@@ -1208,10 +1211,16 @@
                     .replace(/>/g, '&gt;');
             }
 
+            // グローバルスコープに追加
+            window.escapeHtml = escapeHtml;
+
             // 正規表現エスケープ関数
             function escapeRegExp(string) {
                 return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             }
+
+            // グローバルスコープに追加
+            window.escapeRegExp = escapeRegExp;
 
             // ハイライト表示関数（提供されたパターンを使用）
             function highlight(text, targets) {
@@ -1234,6 +1243,10 @@
                 return result;
             }
 
+            // グローバルスコープに追加
+            window.highlight = highlight;
+
+            // グローバル関数として定義
             // リアルタイム同期: 入力テキストの変更を出力に反映
             function syncInputToOutput() {
                 try {
@@ -1269,6 +1282,9 @@
                 }
             }
 
+            // グローバルスコープに追加
+            window.syncInputToOutput = syncInputToOutput;
+
             // ハイライト表示を更新
             function updateHighlights() {
                 // 入力テキストのハイライト更新（元の文字列をハイライト）
@@ -1279,6 +1295,9 @@
                 const outputTargets = Array.from(maskingDictionary.values()).map(entry => entry.masked);
                 outputBackdrop.innerHTML = highlight(outputTextArea.value, outputTargets);
             }
+
+            // グローバルスコープに追加
+            window.updateHighlights = updateHighlights;
 
             // スクロール同期
             function syncScroll(source, target) {
