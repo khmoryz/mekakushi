@@ -119,6 +119,11 @@ function createWindow() {
   // Load the index.html file
   mainWindow.loadFile('index.html');
 
+  // 開発環境では開発者ツールを開く
+  if (process.env.NODE_ENV === 'development' || process.argv.includes('--dev')) {
+    mainWindow.webContents.openDevTools();
+  }
+
   // Show window when ready to prevent visual flash
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();

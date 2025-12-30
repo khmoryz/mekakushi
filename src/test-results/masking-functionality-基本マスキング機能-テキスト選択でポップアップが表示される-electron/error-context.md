@@ -22,7 +22,7 @@
       - generic [ref=e21]:
         - heading "🔒 マスキング済みテキスト" [level=2] [ref=e22]
         - generic [ref=e23]:
-          - textbox "マスキング結果がここに表示されます..." [ref=e24]
+          - textbox "マスキング結果がここに表示されます..." [ref=e24]: secret password
           - button "マスキング済みテキストをコピー" [ref=e25] [cursor=pointer]
     - generic [ref=e26]:
       - heading "📚 マスキング辞書" [level=2] [ref=e27]
