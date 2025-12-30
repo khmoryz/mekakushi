@@ -31,12 +31,10 @@
             "arm64"
           ]
         }
-      ],
-      "icon": "assets/icon.icns"
+      ]
     },
     "dmg": {
       "title": "Mekakushi",
-      "background": "assets/dmg-background.png",
       "window": {
         "width": 540,
         "height": 380
