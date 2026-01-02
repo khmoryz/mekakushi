@@ -40,26 +40,8 @@
     },
     "dmg": {
       "title": "Mekakushi",
-      "window": {
-        "width": 540,
-        "height": 380
-      },
-      "contents": [
-        {
-          "x": 140,
-          "y": 200,
-          "type": "file"
-        },
-        {
-          "x": 400,
-          "y": 200,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ],
-      "format": "UDZO",
-      "background": null,
-      "artifactName": "${productName}-${version}.${ext}"
+      "artifactName": "${productName}-${version}.${ext}",
+      "writeUpdateInfo": false
     },
     "win": {
       "icon": "icon.png",

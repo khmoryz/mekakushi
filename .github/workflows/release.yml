@@ -28,11 +28,16 @@ jobs:
         cd src
         npm ci
         
-    - name: Clean up any mounted volumes
+    - name: Clean up any mounted volumes and processes
       run: |
+        # Kill any existing hdiutil processes
+        sudo pkill -f "hdiutil" || true
+        sudo pkill -f "dmgbuild" || true
+        sleep 3
+        
         # List all mounted volumes
         echo "Currently mounted volumes:"
-        df -h
+        df -h | grep -E "(Volumes|disk)" || true
         
         # Force unmount any existing Mekakushi volumes
         for vol in /Volumes/Mekakushi*; do
@@ -43,14 +48,27 @@ jobs:
           fi
         done
         
-        # Clean up any leftover processes
-        pkill -f "hdiutil" || true
+        # Detach any disk images that might be stuck
+        for disk in $(hdiutil info | grep -E "^/dev/disk[0-9]+" | awk '{print $1}' || true); do
+          echo "Attempting to detach $disk"
+          hdiutil detach "$disk" -force 2>/dev/null || true
+        done
+        
+        # Clean up temporary files
+        sudo rm -rf /tmp/dmg-* 2>/dev/null || true
+        sudo rm -rf /tmp/electron-* 2>/dev/null || true
+        
         sleep 2
+        echo "Cleanup completed"
         
     - name: Build application
       run: |
         cd src
+        # Set environment variables for more stable DMG building
+        export ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES=true
+        export DEBUG=electron-builder
         npm run build:mac
+      timeout-minutes: 30
         
     - name: List build artifacts
       run: |
