@@ -81,10 +81,11 @@
         /* Project Header */
         .project-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
+            /* 左寄せに変更 */
             align-items: center;
-            padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) 120px;
-            /* 左側のpaddingを120pxに増加 */
+            padding: var(--spacing-sm) var(--spacing-md);
+            /* 元のpaddingに戻す */
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-secondary);
             min-height: 48px;
@@ -145,18 +146,6 @@
             color: var(--bg-primary);
             border-color: var(--accent-blue);
             transform: translateY(-1px);
-        }
-
-        .project-status {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            font-style: italic;
-            margin-right: 80px;
-            /* macOSの制御ボタンとの間隔を確保 */
-        }
-
-        .project-status.active {
-            color: var(--accent-green);
         }
 
         /* Main Container */
@@ -927,9 +916,6 @@
                 <button id="manageProjectsBtn" class="project-btn" title="プロジェクトを管理">⚙️</button>
                 <button id="regexPatternsBtn" class="project-btn" title="正規表現パターン">🔍</button>
             </div>
-            <div class="project-status">
-                <span id="projectStatus">プロジェクトが選択されていません</span>
-            </div>
         </div>
 
         <div class="container">
@@ -1068,7 +1054,6 @@
         const projectSelect = document.getElementById('projectSelect');
         const newProjectBtn = document.getElementById('newProjectBtn');
         const manageProjectsBtn = document.getElementById('manageProjectsBtn');
-        const projectStatus = document.getElementById('projectStatus');
 
         // プロジェクト管理インスタンス
         let projectManager = null;
@@ -1292,7 +1277,6 @@
 
                 if (currentProject) {
                     projectSelect.value = currentProject.id;
-                    updateProjectStatus(currentProject);
                     await loadDictionaryFromStore();
                     console.log('Current project loaded:', currentProject.name);
                 } else {
@@ -1304,7 +1288,6 @@
                 console.log('ProjectManager initialization complete');
             } catch (error) {
                 console.error('Failed to initialize ProjectManager:', error);
-                updateProjectStatus(null, 'プロジェクト管理の初期化に失敗しました');
             }
         }
 
@@ -1333,34 +1316,16 @@
             }
         }
 
-        function updateProjectStatus(project, errorMessage = null) {
-            if (errorMessage) {
-                projectStatus.textContent = errorMessage;
-                projectStatus.className = 'project-status';
-                return;
-            }
-
-            if (project) {
-                projectStatus.textContent = `現在のプロジェクト: ${project.name}`;
-                projectStatus.className = 'project-status active';
-            } else {
-                projectStatus.textContent = 'プロジェクトが選択されていません';
-                projectStatus.className = 'project-status';
-            }
-        }
-
         async function createDefaultProject() {
             try {
                 console.log('Creating default project...');
                 const defaultProject = await projectManager.createDefaultProject();
                 await updateProjectList();
                 projectSelect.value = defaultProject.id;
-                updateProjectStatus(defaultProject);
                 await loadDictionaryFromStore();
                 console.log('Default project created successfully:', defaultProject.name);
             } catch (error) {
                 console.error('Failed to create default project:', error);
-                updateProjectStatus(null, 'デフォルトプロジェクトの作成に失敗しました');
 
                 // フォールバック: 手動でデフォルトプロジェクトを作成
                 try {
@@ -1369,7 +1334,6 @@
                     await projectManager.switchProject(fallbackProject.id);
                     await updateProjectList();
                     projectSelect.value = fallbackProject.id;
-                    updateProjectStatus(fallbackProject);
                     await loadDictionaryFromStore();
                     console.log('Fallback default project created:', fallbackProject.name);
                 } catch (fallbackError) {
@@ -1382,7 +1346,6 @@
             const selectedProjectId = projectSelect.value;
 
             if (!selectedProjectId) {
-                updateProjectStatus(null);
                 maskingDictionary.clear();
                 updateDictionaryDisplay();
                 syncInputToOutput();
@@ -1397,7 +1360,6 @@
 
                 // プロジェクトを切り替え
                 const result = await projectManager.switchProject(selectedProjectId);
-                updateProjectStatus(result.project);
 
                 // 辞書をクリアしてから新しいプロジェクトの辞書を読み込み
                 maskingDictionary.clear();
@@ -1410,7 +1372,6 @@
                 console.log('Project switched to:', result.project.name);
             } catch (error) {
                 console.error('Failed to switch project:', error);
-                updateProjectStatus(null, 'プロジェクトの切り替えに失敗しました');
 
                 // エラー時は選択をリセット
                 const currentProject = projectManager.getCurrentProject();
