@@ -30,18 +30,13 @@
       "category": "public.app-category.utilities",
       "target": [
         {
-          "target": "dmg",
+          "target": "zip",
           "arch": [
             "x64",
             "arm64"
           ]
         }
       ]
-    },
-    "dmg": {
-      "title": "Mekakushi",
-      "artifactName": "${productName}-${version}.${ext}",
-      "writeUpdateInfo": false
     },
     "win": {
       "icon": "icon.png",
