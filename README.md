@@ -1,7 +1,7 @@
 # 🥷 Mekakushi
 
 <div align="center">
-  <img src="icon.png" alt="Mekakushi Icon" width="128" height="128">
+  <img src="src/icon.png" alt="Mekakushi Icon" width="128" height="128">
   
   **シンプルで直感的なテキストマスキングアプリ**
   
