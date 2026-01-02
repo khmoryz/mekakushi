@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-release:
-    runs-on: macos-latest
+    runs-on: macos-13
     permissions:
       contents: write
     
@@ -27,6 +27,25 @@ jobs:
       run: |
         cd src
         npm ci
+        
+    - name: Clean up any mounted volumes
+      run: |
+        # List all mounted volumes
+        echo "Currently mounted volumes:"
+        df -h
+        
+        # Force unmount any existing Mekakushi volumes
+        for vol in /Volumes/Mekakushi*; do
+          if [ -d "$vol" ]; then
+            echo "Unmounting $vol"
+            sudo diskutil unmountDisk force "$vol" 2>/dev/null || true
+            hdiutil detach "$vol" -force 2>/dev/null || true
+          fi
+        done
+        
+        # Clean up any leftover processes
+        pkill -f "hdiutil" || true
+        sleep 2
         
     - name: Build application
       run: |

@@ -33,9 +33,9 @@ test.describe('プロジェクト環境管理機能', () => {
     const selectedOption = await projectSelect.inputValue();
     expect(selectedOption).toBeTruthy();
 
-    // プロジェクトステータスがアクティブであることを確認
-    const projectStatus = page.locator('#projectStatus');
-    await expect(projectStatus).toHaveClass(/active/);
+    // プロジェクト選択ドロップダウンにオプションが存在することを確認
+    const options = await projectSelect.locator('option').count();
+    expect(options).toBeGreaterThan(1); // "プロジェクトを選択..." + 実際のプロジェクト
   });
 
   test('新しいプロジェクトを作成できる', async () => {
@@ -65,9 +65,10 @@ test.describe('プロジェクト環境管理機能', () => {
     // 少し待機
     await page.waitForTimeout(1000);
 
-    // 新しいプロジェクトが作成されたことを確認（Electron環境では成功する）
-    const projectStatus = page.locator('#projectStatus');
-    await expect(projectStatus).toBeVisible();
+    // 新しいプロジェクトが作成されたことを確認（プロジェクト選択に追加される）
+    const projectSelect = page.locator('#projectSelect');
+    const projectOptions = await projectSelect.locator('option').count();
+    expect(projectOptions).toBeGreaterThan(2); // "プロジェクトを選択..." + デフォルト + 新規プロジェクト
   });
 
   test('プロジェクトを切り替えできる', async () => {
@@ -78,19 +79,23 @@ test.describe('プロジェクト環境管理機能', () => {
     const newProjectBtn = page.locator('#newProjectBtn');
     await expect(newProjectBtn).toBeVisible();
 
-    // UIコンポーネントが正しく表示されていることを確認
-    const projectStatus = page.locator('#projectStatus');
-    await expect(projectStatus).toBeVisible();
+    // プロジェクト選択ドロップダウンにオプションが存在することを確認
+    const options = await projectSelect.locator('option').count();
+    expect(options).toBeGreaterThan(1);
   });
 
   test('プロジェクトを削除できる', async () => {
-    // プロジェクト管理ボタンが表示されていることを確認
-    const manageProjectsBtn = page.locator('#manageProjectsBtn');
-    await expect(manageProjectsBtn).toBeVisible();
+    // プロジェクト削除ボタンが表示されていることを確認
+    const deleteProjectBtn = page.locator('#deleteProjectBtn');
+    await expect(deleteProjectBtn).toBeVisible();
 
     // プロジェクト選択ドロップダウンが表示されていることを確認
     const projectSelect = page.locator('#projectSelect');
     await expect(projectSelect).toBeVisible();
+
+    // 削除ボタンのツールチップが正しいことを確認
+    const tooltip = await deleteProjectBtn.getAttribute('title');
+    expect(tooltip).toBe('現在のプロジェクトを削除');
   });
 
   test('プロジェクトごとに独立した辞書が管理される', async () => {
@@ -121,12 +126,12 @@ test.describe('プロジェクト環境管理機能', () => {
     const newProjectBtn = page.locator('#newProjectBtn');
     await expect(newProjectBtn).toBeVisible();
 
-    // プロジェクト管理ボタンが表示されていることを確認
-    const manageProjectsBtn = page.locator('#manageProjectsBtn');
-    await expect(manageProjectsBtn).toBeVisible();
+    // プロジェクト削除ボタンが表示されていることを確認
+    const deleteProjectBtn = page.locator('#deleteProjectBtn');
+    await expect(deleteProjectBtn).toBeVisible();
 
-    // プロジェクトステータスが表示されていることを確認
-    const projectStatus = page.locator('#projectStatus');
-    await expect(projectStatus).toBeVisible();
+    // 正規表現パターンボタンが表示されていることを確認
+    const regexPatternsBtn = page.locator('#regexPatternsBtn');
+    await expect(regexPatternsBtn).toBeVisible();
   });
 });

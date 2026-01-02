@@ -131,14 +131,15 @@ class ProjectManager {
       throw new Error('指定されたプロジェクトが見つかりません');
     }
 
-    // 現在のプロジェクトを削除しようとしている場合
-    if (this.currentProject && this.currentProject.id === projectId) {
-      throw new Error('現在選択中のプロジェクトは削除できません');
-    }
-
     try {
       // プロジェクトファイルを削除
       await this.electronAPI.deleteProject(projectId);
+
+      // 削除対象が現在のプロジェクトの場合、現在のプロジェクトをクリア
+      if (this.currentProject && this.currentProject.id === projectId) {
+        this.currentProject = null;
+        await this.electronAPI.setCurrentProject(null);
+      }
 
       // メモリから削除
       this.projects.delete(projectId);

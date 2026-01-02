@@ -147,6 +147,14 @@
             transform: translateY(-1px);
         }
 
+        /* 削除ボタンの特別なスタイル */
+        #deleteProjectBtn:hover {
+            background: var(--accent-red);
+            color: var(--bg-primary);
+            border-color: var(--accent-red);
+            transform: translateY(-1px);
+        }
+
         /* Main Container */
         .container {
             flex: 1;
@@ -912,7 +920,7 @@
                     <option value="">プロジェクトを選択...</option>
                 </select>
                 <button id="newProjectBtn" class="project-btn" title="新しいプロジェクトを作成">➕</button>
-                <button id="manageProjectsBtn" class="project-btn" title="プロジェクトを管理">⚙️</button>
+                <button id="deleteProjectBtn" class="project-btn" title="現在のプロジェクトを削除">🗑️</button>
                 <button id="regexPatternsBtn" class="project-btn" title="正規表現パターン">🔍</button>
             </div>
         </div>
@@ -1052,7 +1060,7 @@
         // プロジェクト管理DOM要素
         const projectSelect = document.getElementById('projectSelect');
         const newProjectBtn = document.getElementById('newProjectBtn');
-        const manageProjectsBtn = document.getElementById('manageProjectsBtn');
+        const deleteProjectBtn = document.getElementById('deleteProjectBtn');
 
         // プロジェクト管理インスタンス
         let projectManager = null;
@@ -1401,55 +1409,44 @@
             }
         }
 
-        async function handleManageProjects() {
-            // 簡単なプロジェクト管理ダイアログ
+        async function handleDeleteCurrentProject() {
+            const currentProject = projectManager.getCurrentProject();
+
+            if (!currentProject) {
+                await showMessageDialog('情報', '削除するプロジェクトが選択されていません。', 'info');
+                return;
+            }
+
+            // プロジェクトが1つしかない場合は削除を禁止
             const projects = projectManager.listProjects();
-
-            if (projects.length === 0) {
-                await showMessageDialog('情報', '管理するプロジェクトがありません。', 'info');
-                return;
-            }
-
-            let message = 'プロジェクト一覧:\n\n';
-            projects.forEach((project, index) => {
-                const status = project.isCurrent ? ' (現在選択中)' : '';
-                message += `${index + 1}. ${project.name}${status}\n`;
-                message += `   作成日: ${new Date(project.createdAt).toLocaleDateString()}\n`;
-                message += `   更新日: ${new Date(project.updatedAt).toLocaleDateString()}\n\n`;
-            });
-
-            message += '削除したいプロジェクトの番号を入力してください（キャンセルする場合は空白）:';
-
-            const input = await showInputDialog('プロジェクト管理', message);
-
-            if (!input || input.trim() === '') {
-                return;
-            }
-
-            const projectIndex = parseInt(input.trim()) - 1;
-
-            if (isNaN(projectIndex) || projectIndex < 0 || projectIndex >= projects.length) {
-                await showMessageDialog('エラー', '無効な番号です。', 'error');
-                return;
-            }
-
-            const projectToDelete = projects[projectIndex];
-
-            if (projectToDelete.isCurrent) {
-                await showMessageDialog('エラー', '現在選択中のプロジェクトは削除できません。', 'error');
+            if (projects.length <= 1) {
+                await showMessageDialog('エラー', '最後のプロジェクトは削除できません。\n新しいプロジェクトを作成してから削除してください。', 'error');
                 return;
             }
 
             const confirmDelete = await showConfirmDialog(
                 'プロジェクト削除の確認',
-                `プロジェクト "${projectToDelete.name}" を削除しますか？\nこの操作は取り消せません。`
+                `プロジェクト "${currentProject.name}" を削除しますか？\nこの操作は取り消せません。`
             );
 
             if (confirmDelete) {
                 try {
-                    await projectManager.deleteProject(projectToDelete.id);
+                    const projectIdToDelete = currentProject.id;
+
+                    // 他のプロジェクトに切り替え（削除対象以外の最初のプロジェクト）
+                    const otherProjects = projects.filter(p => p.id !== projectIdToDelete);
+                    if (otherProjects.length > 0) {
+                        await projectManager.switchProject(otherProjects[0].id);
+                        projectSelect.value = otherProjects[0].id;
+                        await loadDictionaryFromStore();
+                    }
+
+                    // プロジェクトを削除
+                    await projectManager.deleteProject(projectIdToDelete);
                     await updateProjectList();
-                    console.log('Project deleted:', projectToDelete.name);
+
+                    console.log('Project deleted:', currentProject.name);
+                    await showMessageDialog('完了', `プロジェクト "${currentProject.name}" を削除しました。`, 'info');
                 } catch (error) {
                     console.error('Failed to delete project:', error);
                     await showMessageDialog('エラー', 'プロジェクトの削除に失敗しました: ' + error.message, 'error');
@@ -2016,7 +2013,7 @@
                 // プロジェクト選択イベント
                 projectSelect.addEventListener('change', handleProjectChange);
                 newProjectBtn.addEventListener('click', handleNewProject);
-                manageProjectsBtn.addEventListener('click', handleManageProjects);
+                deleteProjectBtn.addEventListener('click', handleDeleteCurrentProject);
 
                 // 正規表現パターンボタンのイベントリスナー
                 const regexPatternsBtn = document.getElementById('regexPatternsBtn');

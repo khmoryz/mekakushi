@@ -56,7 +56,8 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "format": "UDZO"
     },
     "win": {
       "icon": "icon.png",
