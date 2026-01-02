@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-release:
     runs-on: macos-latest
+    permissions:
+      contents: write
     
     steps:
     - name: Checkout code
@@ -31,13 +33,16 @@ jobs:
         cd src
         npm run build:mac
         
+    - name: List build artifacts
+      run: |
+        echo "Contents of src/dist:"
+        ls -la src/dist/
+        
     - name: Create Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: |
-          src/dist/*.dmg
-          src/dist/*.zip
+        files: src/dist/*.dmg
         draft: false
         prerelease: false
         generate_release_notes: true
