@@ -57,7 +57,9 @@
           "path": "/Applications"
         }
       ],
-      "format": "UDZO"
+      "format": "UDZO",
+      "background": null,
+      "artifactName": "${productName}-${version}.${ext}"
     },
     "win": {
       "icon": "icon.png",
