@@ -51,7 +51,15 @@
 
 ## 🚀 クイックスタート
 
-### インストール
+### 📥 ダウンロード（推奨）
+
+**最新版をダウンロード:**
+1. [Releases ページ](https://github.com/your-username/mekakushi/releases)にアクセス
+2. 最新の `Mekakushi-x.x.x.dmg` をダウンロード
+3. DMGファイルをダブルクリックしてインストール
+4. アプリケーションフォルダにドラッグ&ドロップ
+
+### 🛠️ 開発者向けインストール
 
 ```bash
 # リポジトリをクローン
@@ -141,7 +149,27 @@ npm test
 
 # ビルド（macOS）
 npm run build:mac
+
+# 配布用ビルド
+npm run dist
 ```
+
+### リリース手順
+
+1. **バージョンアップ**
+```bash
+npm version patch  # または minor, major
+```
+
+2. **タグをプッシュ**
+```bash
+git push origin --tags
+```
+
+3. **自動ビルド・リリース**
+- GitHub Actionsが自動的にDMGをビルド
+- GitHub Releasesに自動アップロード
+- リリースノートも自動生成
 
 ### プロジェクト構造
 

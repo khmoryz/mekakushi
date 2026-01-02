@@ -1,6 +1,6 @@
 {
   "name": "mekakushi",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple text masking application for macOS",
   "main": "main.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "electron-builder",
     "build:mac": "electron-builder --mac",
     "dist": "electron-builder --publish=never",
+    "release": "electron-builder --publish=always",
     "test": "playwright test --reporter=list",
     "test:headed": "playwright test --headed --reporter=list",
     "test:ui": "playwright test --ui"
