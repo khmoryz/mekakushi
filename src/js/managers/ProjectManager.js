@@ -312,7 +312,7 @@ class ProjectManager {
    */
   async createDefaultProject() {
     try {
-      const defaultProject = await this.createProject('デフォルトプロジェクト');
+      const defaultProject = await this.createProject('デフォルト');
       await this.switchProject(defaultProject.id);
       return defaultProject;
     } catch (error) {

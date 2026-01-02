@@ -1362,7 +1362,7 @@
                 // フォールバック: 手動でデフォルトプロジェクトを作成
                 try {
                     console.log('Attempting manual default project creation...');
-                    const fallbackProject = await projectManager.createProject('デフォルトプロジェクト');
+                    const fallbackProject = await projectManager.createProject('デフォルト');
                     await projectManager.switchProject(fallbackProject.id);
                     await updateProjectList();
                     projectSelect.value = fallbackProject.id;
