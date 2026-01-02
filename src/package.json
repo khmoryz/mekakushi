@@ -23,7 +23,9 @@
       "**/*",
       "!node_modules/**/*"
     ],
+    "icon": "icon.png",
     "mac": {
+      "icon": "icon.png",
       "category": "public.app-category.utilities",
       "target": [
         {
@@ -54,6 +56,14 @@
           "path": "/Applications"
         }
       ]
+    },
+    "win": {
+      "icon": "icon.png",
+      "target": "nsis"
+    },
+    "linux": {
+      "icon": "icon.png",
+      "target": "AppImage"
     }
   },
   "keywords": [
