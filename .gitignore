@@ -63,3 +63,5 @@ src/build/
 *.dmg
 *.blockmap
 src/assets/icon.icns
+
+.gemini/
