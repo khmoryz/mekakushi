@@ -249,19 +249,15 @@
             background: transparent;
         }
 
-        /* テキスト選択時のハイライトを無効化（backdropで表示） */
+        /* テキスト選択時のハイライトをtextareaで表示 */
         .text-panel textarea::selection {
-            background: transparent;
+            background: rgba(132, 160, 198, 0.5);
+            color: var(--text-primary);
         }
 
         .text-panel textarea::-moz-selection {
-            background: transparent;
-        }
-
-        /* backdrop内の選択ハイライト用スタイル */
-        .backdrop .selection-highlight {
             background: rgba(132, 160, 198, 0.5);
-            border-radius: 2px;
+            color: var(--text-primary);
         }
 
         .text-panel textarea:focus {
@@ -1322,65 +1318,13 @@
         }
 
         function applySelectionToBackdrop(textarea, backdrop) {
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-
             // 辞書ハイライトのターゲットを取得
             const targets = textarea === inputTextArea
                 ? Array.from(maskingDictionary.values()).map(entry => entry.original)
                 : Array.from(maskingDictionary.values()).map(entry => entry.masked);
 
-            if (start === end) {
-                // 選択なし - 通常のハイライトのみに戻す
-                backdrop.innerHTML = highlight(textarea.value, targets);
-                return;
-            }
-
-            const text = textarea.value;
-            const beforeSelection = text.substring(0, start);
-            const selectedText = text.substring(start, end);
-            const afterSelection = text.substring(end);
-
-            // 選択範囲を含むHTMLを再構築
-            const beforeHTML = escapeHtml(beforeSelection);
-            const selectedHTML = '<span class="selection-highlight">' + escapeHtml(selectedText) + '</span>';
-            const afterHTML = escapeHtml(afterSelection);
-
-            // まず選択ハイライトを適用してから、辞書ハイライトを適用
-            const textWithSelection = beforeHTML + selectedHTML + afterHTML;
-            backdrop.innerHTML = highlightWithSelection(textWithSelection, targets, start, end);
-        }
-
-        // 選択範囲を考慮したハイライト関数
-        function highlightWithSelection(html, targets, selectionStart, selectionEnd) {
-            if (!targets || targets.length === 0) {
-                return html;
-            }
-
-            // 選択範囲のspanタグを一時的に保護
-            const selectionPlaceholder = '___SELECTION_PLACEHOLDER___';
-            const selectionMatch = html.match(/<span class="selection-highlight">.*?<\/span>/);
-            let result = html;
-
-            if (selectionMatch) {
-                result = html.replace(/<span class="selection-highlight">.*?<\/span>/, selectionPlaceholder);
-            }
-
-            // 辞書ハイライトを適用
-            const sortedTargets = [...targets].sort((a, b) => b.length - a.length);
-            for (const target of sortedTargets) {
-                if (!target) continue;
-                const escapedTarget = escapeRegExp(target);
-                const regex = new RegExp(escapedTarget, 'gi');
-                result = result.replace(regex, '<span class="masked-highlight">' + escapeHtml(target) + '</span>');
-            }
-
-            // 選択範囲を復元
-            if (selectionMatch) {
-                result = result.replace(selectionPlaceholder, selectionMatch[0]);
-            }
-
-            return result;
+            // 辞書ハイライトのみを適用（選択ハイライトはtextareaのネイティブ機能を使用）
+            backdrop.innerHTML = highlight(textarea.value, targets);
         }
 
         // グローバルスコープに追加
