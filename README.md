@@ -45,19 +45,37 @@
 ## 🖼️ スクリーンショット
 
 <div align="center">
-  <img src="screenshot.png" alt="Mekakushi Screenshot" width="800">
-  <p><em>シンプルで直感的なインターフェース</em></p>
+  <img src="demo-screenshot.png" alt="Mekakushi Screenshot" width="800">
+  <p><em>シンプルで直感的なインターフェース - テキストを選択してマスキング候補を選ぶだけ</em></p>
 </div>
 
 ## 🚀 クイックスタート
 
-### 📥 ダウンロード（推奨）
+### 📥 インストール
 
-**最新版をダウンロード:**
-1. [Releases ページ](https://github.com/your-username/mekakushi/releases)にアクセス
-2. 最新の `Mekakushi-x.x.x.dmg` をダウンロード
-3. DMGファイルをダブルクリックしてインストール
-4. アプリケーションフォルダにドラッグ&ドロップ
+#### Homebrew（推奨）
+
+```bash
+brew tap khmoryz/mekakushi
+brew install --cask mekakushi
+```
+
+**メリット:**
+- ✅ Gatekeeperの警告を自動回避
+- ✅ ワンコマンドでインストール完了
+- ✅ アップデートも簡単（`brew upgrade mekakushi`）
+
+#### 手動インストール
+
+1. [Releases ページ](https://github.com/khmoryz/mekakushi/releases)にアクセス
+2. 最新の `Mekakushi-darwin-arm64-x.x.x.zip` をダウンロード
+3. zipファイルを解凍
+4. Mekakushi.appをアプリケーションフォルダに移動
+5. **初回起動時の注意**: Gatekeeperの警告が出る場合は以下を実行
+   ```bash
+   xattr -cr /Applications/Mekakushi.app
+   ```
+   または、右クリック→「開く」で起動
 
 ### 🛠️ 開発者向けインストール
 
