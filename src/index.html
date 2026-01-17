@@ -249,15 +249,21 @@
             background: transparent;
         }
 
-        /* テキスト選択時のハイライトをtextareaで表示 */
+        /* テキスト選択時は背景色のみ表示、文字は透明を維持 */
         .text-panel textarea::selection {
             background: rgba(132, 160, 198, 0.5);
-            color: var(--text-primary);
+            color: transparent;
         }
 
         .text-panel textarea::-moz-selection {
             background: rgba(132, 160, 198, 0.5);
-            color: var(--text-primary);
+            color: transparent;
+        }
+
+        /* backdrop内の選択範囲スタイル */
+        .backdrop .selected {
+            /* 背景色はtextareaの選択背景を透けて見せる */
+            /* 必要に応じて文字色を変更可能 */
         }
 
         .text-panel textarea:focus {
@@ -1318,13 +1324,40 @@
         }
 
         function applySelectionToBackdrop(textarea, backdrop) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+
             // 辞書ハイライトのターゲットを取得
             const targets = textarea === inputTextArea
                 ? Array.from(maskingDictionary.values()).map(entry => entry.original)
                 : Array.from(maskingDictionary.values()).map(entry => entry.masked);
 
-            // 辞書ハイライトのみを適用（選択ハイライトはtextareaのネイティブ機能を使用）
-            backdrop.innerHTML = highlight(textarea.value, targets);
+            // 選択範囲がない場合は通常のハイライトのみ
+            if (start === end) {
+                backdrop.innerHTML = highlight(text, targets);
+                return;
+            }
+
+            // 選択範囲を含むHTMLを生成
+            const beforeSelection = text.substring(0, start);
+            const selectedText = text.substring(start, end);
+            const afterSelection = text.substring(end);
+
+            // 各部分をエスケープしてから辞書ハイライトを適用
+            let html = '';
+
+            // 選択前の部分
+            html += highlight(beforeSelection, targets);
+
+            // 選択範囲（辞書ハイライトも適用）
+            const selectedHighlighted = highlight(selectedText, targets);
+            html += '<span class="selected">' + selectedHighlighted + '</span>';
+
+            // 選択後の部分
+            html += highlight(afterSelection, targets);
+
+            backdrop.innerHTML = html;
         }
 
         // グローバルスコープに追加
