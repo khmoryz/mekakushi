@@ -15,7 +15,7 @@
 ## 特徴
 
 <div align="center">
-  <img src="demo-screenshot.png" alt="Mekakushi Screenshot" width="800">
+  <img src="demo.gif" alt="Mekakushi Demo" width="800">
   <p><em>テキストを選択してマスキング候補を選ぶだけ</em></p>
 </div>
 
