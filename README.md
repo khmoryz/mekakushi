@@ -172,28 +172,3 @@ src/
 └── tests/           # テストファイル
 ```
 
-## コントリビューション
-
-プルリクエストやイシューの報告を歓迎します。
-
-1. このリポジトリをフォーク
-2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'feat: 素晴らしい機能を追加'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. プルリクエストを作成
-
-### コミットメッセージ規約
-
-```
-feat(scope): 新機能を追加
-fix(scope): バグを修正
-docs: ドキュメントを更新
-style: コードスタイルを修正
-refactor: リファクタリング
-test: テストを追加
-chore: その他の変更
-```
-
-## ライセンス
-
-このプロジェクトは [MIT License](LICENSE) の下で公開されています。
