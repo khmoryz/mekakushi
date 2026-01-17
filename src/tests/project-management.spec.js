@@ -51,8 +51,8 @@ test.describe('プロジェクト環境管理機能', () => {
     const dialogTitle = page.locator('h3').filter({ hasText: '新しいプロジェクト名を入力してください' });
     await expect(dialogTitle).toBeVisible();
 
-    // プロジェクト名入力ダイアログの入力フィールドを特定（3番目のinput要素）
-    const inputField = page.locator('input[type="text"]').nth(2);
+    // プロジェクト名入力ダイアログの入力フィールドを特定（IDで確実に特定）
+    const inputField = page.locator('#customDialogInput');
     await expect(inputField).toBeVisible();
 
     // プロジェクト名を入力
