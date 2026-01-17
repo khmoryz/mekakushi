@@ -1325,8 +1325,14 @@
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
 
+            // 辞書ハイライトのターゲットを取得
+            const targets = textarea === inputTextArea
+                ? Array.from(maskingDictionary.values()).map(entry => entry.original)
+                : Array.from(maskingDictionary.values()).map(entry => entry.masked);
+
             if (start === end) {
-                // 選択なし - 通常のハイライトのみ
+                // 選択なし - 通常のハイライトのみに戻す
+                backdrop.innerHTML = highlight(textarea.value, targets);
                 return;
             }
 
@@ -1335,18 +1341,10 @@
             const selectedText = text.substring(start, end);
             const afterSelection = text.substring(end);
 
-            // backdropの現在のHTMLを取得
-            const currentHTML = backdrop.innerHTML;
-
             // 選択範囲を含むHTMLを再構築
             const beforeHTML = escapeHtml(beforeSelection);
             const selectedHTML = '<span class="selection-highlight">' + escapeHtml(selectedText) + '</span>';
             const afterHTML = escapeHtml(afterSelection);
-
-            // 辞書ハイライトを適用
-            const targets = textarea === inputTextArea
-                ? Array.from(maskingDictionary.values()).map(entry => entry.original)
-                : Array.from(maskingDictionary.values()).map(entry => entry.masked);
 
             // まず選択ハイライトを適用してから、辞書ハイライトを適用
             const textWithSelection = beforeHTML + selectedHTML + afterHTML;
