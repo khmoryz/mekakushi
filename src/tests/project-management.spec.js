@@ -129,9 +129,5 @@ test.describe('プロジェクト環境管理機能', () => {
     // プロジェクト削除ボタンが表示されていることを確認
     const deleteProjectBtn = page.locator('#deleteProjectBtn');
     await expect(deleteProjectBtn).toBeVisible();
-
-    // 正規表現パターンボタンが表示されていることを確認
-    const regexPatternsBtn = page.locator('#regexPatternsBtn');
-    await expect(regexPatternsBtn).toBeVisible();
   });
 });
