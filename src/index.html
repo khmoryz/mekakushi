@@ -704,10 +704,55 @@
                 min-width: auto;
                 max-width: none;
                 gap: var(--spacing-md);
+                justify-content: center;
+            }
+
+            /* 縦並び時は矢印を非表示にして上下矢印を表示 */
+            .conversion-arrow.right,
+            .conversion-arrow.left {
+                display: none;
+            }
+
+            /* 上下矢印を追加 */
+            .conversion-controls::before {
+                content: '';
+                width: 16px;
+                height: 16px;
+                position: relative;
+                opacity: 0.6;
+            }
+
+            .conversion-controls::before {
+                /* 下向き矢印 */
+                border-left: 2px solid var(--text-tertiary);
+                border-bottom: 2px solid var(--text-tertiary);
+                transform: rotate(-45deg);
+                margin-bottom: 4px;
+            }
+
+            .conversion-controls::after {
+                content: '';
+                width: 16px;
+                height: 16px;
+                position: relative;
+                opacity: 0.6;
+                /* 上向き矢印 */
+                border-left: 2px solid var(--text-tertiary);
+                border-bottom: 2px solid var(--text-tertiary);
+                transform: rotate(135deg);
+                margin-top: 4px;
             }
 
             .textarea-container {
                 min-height: 240px;
+            }
+
+            /* テキストエリアの折り返しを強制 */
+            .text-panel textarea,
+            .backdrop {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: pre-wrap;
             }
         }
 
