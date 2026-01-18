@@ -433,7 +433,34 @@
             font-weight: 600;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: var(--spacing-xs);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .dictionary-toggle {
+            background: none;
+            border: none;
+            color: var(--text-accent);
+            cursor: pointer;
+            font-size: 16px;
+            padding: var(--spacing-xs);
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .dictionary-toggle:hover {
+            color: var(--accent-blue);
+        }
+
+        .dictionary-panel.collapsed .dictionary-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .dictionary-panel.collapsed .dictionary-list {
+            display: none;
         }
 
         .dictionary-list {
@@ -772,8 +799,11 @@
             </div>
 
             <!-- 右側辞書パネル -->
-            <div class="dictionary-panel">
-                <h2>📚 マスキング辞書</h2>
+            <div class="dictionary-panel" id="dictionaryPanel">
+                <h2 onclick="toggleDictionary()">
+                    <span>📚 マスキング辞書</span>
+                    <button class="dictionary-toggle" id="dictionaryToggle">▼</button>
+                </h2>
                 <div class="dictionary-list" id="dictionaryList">
                     <div class="dictionary-empty">まだマスキングした単語がありません</div>
                 </div>
@@ -808,6 +838,8 @@
         const outputBackdrop = document.getElementById('outputBackdrop');
         const candidatePopup = document.getElementById('candidatePopup');
         const candidateGrid = document.getElementById('candidateGrid');
+        const dictionaryPanel = document.getElementById('dictionaryPanel');
+        const dictionaryToggle = document.getElementById('dictionaryToggle');
 
         // プロジェクト管理DOM要素
         const projectSelect = document.getElementById('projectSelect');
@@ -824,6 +856,7 @@
         let selectionStart = 0;
         let selectionEnd = 0;
         let popupVisible = false;
+        let dictionaryCollapsed = false;
 
         // 候補データ
         const candidateData = {
@@ -1511,6 +1544,28 @@
             });
         }
 
+        // 辞書パネルのトグル機能
+        function toggleDictionary() {
+            dictionaryCollapsed = !dictionaryCollapsed;
+
+            if (dictionaryCollapsed) {
+                dictionaryPanel.classList.add('collapsed');
+                localStorage.setItem('dictionaryCollapsed', 'true');
+            } else {
+                dictionaryPanel.classList.remove('collapsed');
+                localStorage.setItem('dictionaryCollapsed', 'false');
+            }
+        }
+
+        // 辞書パネルの状態を復元
+        function restoreDictionaryState() {
+            const saved = localStorage.getItem('dictionaryCollapsed');
+            if (saved === 'true') {
+                dictionaryCollapsed = true;
+                dictionaryPanel.classList.add('collapsed');
+            }
+        }
+
         // イベントリスナーの設定
         document.addEventListener('DOMContentLoaded', async function () {
             console.log('DOM loaded, initializing application...');
@@ -1570,6 +1625,9 @@
                 // クリック時に選択ハイライトを更新
                 setTimeout(() => updateSelectionHighlight(), 10);
             });
+
+            // 辞書パネルの状態を復元
+            restoreDictionaryState();
 
             // 初期設定
             inputTextArea.focus();

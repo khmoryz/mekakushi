@@ -31,6 +31,11 @@ inclusion: always
 - 各コミットは独立した機能単位を表す
 - 適切なコミットメッセージを記述（commit-message-conventions.mdに従う）
 
+### 相談
+
+実装や調査に困ったらGemini 3 proと相談してください。
+`gemini -m gemini-3-pro-preview`
+
 ## AI開発支援での適用
 
 ### コード生成時の指針（重要）
