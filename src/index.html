@@ -662,7 +662,7 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
+        @media (max-width: 1000px) {
             .dictionary-panel {
                 width: 280px;
             }
@@ -1546,7 +1546,7 @@
 
         // 辞書パネルの状態を復元
         function restoreDictionaryState() {
-            const isSmallScreen = window.innerWidth < 1200;
+            const isSmallScreen = window.innerWidth < 1000;
             console.log('restoreDictionaryState called:', { isSmallScreen, windowWidth: window.innerWidth });
 
             // 小さい画面では完全に非表示
@@ -1564,7 +1564,7 @@
 
         // ウィンドウリサイズ時の処理
         window.addEventListener('resize', function () {
-            const isSmallScreen = window.innerWidth < 1200;
+            const isSmallScreen = window.innerWidth < 1000;
             console.log('Window resized:', { isSmallScreen, windowWidth: window.innerWidth });
 
             if (isSmallScreen) {
