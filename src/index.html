@@ -1585,10 +1585,17 @@
             const saved = localStorage.getItem('dictionaryCollapsed');
             const isSmallScreen = window.innerWidth < 1200;
 
-            // 小さい画面では自動的に折りたたむ、または保存された状態を復元
-            if (saved === 'true' || isSmallScreen) {
+            // 小さい画面では自動的に折りたたむ
+            // 大きい画面では保存された状態を復元（デフォルトは展開）
+            if (isSmallScreen) {
                 dictionaryCollapsed = true;
                 dictionaryPanel.classList.add('collapsed');
+            } else if (saved === 'true') {
+                dictionaryCollapsed = true;
+                dictionaryPanel.classList.add('collapsed');
+            } else {
+                dictionaryCollapsed = false;
+                dictionaryPanel.classList.remove('collapsed');
             }
         }
 
@@ -1600,6 +1607,13 @@
                 // 小さい画面になったら自動的に折りたたむ
                 dictionaryCollapsed = true;
                 dictionaryPanel.classList.add('collapsed');
+            } else if (!isSmallScreen && dictionaryCollapsed) {
+                // 大きい画面になったら自動的に展開（ユーザーが手動で折りたたんでいない限り）
+                const userCollapsed = localStorage.getItem('dictionaryCollapsed') === 'true';
+                if (!userCollapsed) {
+                    dictionaryCollapsed = false;
+                    dictionaryPanel.classList.remove('collapsed');
+                }
             }
         });
 
