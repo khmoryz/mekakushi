@@ -234,9 +234,10 @@
 
         .backdrop {
             z-index: 1;
-            color: var(--text-primary);
+            color: transparent;
             pointer-events: none;
             border-color: transparent;
+            background: var(--bg-tertiary);
         }
 
         .text-panel textarea {
@@ -244,26 +245,27 @@
             resize: none;
             outline: none;
             transition: all 0.2s ease;
-            color: transparent;
+            color: var(--text-primary);
             caret-color: var(--accent-blue);
             background: transparent;
         }
 
-        /* テキスト選択時は背景色のみ表示、文字は透明を維持 */
+        /* テキスト選択時のハイライト */
         .text-panel textarea::selection {
             background: rgba(132, 160, 198, 0.5);
-            color: transparent;
         }
 
         .text-panel textarea::-moz-selection {
             background: rgba(132, 160, 198, 0.5);
-            color: transparent;
         }
 
-        /* backdrop内の選択範囲スタイル */
-        .backdrop .selected {
-            /* 背景色はtextareaの選択背景を透けて見せる */
-            /* 必要に応じて文字色を変更可能 */
+        /* backdrop内のハイライトスタイル */
+        .backdrop .masked-highlight {
+            color: transparent;
+            background: var(--highlight-bg);
+            border: 1px solid var(--highlight-border);
+            border-radius: 3px;
+            padding: 1px 3px;
         }
 
         .text-panel textarea:focus {
@@ -407,20 +409,6 @@
             border-top: 3px solid transparent;
             border-bottom: 3px solid transparent;
             transform: translateY(-50%);
-        }
-
-        /* Highlight Styles */
-        .masked-highlight {
-            background: var(--highlight-bg);
-            border: 1px solid var(--highlight-border);
-            border-radius: 3px;
-            padding: 1px 3px;
-            transition: all 0.2s ease;
-        }
-
-        .masked-highlight:hover {
-            background: var(--selection-bg);
-            border-color: var(--accent-blue);
         }
 
         /* Dictionary Panel */
@@ -1324,40 +1312,13 @@
         }
 
         function applySelectionToBackdrop(textarea, backdrop) {
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const text = textarea.value;
-
             // 辞書ハイライトのターゲットを取得
             const targets = textarea === inputTextArea
                 ? Array.from(maskingDictionary.values()).map(entry => entry.original)
                 : Array.from(maskingDictionary.values()).map(entry => entry.masked);
 
-            // 選択範囲がない場合は通常のハイライトのみ
-            if (start === end) {
-                backdrop.innerHTML = highlight(text, targets);
-                return;
-            }
-
-            // 選択範囲を含むHTMLを生成
-            const beforeSelection = text.substring(0, start);
-            const selectedText = text.substring(start, end);
-            const afterSelection = text.substring(end);
-
-            // 各部分をエスケープしてから辞書ハイライトを適用
-            let html = '';
-
-            // 選択前の部分
-            html += highlight(beforeSelection, targets);
-
-            // 選択範囲（辞書ハイライトも適用）
-            const selectedHighlighted = highlight(selectedText, targets);
-            html += '<span class="selected">' + selectedHighlighted + '</span>';
-
-            // 選択後の部分
-            html += highlight(afterSelection, targets);
-
-            backdrop.innerHTML = html;
+            // 辞書ハイライトのみを適用（選択はtextareaのネイティブ機能を使用）
+            backdrop.innerHTML = highlight(textarea.value, targets);
         }
 
         // グローバルスコープに追加
