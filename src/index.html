@@ -698,53 +698,21 @@
                 gap: var(--spacing-sm);
             }
 
+            /* 矢印を完全に非表示にして領域を節約 */
             .conversion-controls {
-                flex-direction: row;
-                padding: var(--spacing-sm) 0;
-                min-width: auto;
-                max-width: none;
-                gap: var(--spacing-md);
-                justify-content: center;
-            }
-
-            /* 縦並び時は矢印を非表示にして上下矢印を表示 */
-            .conversion-arrow.right,
-            .conversion-arrow.left {
                 display: none;
             }
 
-            /* 上下矢印を追加 */
-            .conversion-controls::before {
-                content: '';
-                width: 16px;
-                height: 16px;
-                position: relative;
-                opacity: 0.6;
-            }
-
-            .conversion-controls::before {
-                /* 下向き矢印 */
-                border-left: 2px solid var(--text-tertiary);
-                border-bottom: 2px solid var(--text-tertiary);
-                transform: rotate(-45deg);
-                margin-bottom: 4px;
-            }
-
-            .conversion-controls::after {
-                content: '';
-                width: 16px;
-                height: 16px;
-                position: relative;
-                opacity: 0.6;
-                /* 上向き矢印 */
-                border-left: 2px solid var(--text-tertiary);
-                border-bottom: 2px solid var(--text-tertiary);
-                transform: rotate(135deg);
-                margin-top: 4px;
+            /* テキストパネルを均等に配置 */
+            .text-panel {
+                flex: 1;
+                min-height: 0;
+                /* Flexboxの縮小を許可 */
             }
 
             .textarea-container {
-                min-height: 240px;
+                min-height: 200px;
+                /* 小さい画面用の最小高さ */
             }
 
             /* テキストエリアの折り返しを強制 */
