@@ -433,57 +433,17 @@
             font-weight: 600;
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: var(--spacing-xs);
-            cursor: pointer;
-            user-select: none;
         }
 
-        .dictionary-toggle {
-            background: none;
-            border: none;
-            color: var(--text-accent);
-            cursor: pointer;
-            font-size: 16px;
-            padding: var(--spacing-xs);
-            transition: transform 0.2s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .dictionary-toggle:hover {
-            color: var(--accent-blue);
-        }
-
-        .dictionary-panel.collapsed .dictionary-toggle {
-            transform: rotate(-90deg);
-        }
-
-        .dictionary-panel.collapsed .dictionary-list {
+        /* 小さい画面幅では辞書パネル全体を非表示 */
+        .dictionary-panel.hidden {
             display: none;
         }
 
         /* 小さい画面幅では辞書パネル全体を非表示 */
-        .dictionary-panel.collapsed {
-            width: 48px;
-            min-width: 48px;
-            padding: var(--spacing-md) var(--spacing-xs);
-        }
-
-        .dictionary-panel.collapsed h2 {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            margin: 0;
-            white-space: nowrap;
-        }
-
-        .dictionary-panel.collapsed h2 span {
+        .dictionary-panel.hidden {
             display: none;
-        }
-
-        .dictionary-panel.collapsed .dictionary-toggle {
-            transform: rotate(0deg);
-            writing-mode: horizontal-tb;
         }
 
         .dictionary-list {
@@ -823,10 +783,7 @@
 
             <!-- 右側辞書パネル -->
             <div class="dictionary-panel" id="dictionaryPanel">
-                <h2 onclick="toggleDictionary()">
-                    <span>📚 マスキング辞書</span>
-                    <button class="dictionary-toggle" id="dictionaryToggle">▼</button>
-                </h2>
+                <h2>📚 マスキング辞書</h2>
                 <div class="dictionary-list" id="dictionaryList">
                     <div class="dictionary-empty">まだマスキングした単語がありません</div>
                 </div>
@@ -862,7 +819,6 @@
         const candidatePopup = document.getElementById('candidatePopup');
         const candidateGrid = document.getElementById('candidateGrid');
         const dictionaryPanel = document.getElementById('dictionaryPanel');
-        const dictionaryToggle = document.getElementById('dictionaryToggle');
 
         // プロジェクト管理DOM要素
         const projectSelect = document.getElementById('projectSelect');
@@ -1572,30 +1528,26 @@
             dictionaryCollapsed = !dictionaryCollapsed;
 
             if (dictionaryCollapsed) {
-                dictionaryPanel.classList.add('collapsed');
+                dictionaryPanel.classList.add('hidden');
                 localStorage.setItem('dictionaryCollapsed', 'true');
             } else {
-                dictionaryPanel.classList.remove('collapsed');
+                dictionaryPanel.classList.remove('hidden');
                 localStorage.setItem('dictionaryCollapsed', 'false');
             }
         }
 
         // 辞書パネルの状態を復元
         function restoreDictionaryState() {
-            const saved = localStorage.getItem('dictionaryCollapsed');
             const isSmallScreen = window.innerWidth < 1200;
 
-            // 小さい画面では自動的に折りたたむ
-            // 大きい画面では保存された状態を復元（デフォルトは展開）
+            // 小さい画面では完全に非表示
+            // 大きい画面では表示
             if (isSmallScreen) {
                 dictionaryCollapsed = true;
-                dictionaryPanel.classList.add('collapsed');
-            } else if (saved === 'true') {
-                dictionaryCollapsed = true;
-                dictionaryPanel.classList.add('collapsed');
+                dictionaryPanel.classList.add('hidden');
             } else {
                 dictionaryCollapsed = false;
-                dictionaryPanel.classList.remove('collapsed');
+                dictionaryPanel.classList.remove('hidden');
             }
         }
 
@@ -1603,17 +1555,14 @@
         window.addEventListener('resize', function () {
             const isSmallScreen = window.innerWidth < 1200;
 
-            if (isSmallScreen && !dictionaryCollapsed) {
-                // 小さい画面になったら自動的に折りたたむ
+            if (isSmallScreen) {
+                // 小さい画面になったら自動的に非表示
                 dictionaryCollapsed = true;
-                dictionaryPanel.classList.add('collapsed');
-            } else if (!isSmallScreen && dictionaryCollapsed) {
-                // 大きい画面になったら自動的に展開（ユーザーが手動で折りたたんでいない限り）
-                const userCollapsed = localStorage.getItem('dictionaryCollapsed') === 'true';
-                if (!userCollapsed) {
-                    dictionaryCollapsed = false;
-                    dictionaryPanel.classList.remove('collapsed');
-                }
+                dictionaryPanel.classList.add('hidden');
+            } else {
+                // 大きい画面になったら自動的に表示
+                dictionaryCollapsed = false;
+                dictionaryPanel.classList.remove('hidden');
             }
         });
 
