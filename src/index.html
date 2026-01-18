@@ -463,6 +463,29 @@
             display: none;
         }
 
+        /* 小さい画面幅では辞書パネル全体を非表示 */
+        .dictionary-panel.collapsed {
+            width: 48px;
+            min-width: 48px;
+            padding: var(--spacing-md) var(--spacing-xs);
+        }
+
+        .dictionary-panel.collapsed h2 {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .dictionary-panel.collapsed h2 span {
+            display: none;
+        }
+
+        .dictionary-panel.collapsed .dictionary-toggle {
+            transform: rotate(0deg);
+            writing-mode: horizontal-tb;
+        }
+
         .dictionary-list {
             flex: 1;
             overflow-y: auto;
@@ -1560,11 +1583,25 @@
         // 辞書パネルの状態を復元
         function restoreDictionaryState() {
             const saved = localStorage.getItem('dictionaryCollapsed');
-            if (saved === 'true') {
+            const isSmallScreen = window.innerWidth < 1200;
+
+            // 小さい画面では自動的に折りたたむ、または保存された状態を復元
+            if (saved === 'true' || isSmallScreen) {
                 dictionaryCollapsed = true;
                 dictionaryPanel.classList.add('collapsed');
             }
         }
+
+        // ウィンドウリサイズ時の処理
+        window.addEventListener('resize', function () {
+            const isSmallScreen = window.innerWidth < 1200;
+
+            if (isSmallScreen && !dictionaryCollapsed) {
+                // 小さい画面になったら自動的に折りたたむ
+                dictionaryCollapsed = true;
+                dictionaryPanel.classList.add('collapsed');
+            }
+        });
 
         // イベントリスナーの設定
         document.addEventListener('DOMContentLoaded', async function () {
