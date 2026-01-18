@@ -441,11 +441,6 @@
             display: none;
         }
 
-        /* 小さい画面幅では辞書パネル全体を非表示 */
-        .dictionary-panel.hidden {
-            display: none;
-        }
-
         .dictionary-list {
             flex: 1;
             overflow-y: auto;
@@ -1539,30 +1534,36 @@
         // 辞書パネルの状態を復元
         function restoreDictionaryState() {
             const isSmallScreen = window.innerWidth < 1200;
+            console.log('restoreDictionaryState called:', { isSmallScreen, windowWidth: window.innerWidth });
 
             // 小さい画面では完全に非表示
             // 大きい画面では表示
             if (isSmallScreen) {
                 dictionaryCollapsed = true;
                 dictionaryPanel.classList.add('hidden');
+                console.log('Dictionary hidden (small screen)');
             } else {
                 dictionaryCollapsed = false;
                 dictionaryPanel.classList.remove('hidden');
+                console.log('Dictionary shown (large screen)');
             }
         }
 
         // ウィンドウリサイズ時の処理
         window.addEventListener('resize', function () {
             const isSmallScreen = window.innerWidth < 1200;
+            console.log('Window resized:', { isSmallScreen, windowWidth: window.innerWidth });
 
             if (isSmallScreen) {
                 // 小さい画面になったら自動的に非表示
                 dictionaryCollapsed = true;
                 dictionaryPanel.classList.add('hidden');
+                console.log('Dictionary hidden (resize to small)');
             } else {
                 // 大きい画面になったら自動的に表示
                 dictionaryCollapsed = false;
                 dictionaryPanel.classList.remove('hidden');
+                console.log('Dictionary shown (resize to large)');
             }
         });
 
