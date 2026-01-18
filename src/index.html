@@ -226,7 +226,6 @@
             border: 1px solid var(--border-secondary);
             border-radius: var(--radius-sm);
             margin: 0;
-            background: var(--bg-tertiary);
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow: auto;
@@ -236,7 +235,6 @@
             z-index: 1;
             color: transparent;
             pointer-events: none;
-            border-color: transparent;
             background: var(--bg-tertiary);
         }
 
@@ -248,6 +246,13 @@
             color: var(--text-primary);
             caret-color: var(--accent-blue);
             background: transparent;
+        }
+
+        outline: none;
+        transition: all 0.2s ease;
+        color: var(--text-primary);
+        caret-color: var(--accent-blue);
+        background: transparent;
         }
 
         /* テキスト選択時のハイライト */
@@ -263,9 +268,7 @@
         .backdrop .masked-highlight {
             color: transparent;
             background: var(--highlight-bg);
-            border: 1px solid var(--highlight-border);
-            border-radius: 3px;
-            padding: 1px 3px;
+            border-radius: 2px;
         }
 
         .text-panel textarea:focus {
